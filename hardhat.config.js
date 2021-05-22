@@ -1,7 +1,7 @@
 require("@nomiclabs/hardhat-waffle");
 require("@nomiclabs/hardhat-etherscan");
 require('hardhat-spdx-license-identifier');
-require('hardhat-log-remover');
+const { removeConsoleLog } = require('hardhat-preprocessor');
 const fs = require('fs');
 const { infuraProjectId, privateKey, privateKeyGanache, etherApiKey, bscApiKey } = JSON.parse(fs.readFileSync('.secret').toString().trim());
 
@@ -38,9 +38,12 @@ task("accounts", "Prints the list of accounts", async () => {
  */
 
 module.exports = {
-  defaultNetwork: "kovan",
+  defaultNetwork: "hardhat",
   networks: {
     hardhat: {
+      forking: {
+        url: "https://eth-kovan.alchemyapi.io/v2/kzTpbwIPy_KjG1bG0omquzJ6tKi5i0XB"
+      }
     },
     kovan: {
       url: "https://eth-kovan.alchemyapi.io/v2/kzTpbwIPy_KjG1bG0omquzJ6tKi5i0XB",
@@ -72,10 +75,13 @@ module.exports = {
   etherscan: {
     // Your API key for Etherscan
     // Obtain one at https://etherscan.io/
-    apiKey: bscApiKey
+    apiKey: etherApiKey
   },
   spdxLicenseIdentifier: {
     overwrite: true,
     runOnCompile: true,
-  }
+  },
+  preprocess: {
+    eachLine: removeConsoleLog((hre) => hre.network.name !== 'hardhat' && hre.network.name !== 'localhost'),
+  },
 };

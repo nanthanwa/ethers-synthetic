@@ -1,7 +1,6 @@
 {
-  "name": "simple_hardhat",
+  "name": "chainlink-synthetic",
   "version": "1.0.0",
-  "main": "index.js",
   "license": "MIT",
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.2",

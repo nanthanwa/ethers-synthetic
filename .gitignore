@@ -5,3 +5,8 @@ cache
 artifacts
 .secret
 .openzeppelin
+
+.DS_Store
+artifacts/contracts/*
+!artifacts/contracts/PriceConsumerV3.sol
+!artifacts/contracts/Dolly.sol

@@ -1,5 +1,5 @@
-require("@nomiclabs/hardhat-waffle");
-require("@nomiclabs/hardhat-etherscan");
+require('@nomiclabs/hardhat-waffle');
+require('@nomiclabs/hardhat-etherscan');
 require('hardhat-spdx-license-identifier');
 const { removeConsoleLog } = require('hardhat-preprocessor');
 const fs = require('fs');
@@ -22,7 +22,7 @@ const { infuraProjectId, privateKey, privateKeyGanache, etherApiKey, bscApiKey }
 
 // This is a sample Hardhat task. To learn how to create your own go to
 // https://hardhat.org/guides/create-task.html
-task("accounts", "Prints the list of accounts", async () => {
+task('accounts', 'Prints the list of accounts', async () => {
   const accounts = await ethers.getSigners();
 
   for (const account of accounts) {
@@ -38,24 +38,25 @@ task("accounts", "Prints the list of accounts", async () => {
  */
 
 module.exports = {
-  defaultNetwork: "bscTestnet",
+  defaultNetwork: 'kovan',
   networks: {
     hardhat: {
       forking: {
-        url: "https://eth-kovan.alchemyapi.io/v2/kzTpbwIPy_KjG1bG0omquzJ6tKi5i0XB"
+        url: 'https://eth-kovan.alchemyapi.io/v2/kzTpbwIPy_KjG1bG0omquzJ6tKi5i0XB'
       }
     },
     kovan: {
-      url: "https://eth-kovan.alchemyapi.io/v2/kzTpbwIPy_KjG1bG0omquzJ6tKi5i0XB",
+      // url: 'https://eth-kovan.alchemyapi.io/v2/kzTpbwIPy_KjG1bG0omquzJ6tKi5i0XB',
+      url: `https://kovan.infura.io/v3/${infuraProjectId}`,
       accounts: privateKey
     },
     bscTestnet: {
-      url: "https://data-seed-prebsc-1-s1.binance.org:8545",
+      url: 'https://data-seed-prebsc-1-s1.binance.org:8545',
       accounts: privateKey
     }
   },
   solidity: {
-    version: "0.6.12",
+    version: '0.6.12',
     settings: {
       optimizer: {
         enabled: true,
@@ -64,10 +65,10 @@ module.exports = {
     }
   },
   paths: {
-    sources: "./contracts",
-    tests: "./test",
-    cache: "./cache",
-    artifacts: "./artifacts"
+    sources: './contracts',
+    tests: './test',
+    cache: './cache',
+    artifacts: './artifacts'
   },
   mocha: {
     timeout: 20000
@@ -75,7 +76,7 @@ module.exports = {
   etherscan: {
     // Your API key for Etherscan
     // Obtain one at https://etherscan.io/
-    apiKey: bscApiKey
+    apiKey: etherApiKey
   },
   spdxLicenseIdentifier: {
     overwrite: true,

@@ -38,7 +38,7 @@ task("accounts", "Prints the list of accounts", async () => {
  */
 
 module.exports = {
-  defaultNetwork: "hardhat",
+  defaultNetwork: "bscTestnet",
   networks: {
     hardhat: {
       forking: {
@@ -75,7 +75,7 @@ module.exports = {
   etherscan: {
     // Your API key for Etherscan
     // Obtain one at https://etherscan.io/
-    apiKey: etherApiKey
+    apiKey: bscApiKey
   },
   spdxLicenseIdentifier: {
     overwrite: true,

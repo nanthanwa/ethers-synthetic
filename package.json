@@ -5,6 +5,7 @@
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.2",
     "@nomiclabs/hardhat-etherscan": "^2.1.2",
+    "chai-bignumber": "^3.0.0",
     "hardhat-preprocessor": "^0.1.4",
     "hardhat-spdx-license-identifier": "^2.0.3"
   }

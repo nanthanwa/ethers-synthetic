@@ -8,4 +8,7 @@ BSC Mainnet
 Oracle: 0x43222216f93B140EEC072c4baCB4017746017644
 
 Kovan
-PriceConsumerV3: 0x894E9Cd00972c3CDB8B5c204C3fe53bBe17c4d40
+PriceConsumerV3: 0xe14b76C21eB129Db30Db428A6f90d1dE313DBB4b
+verify: hh verify 0xe14b76C21eB129Db30Db428A6f90d1dE313DBB4b --network kovan
+Dolly: 0xbB114C04e75E22d2AFd3DCc23ffF75C138d274fa
+verify dolly: hh verify 0xbB114C04e75E22d2AFd3DCc23ffF75C138d274fa "Dolly Stable Coin" "DOLLY" "18" --network kovan

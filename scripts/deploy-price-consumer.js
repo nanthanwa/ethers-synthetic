@@ -22,10 +22,10 @@ async function main() {
     const tsla = await PriceConsumerV3.deploy();
     await tsla.deployed();
     await tsla.setAggAddress('TSLA/USD', '0xb31357d152638fd1ae0853d24b9Ea81dF29E3EF2');
-    await tsla.setAggDecimal('TSLA/USD', '8');
     await tsla.setAggAddress('XAU/USD', '0xc8fb5684f2707C82f28595dEaC017Bfdf44EE9c5');
-    await tsla.setAggDecimal('XAU/USD', '8');
     await tsla.setAggAddress('FerrariF12TDF/USD', '0x22a2D07993A1A18b3b86E56F960fa735b6D6cFD9');
+    await tsla.setAggDecimal('TSLA/USD', '8');
+    await tsla.setAggDecimal('XAU/USD', '8');
     await tsla.setAggDecimal('FerrariF12TDF/USD', '8');
     console.log('PriceConsumerV3 deployed to:', tsla.address);
   } else if (network.name === 'bsc') {

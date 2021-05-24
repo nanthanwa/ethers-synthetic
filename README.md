@@ -37,15 +37,16 @@ hh verify 0x421F2f885Fbec45b0154a5483c8837497b12a747 0x9106f09bf08dfb23fca61a982
 DoppleSyntheticToken
 hh run scripts/deploy-dopple-synthetic-token.js --network kovan
 Network name: kovan
-DoppleTSLA deployed to: 0x65cAC0F09EFdB88195a002E8DD4CBF6Ec9BC7f60
+DoppleTSLA deployed to: 0x34213C239db7D8366537BdB562D99edF39f260cb
+hh verify --contract contracts/DoppleSyntheticToken.sol:DoppleTSLA 0x34213C239db7D8366537BdB562D99edF39f260cb 0x346d1d67889EeA17547c4Fc7B2a19586e82b6C9d  --network kovan
+https://kovan.etherscan.io/address/0x34213C239db7D8366537BdB562D99edF39f260cb#code
+
 DoppleCOIN deployed to: 0xEaD23317987E35FD23296842c09C78813F50d155
 DoppleAAPL deployed to: 0x16D28449Da5AfEE7C8a68F05A89CBc2CeFF43f93
 DoppleQQQ deployed to: 0xFB5494F2849d8871a06E56EC82cD4FdeA7947Db0
 DoppleAMZN deployed to: 0x06bdEfAD45AE21906fB07b6B72612c7CB9D7a7c8
 DoppleXAU deployed to: 0x2542792182Ad3C630068178a4E180fC7663E4b2b
 
-hh verify --contract contracts/DoppleSyntheticToken.sol:DoppleTSLA 0x28E24804ea5A7DC78eCfc9D89fb61E894394C5C0 0x779727409FeEc915B98E574f4EfEbB9f427f74B0  --network kovan
-https://kovan.etherscan.io/address/0x28E24804ea5A7DC78eCfc9D89fb61E894394C5C0#code
 
 hh verify --contract contracts/DoppleSyntheticToken.sol:DoppleCOIN 0xEaD23317987E35FD23296842c09C78813F50d155 --network kovan
 hh verify --contract contracts/DoppleSyntheticToken.sol:DoppleAAPL 0x16D28449Da5AfEE7C8a68F05A89CBc2CeFF43f93 --network kovan
@@ -59,4 +60,16 @@ hh verify 0x172018C14eeA6312BF4243BFa3d07249feA7E542 "Dolly Stable Coin" "DOLLY"
 
 Synthetic
 hh run scripts/deploy-synthetic.js --network kovan
-hh verify 0x779727409FeEc915B98E574f4EfEbB9f427f74B0 "0x172018C14eeA6312BF4243BFa3d07249feA7E542" "0x9106f09bf08dfb23fca61a9829543f1c80a81a4b"  --network kovan
+Synthetic deployed to: 0x346d1d67889EeA17547c4Fc7B2a19586e82b6C9d
+args: dolly, bandRef
+hh verify 0x346d1d67889EeA17547c4Fc7B2a19586e82b6C9d "0x172018C14eeA6312BF4243BFa3d07249feA7E542" "0x9106f09bf08dfb23fca61a9829543f1c80a81a4b" --network kovan
+https://kovan.etherscan.io/address/0x346d1d67889EeA17547c4Fc7B2a19586e82b6C9d#code
+
+
+
+Step to deploy
+- deploy Dolly
+- deploy DoppleSyntheticAsset
+- deploy Synthetic <Dolly> <BandOracleRef> <DoppleSyntheticAsset>
+- set owner of DoppleSyntheticAsset to Synthetic
+<!-- - set isSupport DoppleSyntheticAsset at Synthetic -->

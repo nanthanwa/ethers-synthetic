@@ -32,15 +32,22 @@ contract Synthetic is Ownable {
         ] = 0x65cAC0F09EFdB88195a002E8DD4CBF6Ec9BC7f60;
     }
 
+    // user need to approve for synthetic mint at dolly contract first.
     function mintSynthetic(
         IERC20Burnable _synthetic,
         uint256 _amount,
         uint256 _backedAmount
     ) external {
         _synthetic.mint(_msgSender(), _amount);
+        dolly.transferFrom(_msgSender(), address(this), _backedAmount);
     }
 
-    function redeemSynthetic() external {}
+    // user need to approve for burn at SyntheticAsset before call this function.
+    function redeemSynthetic(IERC20Burnable _synthetic, uint256 _amount)
+        external
+    {
+        _synthetic.burnFrom(_msgSender(), _amount);
+    }
 
     function liquidate() external {}
 

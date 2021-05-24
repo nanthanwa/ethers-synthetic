@@ -2,6 +2,7 @@ require('dotenv').config();
 require('@nomiclabs/hardhat-waffle');
 require('@nomiclabs/hardhat-etherscan');
 require('hardhat-spdx-license-identifier');
+require('hardhat-deploy');
 const { removeConsoleLog } = require('hardhat-preprocessor');
 const fs = require('fs');
 const { infuraProjectId, privateKey, privateKeyGanache, etherApiKey, bscApiKey } = JSON.parse(fs.readFileSync('.secret').toString().trim());
@@ -32,17 +33,20 @@ module.exports = {
         blockNumber: 25036674
       },
       saveDeployments: true,
+      tags: ["test", "local"],
     },
     kovan: {
       // url: 'https://eth-kovan.alchemyapi.io/v2/kzTpbwIPy_KjG1bG0omquzJ6tKi5i0XB',
       url: `https://kovan.infura.io/v3/${infuraProjectId}`,
       accounts: privateKey,
       saveDeployments: true,
+      tags: ["test", "local"],
     },
     bscTestnet: {
       url: 'https://data-seed-prebsc-1-s1.binance.org:8545',
       accounts: privateKey,
       saveDeployments: true,
+      tags: ["test", "local"],
     }
   },
   solidity: {
@@ -59,6 +63,9 @@ module.exports = {
     tests: './test',
     cache: './cache',
     artifacts: './artifacts'
+    // deploy: './deploy',
+    // deployments: './deployments',
+    // imports: './imports'
   },
   mocha: {
     timeout: 20000

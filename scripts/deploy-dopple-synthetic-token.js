@@ -6,7 +6,7 @@ async function main() {
 
   if (network.name === 'kovan') {
     const DoppleTSLA = await ethers.getContractFactory('DoppleTSLA');
-    const doppleTSLA = await DoppleTSLA.deploy();
+    const doppleTSLA = await DoppleTSLA.deploy("0x779727409FeEc915B98E574f4EfEbB9f427f74B0");
     await doppleTSLA.deployed();
     console.log('DoppleTSLA deployed to:', doppleTSLA.address);
     // const DoppleCOIN = await ethers.getContractFactory('DoppleCOIN');

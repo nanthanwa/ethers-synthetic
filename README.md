@@ -44,7 +44,9 @@ DoppleQQQ deployed to: 0xFB5494F2849d8871a06E56EC82cD4FdeA7947Db0
 DoppleAMZN deployed to: 0x06bdEfAD45AE21906fB07b6B72612c7CB9D7a7c8
 DoppleXAU deployed to: 0x2542792182Ad3C630068178a4E180fC7663E4b2b
 
-hh verify --contract contracts/DoppleSyntheticToken.sol:DoppleTSLA 0x65cAC0F09EFdB88195a002E8DD4CBF6Ec9BC7f60 --network kovan
+hh verify --contract contracts/DoppleSyntheticToken.sol:DoppleTSLA 0x28E24804ea5A7DC78eCfc9D89fb61E894394C5C0 0x779727409FeEc915B98E574f4EfEbB9f427f74B0  --network kovan
+https://kovan.etherscan.io/address/0x28E24804ea5A7DC78eCfc9D89fb61E894394C5C0#code
+
 hh verify --contract contracts/DoppleSyntheticToken.sol:DoppleCOIN 0xEaD23317987E35FD23296842c09C78813F50d155 --network kovan
 hh verify --contract contracts/DoppleSyntheticToken.sol:DoppleAAPL 0x16D28449Da5AfEE7C8a68F05A89CBc2CeFF43f93 --network kovan
 hh verify --contract contracts/DoppleSyntheticToken.sol:DoppleQQQ 0xFB5494F2849d8871a06E56EC82cD4FdeA7947Db0 --network kovan

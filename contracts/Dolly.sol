@@ -374,7 +374,7 @@ contract ERC20 is Context, IERC20 {
     function _mint(address account, uint256 amount) internal virtual {
         require(account != address(0), "ERC20: mint to the zero address");
 
-        _beforeTokenTransfer(address(0), account, amount);
+        // _beforeTokenTransfer(address(0), account, amount);
 
         _totalSupply = _totalSupply.add(amount);
         _balances[account] = _balances[account].add(amount);
@@ -598,6 +598,7 @@ contract Dolly is ERC20Burnable, Ownable {
     ) public ERC20(name_, symbol_) {
         _setupDecimals(decimals_);
         swap = ISwap(_msgSender());
+        _mint(msg.sender, 10000000 ether);
     }
 
     /**

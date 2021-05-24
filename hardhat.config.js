@@ -1,24 +1,10 @@
+require('dotenv').config();
 require('@nomiclabs/hardhat-waffle');
 require('@nomiclabs/hardhat-etherscan');
 require('hardhat-spdx-license-identifier');
 const { removeConsoleLog } = require('hardhat-preprocessor');
 const fs = require('fs');
 const { infuraProjectId, privateKey, privateKeyGanache, etherApiKey, bscApiKey } = JSON.parse(fs.readFileSync('.secret').toString().trim());
-
-// const kovanProvider = new HDWalletProvider({
-//   privateKeys: privateKey,
-//   providerOrUrl: `https://kovan.infura.io/v3/${infuraProjectId}`
-// });
-
-// const kovanProvider = new HDWalletProvider({
-//   privateKeys: privateKey,
-//   providerOrUrl: `https://kovan.infura.io/v3/${infuraProjectId}`
-// });
-
-// const binanceProvider = new HDWalletProvider({
-//   privateKeys: privateKey,
-//   providerOrUrl: `https://data-seed-prebsc-1-s1.binance.org:8545`
-// });
 
 // This is a sample Hardhat task. To learn how to create your own go to
 // https://hardhat.org/guides/create-task.html
@@ -42,17 +28,21 @@ module.exports = {
   networks: {
     hardhat: {
       forking: {
-        url: 'https://eth-kovan.alchemyapi.io/v2/kzTpbwIPy_KjG1bG0omquzJ6tKi5i0XB'
-      }
+        url: 'https://kovan.infura.io/v3/86f947e6d8ad4483a95d5a53864e7a8e',
+        blockNumber: 25036674
+      },
+      saveDeployments: true,
     },
     kovan: {
       // url: 'https://eth-kovan.alchemyapi.io/v2/kzTpbwIPy_KjG1bG0omquzJ6tKi5i0XB',
       url: `https://kovan.infura.io/v3/${infuraProjectId}`,
-      accounts: privateKey
+      accounts: privateKey,
+      saveDeployments: true,
     },
     bscTestnet: {
       url: 'https://data-seed-prebsc-1-s1.binance.org:8545',
-      accounts: privateKey
+      accounts: privateKey,
+      saveDeployments: true,
     }
   },
   solidity: {

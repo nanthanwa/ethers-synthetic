@@ -4,18 +4,8 @@ async function main() {
 
   console.log('Network name:', network.name);
 
-  if (network.name === 'bscTestnet') {
-    const Dolly = await ethers.getContractFactory("Dolly");
-    const dolly = await Dolly.deploy("Dolly Stable Coin", "DOLLY", "18");
-    await dolly.deployed();
-    console.log("Dolly deployed to:", dolly.address);
-  } else if (network.name === 'hardhat') {
-    const Dolly = await ethers.getContractFactory("Dolly");
-    const dolly = await Dolly.deploy("Dolly Stable Coin", "DOLLY", "18");
-    await dolly.deployed();
-    console.log("Dolly deployed to:", dolly.address);
-  } else if (network.name === 'kovan') {
-    const Dolly = await ethers.getContractFactory("Dolly");
+  if (network.name === 'kovan') {
+    const Dolly = await ethers.getContractFactory("contracts/Dolly.sol:Dolly");
     const dolly = await Dolly.deploy("Dolly Stable Coin", "DOLLY", "18");
     await dolly.deployed();
     console.log("Dolly deployed to:", dolly.address);

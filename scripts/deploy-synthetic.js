@@ -4,9 +4,9 @@ async function main() {
 
   console.log('Network name:', network.name);
 
-  if (network.name === 'hardhat') {
+  if (network.name === 'kovan') {
     const Synthetic = await ethers.getContractFactory('Synthetic');
-    const synthetic = await Synthetic.deploy('0xbB114C04e75E22d2AFd3DCc23ffF75C138d274fa', '0x9106f09bf08dfb23fca61a9829543f1c80a81a4b');
+    const synthetic = await Synthetic.deploy('0x172018C14eeA6312BF4243BFa3d07249feA7E542', '0x9106f09bf08dfb23fca61a9829543f1c80a81a4b');
     await synthetic.deployed();
     console.log('Synthetic deployed to:', synthetic.address);
   }

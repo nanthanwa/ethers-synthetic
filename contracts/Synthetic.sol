@@ -88,14 +88,14 @@ contract Synthetic is Ownable {
 
         uint256 exchangeRate = getRate(addressToPairs[address(_synthetic)]);
         uint256 assetBackedAtRateAmount =
-            (_amount * exchangeRate) / denominator; // 606872500000000000000
+            (_amount.mul(exchangeRate)).div(denominator); // 606872500000000000000
         uint256 requiredAmount =
-            (assetBackedAtRateAmount * collateralRatio) / denominator;
+            (assetBackedAtRateAmount.mul(collateralRatio)).div(denominator);
         require(
             _backedAmount >= requiredAmount,
             "Synthetic::mintSynthetic: under collateral"
         );
-        uint256 canWithdrawRemainning = _backedAmount - requiredAmount;
+        uint256 canWithdrawRemainning = _backedAmount.sub(requiredAmount);
         _synthetic.mint(_msgSender(), _amount);
 
         require(dolly.transferFrom(_msgSender(), address(this), _backedAmount));
@@ -106,17 +106,23 @@ contract Synthetic is Ownable {
         mn.assetBackedAmount = _backedAmount;
         mn.exchangeRateAtMinted = exchangeRate;
         mn.currentExchangeRate = exchangeRate;
-        mn.currentRatio =
-            (((_backedAmount * denominator) / exchangeRate) * denominator) /
-            denominator; // must more than 1.5 ratio (15e17)
-        mn.willLiquidateAtPrice =
-            (_backedAmount * liquidationRatio) /
-            denominator; // more assetBacked, more liquidatePrice
+        mn.currentRatio = (
+            ((_backedAmount.mul(denominator)).div(exchangeRate)).mul(
+                denominator
+            )
+        )
+            .div(denominator); // must more than 1.5 ratio (15e17)
+        mn.willLiquidateAtPrice = (_backedAmount.mul(liquidationRatio)).div(
+            denominator
+        ); // more assetBacked, more liquidatePrice
         mn.canWithdrawRemainning = canWithdrawRemainning;
-        mn.canMintRemainning =
-            (((_backedAmount * denominator) / collateralRatio) * denominator) /
-            denominator -
-            _amount;
+        mn.canMintRemainning = (
+            ((_backedAmount.mul(denominator)).div(collateralRatio)).mul(
+                denominator
+            )
+        )
+            .div(denominator)
+            .sub(_amount);
         mn.updatedAt = block.timestamp;
         mn.updatedBlock = block.number;
         emit MintAsset(_msgSender(), address(_synthetic), _amount);
@@ -142,46 +148,54 @@ contract Synthetic is Ownable {
         } else {
             // patial redeeming
             uint256 percent =
-                (((_amount * denominator) / mn.assetAmount) * denominator) /
-                    denominator;
+                (
+                    ((_amount.mul(denominator)).div(mn.assetAmount)).mul(
+                        denominator
+                    )
+                )
+                    .div(denominator);
             uint256 assetToBeBurned = (mn.assetAmount * percent) / denominator;
             uint256 assetBackedToBeRedeemed =
                 (mn.assetBackedAmount * percent) / denominator;
 
             uint256 exchangeRate = getRate(addressToPairs[address(_synthetic)]);
             uint256 assetBackedAmountAfterRedeem =
-                mn.assetBackedAmount - assetBackedToBeRedeemed;
+                mn.assetBackedAmount.sub(assetBackedToBeRedeemed);
 
-            uint256 assetRemainning = mn.assetAmount - assetToBeBurned;
+            uint256 assetRemainning = mn.assetAmount.sub(assetToBeBurned);
             uint256 assetBackedAtRateAmount =
-                (assetRemainning * exchangeRate) / denominator; // 606872500000000000000
+                (assetRemainning.mul(exchangeRate)).div(denominator);
 
             uint256 requiredAmount =
-                (assetBackedAtRateAmount * collateralRatio) / denominator;
+                (assetBackedAtRateAmount.mul(collateralRatio)).div(denominator);
             require(
                 assetBackedAmountAfterRedeem >= requiredAmount,
                 "Synthetic::redeemSynthetic: under collateral ratio"
             );
             uint256 canWithdrawRemainning =
-                assetBackedAmountAfterRedeem - requiredAmount;
+                assetBackedAmountAfterRedeem.sub(requiredAmount);
 
             _synthetic.burnFrom(_msgSender(), assetToBeBurned);
             dolly.transfer(_msgSender(), assetBackedToBeRedeemed);
 
             mn.assetAmount = assetRemainning;
             mn.assetBackedAmount = assetBackedAmountAfterRedeem;
-            mn.currentRatio =
-                (((mn.assetBackedAmount * denominator) / exchangeRate) *
-                    denominator) /
-                denominator; // must more than 1.5 ratio (15e17)
-            mn.willLiquidateAtPrice =
-                (mn.assetBackedAmount * liquidationRatio) /
-                denominator; // more assetBacked, more liquidatePrice
+            mn.currentRatio = (
+                ((mn.assetBackedAmount.mul(denominator)).div(exchangeRate)).mul(
+                    denominator
+                )
+            )
+                .div(denominator); // must more than 1.5 ratio (15e17)
+            mn.willLiquidateAtPrice = (
+                mn.assetBackedAmount.mul(liquidationRatio)
+            )
+                .div(denominator); // more assetBacked, more liquidatePrice
             mn.canWithdrawRemainning = canWithdrawRemainning;
-            mn.canMintRemainning =
-                (((canWithdrawRemainning * denominator) / exchangeRate) *
-                    denominator) /
-                denominator;
+            mn.canMintRemainning = (
+                ((canWithdrawRemainning.mul(denominator)).div(exchangeRate))
+                    .mul(denominator)
+            )
+                .div(denominator);
             mn.currentExchangeRate = exchangeRate;
             mn.updatedAt = block.timestamp;
             mn.updatedBlock = block.number;
@@ -201,24 +215,28 @@ contract Synthetic is Ownable {
 
         uint256 exchangeRate = getRate(addressToPairs[address(_synthetic)]);
         uint256 assetBackedAtRateAmount =
-            (mn.assetAmount * exchangeRate) / denominator; // 606872500000000000000
+            (mn.assetAmount.mul(exchangeRate)).div(denominator);
         uint256 requiredAmount =
-            (assetBackedAtRateAmount * collateralRatio) / denominator;
+            (assetBackedAtRateAmount.mul(collateralRatio)).div(denominator);
 
-        uint256 canWithdrawRemainning = mn.assetBackedAmount - requiredAmount;
+        uint256 canWithdrawRemainning =
+            mn.assetBackedAmount.sub(requiredAmount);
         require(dolly.transferFrom(_msgSender(), address(this), _addAmount));
-        mn.currentRatio =
-            (((mn.assetBackedAmount * denominator) / exchangeRate) *
-                denominator) /
-            denominator; // must more than 1.5 ratio (15e17)
-        mn.willLiquidateAtPrice =
-            (mn.assetBackedAmount * liquidationRatio) /
-            denominator; // more assetBacked, more liquidatePrice
+        mn.currentRatio = (
+            ((mn.assetBackedAmount.mul(denominator)).div(exchangeRate)).mul(
+                denominator
+            )
+        )
+            .div(denominator); // must more than 1.5 ratio (15e17)
+        mn.willLiquidateAtPrice = (mn.assetBackedAmount.mul(liquidationRatio))
+            .div(denominator); // more assetBacked, more liquidatePrice
         mn.canWithdrawRemainning = canWithdrawRemainning;
-        mn.canMintRemainning =
-            (((canWithdrawRemainning * denominator) / exchangeRate) *
-                denominator) /
-            denominator;
+        mn.canMintRemainning = (
+            ((canWithdrawRemainning.mul(denominator)).div(exchangeRate)).mul(
+                denominator
+            )
+        )
+            .div(denominator);
         mn.currentExchangeRate = exchangeRate;
         mn.updatedAt = block.timestamp;
         mn.updatedBlock = block.number;
@@ -240,9 +258,9 @@ contract Synthetic is Ownable {
         );
         uint256 exchangeRate = getRate(addressToPairs[address(_synthetic)]);
         uint256 assetBackedAtRateAmount =
-            (mn.assetAmount * exchangeRate) / denominator; // 606872500000000000000
+            (mn.assetAmount.mul(exchangeRate)).div(denominator); // 606872500000000000000
         uint256 requiredAmount =
-            (assetBackedAtRateAmount * collateralRatio) / denominator;
+            (assetBackedAtRateAmount.mul(collateralRatio)).div(denominator);
 
         uint256 canWithdrawRemainning =
             mn.assetBackedAmount.sub(requiredAmount);
@@ -251,18 +269,21 @@ contract Synthetic is Ownable {
             "Synthetic::removeCollateral: canWithdrawRemainning less than zero"
         );
         dolly.transfer(_msgSender(), _removeAmount);
-        mn.currentRatio =
-            (((mn.assetBackedAmount * denominator) / exchangeRate) *
-                denominator) /
-            denominator; // must more than 1.5 ratio (15e17)
-        mn.willLiquidateAtPrice =
-            (mn.assetBackedAmount * liquidationRatio) /
-            denominator; // more assetBacked, more liquidatePrice
+        mn.currentRatio = (
+            ((mn.assetBackedAmount.mul(denominator)).div(exchangeRate)).mul(
+                denominator
+            )
+        )
+            .div(denominator); // must more than 1.5 ratio (15e17)
+        mn.willLiquidateAtPrice = (mn.assetBackedAmount.mul(liquidationRatio))
+            .div(denominator); // more assetBacked, more liquidatePrice
         mn.canWithdrawRemainning = canWithdrawRemainning;
-        mn.canMintRemainning =
-            (((canWithdrawRemainning * denominator) / exchangeRate) *
-                denominator) /
-            denominator;
+        mn.canMintRemainning = (
+            ((canWithdrawRemainning.mul(denominator)).div(exchangeRate)).mul(
+                denominator
+            )
+        )
+            .div(denominator);
         mn.currentExchangeRate = exchangeRate;
         mn.updatedAt = block.timestamp;
         mn.updatedBlock = block.number;
@@ -283,13 +304,14 @@ contract Synthetic is Ownable {
         uint256 exchangeRate = getRate(addressToPairs[address(_synthetic)]);
 
         dolly.transfer(_msgSender(), _removeAmount);
-        mn.currentRatio =
-            (((mn.assetBackedAmount * denominator) / exchangeRate) *
-                denominator) /
-            denominator;
-        mn.willLiquidateAtPrice =
-            (mn.assetBackedAmount * liquidationRatio) /
-            denominator;
+        mn.currentRatio = (
+            ((mn.assetBackedAmount.mul(denominator)).div(exchangeRate)).mul(
+                denominator
+            )
+        )
+            .div(denominator);
+        mn.willLiquidateAtPrice = (mn.assetBackedAmount.mul(liquidationRatio))
+            .div(denominator);
         mn.canWithdrawRemainning = 0;
         mn.canMintRemainning = 0;
         mn.currentExchangeRate = exchangeRate;

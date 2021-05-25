@@ -23,7 +23,7 @@ async function main() {
 
     const Synthetic = await ethers.getContractFactory('Synthetic');
     const synthetic = await Synthetic.deploy(dolly.address, bandRef); // dolly, bandRef
-    // const synthetic = await ethers.getContractAt('Synthetic', '0x5BAF787474Ba2E3a6E4fFAbDEdEB3e1328cA0DDF');
+    // const synthetic = await ethers.getContractAt('Synthetic', '0x29A7A9a9b006b6C8517323EE03dDD71E6DD64d69');
     await synthetic.deployed();
     console.log('Synthetic deployed to:', synthetic.address);
     console.log('verify Synthetic');

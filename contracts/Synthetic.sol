@@ -5,6 +5,7 @@ pragma experimental ABIEncoderV2;
 import "./token/ERC20/IERC20.sol";
 import "./access/Ownable.sol";
 import "./IStdReference.sol";
+import "./math/SafeMath.sol";
 
 interface IERC20Burnable is IERC20 {
     function burn(uint256 amount) external;
@@ -15,6 +16,8 @@ interface IERC20Burnable is IERC20 {
 }
 
 contract Synthetic is Ownable {
+    using SafeMath for uint256;
+
     IERC20Burnable public systheticAsset;
     IERC20 public dolly;
     IStdReference public bandOracle;
@@ -40,6 +43,7 @@ contract Synthetic is Ownable {
         uint256 updatedAt;
         uint256 updatedBlock;
         uint256 exchangeRateAtMinted;
+        uint256 currentExchangeRate;
     }
 
     mapping(address => mapping(address => MintingNote)) public minter; // lender => asset => MintingNote
@@ -50,9 +54,9 @@ contract Synthetic is Ownable {
         uint256 amount
     );
     event RedeemAsset(address indexed syntheticAddress, uint256 amount);
-    event addCollateral(address indexed user, uint256 amount);
-    event removeCollateral(address indexed user, uint256 amount);
-    event liquidated(
+    event AddCollateral(address indexed user, uint256 amount);
+    event RemoveCollateral(address indexed user, uint256 amount);
+    event Liquidated(
         address indexed liquidated,
         address indexed liquidator,
         address indexed syntheticAddress,
@@ -101,6 +105,7 @@ contract Synthetic is Ownable {
         mn.assetAmount = _amount;
         mn.assetBackedAmount = _backedAmount;
         mn.exchangeRateAtMinted = exchangeRate;
+        mn.currentExchangeRate = exchangeRate;
         mn.currentRatio =
             (((_backedAmount * denominator) / exchangeRate) * denominator) /
             denominator; // must more than 1.5 ratio (15e17)
@@ -177,9 +182,43 @@ contract Synthetic is Ownable {
                 (((canWithdrawRemainning * denominator) / exchangeRate) *
                     denominator) /
                 denominator;
+            mn.currentExchangeRate = exchangeRate;
             mn.updatedAt = block.timestamp;
             mn.updatedBlock = block.number;
+            emit RedeemAsset(address(_synthetic), _amount);
         }
+    }
+
+    function addCollateral(IERC20Burnable _synthetic, uint256 _extraAmount)
+        external
+    {
+        MintingNote storage mn = minter[_msgSender()][address(_synthetic)];
+        mn.assetBackedAmount = mn.assetBackedAmount.add(_extraAmount);
+
+        uint256 exchangeRate = getRate(addressToPairs[address(_synthetic)]);
+        uint256 assetBackedAtRateAmount =
+            (mn.assetAmount * exchangeRate) / denominator; // 606872500000000000000
+        uint256 requiredAmount =
+            (assetBackedAtRateAmount * collateralRatio) / denominator;
+
+        uint256 canWithdrawRemainning = mn.assetBackedAmount - requiredAmount;
+        require(dolly.transferFrom(_msgSender(), address(this), _extraAmount));
+        mn.currentRatio =
+            (((mn.assetBackedAmount * denominator) / exchangeRate) *
+                denominator) /
+            denominator; // must more than 1.5 ratio (15e17)
+        mn.willLiquidateAtPrice =
+            (mn.assetBackedAmount * liquidationRatio) /
+            denominator; // more assetBacked, more liquidatePrice
+        mn.canWithdrawRemainning = canWithdrawRemainning;
+        mn.canMintRemainning =
+            (((canWithdrawRemainning * denominator) / exchangeRate) *
+                denominator) /
+            denominator;
+        mn.currentExchangeRate = exchangeRate;
+        mn.updatedAt = block.timestamp;
+        mn.updatedBlock = block.number;
+        emit AddCollateral(_msgSender(), _extraAmount);
     }
 
     function liquidate() external {}

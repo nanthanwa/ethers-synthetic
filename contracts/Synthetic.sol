@@ -160,7 +160,7 @@ contract Synthetic is Ownable {
                 (assetBackedAtRateAmount * collateralRatio) / denominator;
             require(
                 assetBackedAmountAfterRedeem >= requiredAmount,
-                "Synthetic::redeemSynthetic: under collateral"
+                "Synthetic::redeemSynthetic: under collateral ratio"
             );
             uint256 canWithdrawRemainning =
                 assetBackedAmountAfterRedeem - requiredAmount;
@@ -189,11 +189,15 @@ contract Synthetic is Ownable {
         }
     }
 
-    function addCollateral(IERC20Burnable _synthetic, uint256 _extraAmount)
+    function addCollateral(IERC20Burnable _synthetic, uint256 _addAmount)
         external
     {
         MintingNote storage mn = minter[_msgSender()][address(_synthetic)];
-        mn.assetBackedAmount = mn.assetBackedAmount.add(_extraAmount);
+        require(
+            mn.assetAmount > 0,
+            "Synthetic::addCollateral: cannot add collateral to empty contract"
+        );
+        mn.assetBackedAmount = mn.assetBackedAmount.add(_addAmount);
 
         uint256 exchangeRate = getRate(addressToPairs[address(_synthetic)]);
         uint256 assetBackedAtRateAmount =
@@ -202,7 +206,7 @@ contract Synthetic is Ownable {
             (assetBackedAtRateAmount * collateralRatio) / denominator;
 
         uint256 canWithdrawRemainning = mn.assetBackedAmount - requiredAmount;
-        require(dolly.transferFrom(_msgSender(), address(this), _extraAmount));
+        require(dolly.transferFrom(_msgSender(), address(this), _addAmount));
         mn.currentRatio =
             (((mn.assetBackedAmount * denominator) / exchangeRate) *
                 denominator) /
@@ -218,7 +222,50 @@ contract Synthetic is Ownable {
         mn.currentExchangeRate = exchangeRate;
         mn.updatedAt = block.timestamp;
         mn.updatedBlock = block.number;
-        emit AddCollateral(_msgSender(), _extraAmount);
+        emit AddCollateral(_msgSender(), _addAmount);
+    }
+
+    function removeCollateral(IERC20Burnable _synthetic, uint256 _removeAmount)
+        external
+    {
+        MintingNote storage mn = minter[_msgSender()][address(_synthetic)];
+        require(
+            mn.assetAmount > 0,
+            "Synthetic::removeCollateral: cannot remove collateral to empty contract"
+        );
+        mn.assetBackedAmount = mn.assetBackedAmount.sub(_removeAmount);
+        require(
+            mn.canWithdrawRemainning >= _removeAmount,
+            "Synthetic::removeCollateral: amount exceeds required collateral"
+        );
+        uint256 exchangeRate = getRate(addressToPairs[address(_synthetic)]);
+        uint256 assetBackedAtRateAmount =
+            (mn.assetAmount * exchangeRate) / denominator; // 606872500000000000000
+        uint256 requiredAmount =
+            (assetBackedAtRateAmount * collateralRatio) / denominator;
+
+        uint256 canWithdrawRemainning = mn.assetBackedAmount - requiredAmount;
+        require(
+            canWithdrawRemainning >= 0,
+            "Synthetic::removeCollateral: canWithdrawRemainning less than zero"
+        );
+        dolly.transfer(_msgSender(), _removeAmount);
+        mn.currentRatio =
+            (((mn.assetBackedAmount * denominator) / exchangeRate) *
+                denominator) /
+            denominator; // must more than 1.5 ratio (15e17)
+        mn.willLiquidateAtPrice =
+            (mn.assetBackedAmount * liquidationRatio) /
+            denominator; // more assetBacked, more liquidatePrice
+        mn.canWithdrawRemainning = canWithdrawRemainning;
+        mn.canMintRemainning =
+            (((canWithdrawRemainning * denominator) / exchangeRate) *
+                denominator) /
+            denominator;
+        mn.currentExchangeRate = exchangeRate;
+        mn.updatedAt = block.timestamp;
+        mn.updatedBlock = block.number;
+        emit RemoveCollateral(_msgSender(), _removeAmount);
     }
 
     function liquidate() external {}

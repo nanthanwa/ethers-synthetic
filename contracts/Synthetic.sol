@@ -39,7 +39,6 @@ contract Synthetic is Ownable {
         uint256 canWithdrawRemainning;
         uint256 updatedAt;
         uint256 updatedBlock;
-        uint256 pastDays;
         uint256 exchangeRateAtMinted;
     }
 
@@ -101,11 +100,6 @@ contract Synthetic is Ownable {
         mn.assetBacked = dolly;
         mn.assetAmount = _amount;
         mn.assetBackedAmount = _backedAmount;
-        mn.canWithdrawRemainning = canWithdrawRemainning;
-        mn.canMintRemainning =
-            (((canWithdrawRemainning * denominator) / exchangeRate) *
-                denominator) /
-            denominator;
         mn.exchangeRateAtMinted = exchangeRate;
         mn.currentRatio =
             (((_backedAmount * denominator) / exchangeRate) * denominator) /
@@ -113,6 +107,11 @@ contract Synthetic is Ownable {
         mn.willLiquidateAtPrice =
             (_backedAmount * liquidationRatio) /
             denominator; // more assetBacked, more liquidatePrice
+        mn.canWithdrawRemainning = canWithdrawRemainning;
+        mn.canMintRemainning =
+            (((_backedAmount * denominator) / collateralRatio) * denominator) /
+            denominator -
+            _amount;
         mn.updatedAt = block.timestamp;
         mn.updatedBlock = block.number;
         emit MintAsset(_msgSender(), address(_synthetic), _amount);
@@ -124,34 +123,63 @@ contract Synthetic is Ownable {
         external
     {
         MintingNote storage mn = minter[_msgSender()][address(_synthetic)];
-
         require(
             mn.assetAmount >= _amount,
             "Synthetic::redeemSynthetic: amount exceeds collateral"
         );
-        uint256 percent = (_amount / mn.assetAmount) * denominator;
-        uint256 assetToBeBurned =
-            (mn.assetAmount * (denominator - percent)) / denominator;
-        uint256 assetBackedToBeRedeemed =
-            (mn.assetBackedAmount * (denominator - percent)) / denominator;
 
-        _synthetic.burnFrom(_msgSender(), assetToBeBurned);
-        dolly.transfer(_msgSender(), assetBackedToBeRedeemed);
+        if (_amount == mn.assetAmount) {
+            // redeem and exit
+            _synthetic.burnFrom(_msgSender(), _amount);
+            dolly.transfer(_msgSender(), mn.assetBackedAmount);
+            delete minter[_msgSender()][address(_synthetic)];
+            emit RedeemAsset(address(_synthetic), _amount);
+        } else {
+            // patial redeeming
+            uint256 percent =
+                (((_amount * denominator) / mn.assetAmount) * denominator) /
+                    denominator;
+            uint256 assetToBeBurned = (mn.assetAmount * percent) / denominator;
+            uint256 assetBackedToBeRedeemed =
+                (mn.assetBackedAmount * percent) / denominator;
 
-        uint256 exchangeRate = getRate(addressToPairs[address(_synthetic)]);
+            uint256 exchangeRate = getRate(addressToPairs[address(_synthetic)]);
+            uint256 assetBackedAmountAfterRedeem =
+                mn.assetBackedAmount - assetBackedToBeRedeemed;
 
-        mn.assetAmount = mn.assetAmount - assetToBeBurned;
-        mn.assetBackedAmount = mn.assetBackedAmount - assetBackedToBeRedeemed;
-        mn.willLiquidateAtPrice =
-            (mn.assetBackedAmount / liquidationRatio) *
-            denominator;
-        mn.currentRatio = (mn.assetBackedAmount / exchangeRate) * denominator; // must more than 1.5 ratio
-        // mn.canWithdrawRemainning = canWithdrawRemainning;
-        // mn.canMintRemainning =
-        //     (canWithdrawRemainning * exchangeRate) /
-        //     denominator;
-        mn.updatedAt = block.timestamp;
-        mn.updatedBlock = block.number;
+            uint256 assetRemainning = mn.assetAmount - assetToBeBurned;
+            uint256 assetBackedAtRateAmount =
+                (assetRemainning * exchangeRate) / denominator; // 606872500000000000000
+
+            uint256 requiredAmount =
+                (assetBackedAtRateAmount * collateralRatio) / denominator;
+            require(
+                assetBackedAmountAfterRedeem >= requiredAmount,
+                "Synthetic::redeemSynthetic: under collateral"
+            );
+            uint256 canWithdrawRemainning =
+                assetBackedAmountAfterRedeem - requiredAmount;
+
+            _synthetic.burnFrom(_msgSender(), assetToBeBurned);
+            dolly.transfer(_msgSender(), assetBackedToBeRedeemed);
+
+            mn.assetAmount = assetRemainning;
+            mn.assetBackedAmount = assetBackedAmountAfterRedeem;
+            mn.currentRatio =
+                (((mn.assetBackedAmount * denominator) / exchangeRate) *
+                    denominator) /
+                denominator; // must more than 1.5 ratio (15e17)
+            mn.willLiquidateAtPrice =
+                (mn.assetBackedAmount * liquidationRatio) /
+                denominator; // more assetBacked, more liquidatePrice
+            mn.canWithdrawRemainning = canWithdrawRemainning;
+            mn.canMintRemainning =
+                (((canWithdrawRemainning * denominator) / exchangeRate) *
+                    denominator) /
+                denominator;
+            mn.updatedAt = block.timestamp;
+            mn.updatedBlock = block.number;
+        }
     }
 
     function liquidate() external {}

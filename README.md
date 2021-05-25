@@ -37,9 +37,9 @@ hh verify 0x421F2f885Fbec45b0154a5483c8837497b12a747 0x9106f09bf08dfb23fca61a982
 DoppleSyntheticToken
 hh run scripts/deploy-dopple-synthetic-token.js --network kovan
 Network name: kovan
-DoppleTSLA deployed to: 0x34213C239db7D8366537BdB562D99edF39f260cb
-hh verify --contract contracts/DoppleSyntheticToken.sol:DoppleTSLA 0x34213C239db7D8366537BdB562D99edF39f260cb 0x346d1d67889EeA17547c4Fc7B2a19586e82b6C9d  --network kovan
-https://kovan.etherscan.io/address/0x34213C239db7D8366537BdB562D99edF39f260cb#code
+DoppleTSLA deployed to: 0xF1d66411544eD4c25a37aa3fFe00bAfB476f6c70
+hh verify --contract contracts/DoppleSyntheticToken.sol:DoppleTSLA 0xF1d66411544eD4c25a37aa3fFe00bAfB476f6c70 0x346d1d67889EeA17547c4Fc7B2a19586e82b6C9d  --network kovan
+https://kovan.etherscan.io/address/0xF1d66411544eD4c25a37aa3fFe00bAfB476f6c70#code
 
 DoppleCOIN deployed to: 0xEaD23317987E35FD23296842c09C78813F50d155
 DoppleAAPL deployed to: 0x16D28449Da5AfEE7C8a68F05A89CBc2CeFF43f93
@@ -60,10 +60,11 @@ hh verify 0x172018C14eeA6312BF4243BFa3d07249feA7E542 "Dolly Stable Coin" "DOLLY"
 
 Synthetic
 hh run scripts/deploy-synthetic.js --network kovan
-Synthetic deployed to: 0x346d1d67889EeA17547c4Fc7B2a19586e82b6C9d
-args: dolly, bandRef
-hh verify 0x346d1d67889EeA17547c4Fc7B2a19586e82b6C9d "0x172018C14eeA6312BF4243BFa3d07249feA7E542" "0x9106f09bf08dfb23fca61a9829543f1c80a81a4b" --network kovan
-https://kovan.etherscan.io/address/0x346d1d67889EeA17547c4Fc7B2a19586e82b6C9d#code
+Synthetic deployed to: 0xFDd942866A2e2555a42340366AA0aB2E257Ee898
+args: dolly, bandRef 
+## no change
+hh verify 0xFDd942866A2e2555a42340366AA0aB2E257Ee898 "0x172018C14eeA6312BF4243BFa3d07249feA7E542" "0x9106f09bf08dfb23fca61a9829543f1c80a81a4b" --network kovan
+https://kovan.etherscan.io/address/0xFDd942866A2e2555a42340366AA0aB2E257Ee898#code
 
 
 

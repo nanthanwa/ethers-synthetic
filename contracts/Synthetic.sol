@@ -223,18 +223,24 @@ contract Synthetic is Ownable {
             mn.assetBackedAmount.sub(requiredAmount);
         require(dolly.transferFrom(_msgSender(), address(this), _addAmount));
         mn.currentRatio = (
-            ((mn.assetBackedAmount.mul(denominator)).div(exchangeRate)).mul(
-                denominator
+            (
+                (mn.assetBackedAmount.mul(denominator)).div(
+                    assetBackedAtRateAmount
+                )
             )
+                .mul(denominator)
         )
             .div(denominator); // must more than 1.5 ratio (15e17)
         mn.willLiquidateAtPrice = (mn.assetBackedAmount.mul(liquidationRatio))
             .div(denominator); // more assetBacked, more liquidatePrice
         mn.canWithdrawRemainning = canWithdrawRemainning;
         mn.canMintRemainning = (
-            ((canWithdrawRemainning.mul(denominator)).div(exchangeRate)).mul(
-                denominator
+            (
+                (canWithdrawRemainning.mul(denominator)).div(
+                    assetBackedAtRateAmount
+                )
             )
+                .mul(denominator)
         )
             .div(denominator);
         mn.currentExchangeRate = exchangeRate;
@@ -271,18 +277,24 @@ contract Synthetic is Ownable {
         );
         dolly.transfer(_msgSender(), _removeBackedAmount);
         mn.currentRatio = (
-            ((mn.assetBackedAmount.mul(denominator)).div(exchangeRate)).mul(
-                denominator
+            (
+                (mn.assetBackedAmount.mul(denominator)).div(
+                    assetBackedAtRateAmount
+                )
             )
+                .mul(denominator)
         )
             .div(denominator); // must more than 1.5 ratio (15e17)
         mn.willLiquidateAtPrice = (mn.assetBackedAmount.mul(liquidationRatio))
             .div(denominator); // more assetBacked, more liquidatePrice
         mn.canWithdrawRemainning = canWithdrawRemainning;
         mn.canMintRemainning = (
-            ((canWithdrawRemainning.mul(denominator)).div(exchangeRate)).mul(
-                denominator
+            (
+                (canWithdrawRemainning.mul(denominator)).div(
+                    assetBackedAtRateAmount
+                )
             )
+                .mul(denominator)
         )
             .div(denominator);
         mn.currentExchangeRate = exchangeRate;

@@ -68,3 +68,6 @@
 - Band protocol: 0x9106f09bf08dfb23fca61a9829543f1c80a81a4b (bypass proxy)
 - Synthetic: 0xbceFa26F41E35D10b1BA595b2E7fb8D01146220D
 - DoppleTSLA: 0xdC47e2C0b6046cD58d3B21583DA19B45Ebf679ad (synthetic asset)
+
+## Miscellaneous
+- Deployer address: 0xad1F66Acea98733D63cd8FC522118e4014Cb3F79

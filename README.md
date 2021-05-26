@@ -9,6 +9,28 @@
 - Dolly address (to deploy, run `hh run scripts/deploy-dolly.js  --network kovan`)
 - Synthetic asset address (to deploy, run `hh run scripts/deploy-dopple-synthetic-token.js  --network kovan`)
 - Band oracle reference address [reference](https://docs.bandchain.org/band-standard-dataset/supported-blockchains.html)
+- Create `.secret` file and provide credential following
+
+```
+{
+    "infuraProjectId": "",
+    "privateKey": [
+        "",
+        "",
+        "",
+        ""
+        ],
+    "privateKeyGanache": [
+        "",
+        "",
+        "",
+        ""
+        ],
+    "etherApiKey": "",
+    "bscApiKey": ""
+}
+
+```
 
 ## Features
 - Can mint synthetic asset by provide 150% of collateral (adjustable). (e.g. provide $DOLLY -> receive $dTSLA)

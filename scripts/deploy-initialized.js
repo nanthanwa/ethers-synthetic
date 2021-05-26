@@ -21,9 +21,9 @@ async function main() {
     //   ],
     // });
 
-    const Synthetic = await ethers.getContractFactory('Synthetic');
-    const synthetic = await Synthetic.deploy(dolly.address, bandRef); // dolly, bandRef
-    // const synthetic = await ethers.getContractAt('Synthetic', '0xB3D839e434942f5f61D5746f5bd084b1237889d1');
+    // const Synthetic = await ethers.getContractFactory('Synthetic');
+    // const synthetic = await Synthetic.deploy(dolly.address, bandRef); // dolly, bandRef
+    const synthetic = await ethers.getContractAt('Synthetic', '0x6A23889CbA84D8E3D3e66Dad086c67Dd69909fFD');
     await synthetic.deployed();
     console.log('Synthetic deployed to:', synthetic.address);
     console.log('verify Synthetic');

@@ -5,30 +5,73 @@ async function main() {
   console.log('Network name:', network.name);
 
   if (network.name === 'kovan') {
+    const syntheticAddress = '0xAdde342E77525862Bf435fb85004Af9F40403BAe';
     const DoppleTSLA = await ethers.getContractFactory('DoppleTSLA');
-    const doppleTSLA = await DoppleTSLA.deploy("0x346d1d67889EeA17547c4Fc7B2a19586e82b6C9d"); // synthetic address
+    const doppleTSLA = await DoppleTSLA.deploy(syntheticAddress);
     await doppleTSLA.deployed();
     console.log('DoppleTSLA deployed to:', doppleTSLA.address);
+    await run('verify:verify', {
+      address: doppleTSLA.address,
+      contract: 'contracts/DoppleSyntheticToken.sol:DoppleTSLA',
+      constructorArguments: [
+        syntheticAddress,
+      ],
+    });
     // const DoppleCOIN = await ethers.getContractFactory('DoppleCOIN');
-    // const doppleCoin = await DoppleCOIN.deploy();
+    // const doppleCoin = await DoppleCOIN.deploy("0xAdde342E77525862Bf435fb85004Af9F40403BAe");
     // await doppleCoin.deployed();
     // console.log('DoppleCOIN deployed to:', doppleCoin.address);
+    // await run('verify:verify', {
+    //   address: doppleCoin.address,
+    //   contract: 'contracts/DoppleSyntheticToken.sol:DoppleCOIN',
+    //   constructorArguments: [
+    //     syntheticAddress,
+    //   ],
+    // });
     // const DoppleAAPL = await ethers.getContractFactory('DoppleAAPL');
-    // const doppleAAPL = await DoppleAAPL.deploy();
+    // const doppleAAPL = await DoppleAAPL.deploy("0xAdde342E77525862Bf435fb85004Af9F40403BAe");
     // await doppleAAPL.deployed();
     // console.log('DoppleAAPL deployed to:', doppleAAPL.address);
+    // await run('verify:verify', {
+    //   address: doppleAAPL.address,
+    //   contract: 'contracts/DoppleSyntheticToken.sol:DoppleAAPL',
+    //   constructorArguments: [
+    //     syntheticAddress,
+    //   ],
+    // });
     // const DoppleQQQ = await ethers.getContractFactory('DoppleQQQ');
-    // const doppleQQQ = await DoppleQQQ.deploy();
+    // const doppleQQQ = await DoppleQQQ.deploy("0xAdde342E77525862Bf435fb85004Af9F40403BAe");
     // await doppleQQQ.deployed();
     // console.log('DoppleQQQ deployed to:', doppleQQQ.address);
+    // await run('verify:verify', {
+    //   address: doppleQQQ.address,
+    //   contract: 'contracts/DoppleSyntheticToken.sol:DoppleQQQ',
+    //   constructorArguments: [
+    //     syntheticAddress,
+    //   ],
+    // });
     // const DoppleAMZN = await ethers.getContractFactory('DoppleAMZN');
-    // const doppleAMZN = await DoppleAMZN.deploy();
+    // const doppleAMZN = await DoppleAMZN.deploy("0xAdde342E77525862Bf435fb85004Af9F40403BAe");
     // await doppleAMZN.deployed();
     // console.log('DoppleAMZN deployed to:', doppleAMZN.address);
+    // await run('verify:verify', {
+    //   address: doppleAMZN.address,
+    //   contract: 'contracts/DoppleSyntheticToken.sol:DoppleAMZN',
+    //   constructorArguments: [
+    //     syntheticAddress,
+    //   ],
+    // });
     // const DoppleXAU = await ethers.getContractFactory('DoppleXAU');
-    // const doppleXAU = await DoppleXAU.deploy();
+    // const doppleXAU = await DoppleXAU.deploy("0xAdde342E77525862Bf435fb85004Af9F40403BAe");
     // await doppleXAU.deployed();
     // console.log('DoppleXAU deployed to:', doppleXAU.address);
+    // await run('verify:verify', {
+    //   address: doppleXAU.address,
+    //   contract: 'contracts/DoppleSyntheticToken.sol:DoppleXAU',
+    //   constructorArguments: [
+    //     syntheticAddress,
+    //   ],
+    // });
   }
   else {
     console.error('please specify the network!');

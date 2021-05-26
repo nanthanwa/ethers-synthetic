@@ -52,7 +52,7 @@ contract Synthetic is Ownable {
         uint256 currentExchangeRate;
     }
 
-    mapping(address => mapping(address => MintingNote)) public minter; // minter => asset => MintingNote
+    mapping(address => mapping(address => MintingNote)) public contracts; // minter => asset => MintingNote
 
     mapping(address => address[]) public pendingLiquidate; // synthetic address => minter
 
@@ -91,7 +91,7 @@ contract Synthetic is Ownable {
         uint256 _amount, // amount of synthetic that want to mint
         uint256 _backedAmount // amount of Dolly that you want to collateral
     ) external {
-        MintingNote storage mn = minter[_msgSender()][address(_synthetic)];
+        MintingNote storage mn = contracts[_msgSender()][address(_synthetic)];
         require(
             mn.minter == address(0),
             "Synthetic::mintSynthetic: transfer to address(0)"
@@ -147,7 +147,7 @@ contract Synthetic is Ownable {
     function redeemSynthetic(IERC20Burnable _synthetic, uint256 _amount)
         external
     {
-        MintingNote storage mn = minter[_msgSender()][address(_synthetic)];
+        MintingNote storage mn = contracts[_msgSender()][address(_synthetic)];
         require(
             mn.assetAmount >= _amount,
             "Synthetic::redeemSynthetic: amount exceeds collateral"
@@ -157,7 +157,7 @@ contract Synthetic is Ownable {
             // redeem and exit
             _synthetic.burnFrom(_msgSender(), _amount);
             dolly.transfer(_msgSender(), mn.assetBackedAmount);
-            delete minter[_msgSender()][address(_synthetic)];
+            delete contracts[_msgSender()][address(_synthetic)];
             emit RedeemAsset(address(_synthetic), _amount);
         } else {
             // patial redeeming
@@ -216,7 +216,7 @@ contract Synthetic is Ownable {
     function addCollateral(IERC20Burnable _synthetic, uint256 _addAmount)
         external
     {
-        MintingNote storage mn = minter[_msgSender()][address(_synthetic)];
+        MintingNote storage mn = contracts[_msgSender()][address(_synthetic)];
         require(
             mn.assetAmount > 0,
             "Synthetic::addCollateral: cannot add collateral to empty contract"
@@ -267,7 +267,7 @@ contract Synthetic is Ownable {
         IERC20Burnable _synthetic,
         uint256 _removeBackedAmount
     ) external {
-        MintingNote storage mn = minter[_msgSender()][address(_synthetic)];
+        MintingNote storage mn = contracts[_msgSender()][address(_synthetic)];
         require(
             mn.assetAmount > 0,
             "Synthetic::removeCollateral: cannot remove collateral to empty contract"
@@ -326,7 +326,7 @@ contract Synthetic is Ownable {
         IERC20Burnable _synthetic,
         uint256 _removeAmount
     ) external onlyOwner {
-        MintingNote storage mn = minter[_msgSender()][address(_synthetic)];
+        MintingNote storage mn = contracts[_msgSender()][address(_synthetic)];
         require(
             mn.assetAmount > 0,
             "Synthetic::removeCollateral: cannot remove collateral to empty contract"
@@ -361,7 +361,7 @@ contract Synthetic is Ownable {
 
     // @dev liquidator must approve Synthetic asset to spending Dolly
     function liquidate(IERC20Burnable _synthetic, address _minter) external {
-        MintingNote storage mn = minter[_minter][address(_synthetic)];
+        MintingNote storage mn = contracts[_minter][address(_synthetic)];
         require(
             mn.minter != address(0),
             "Synthetic::liquidate: empty contract"
@@ -402,7 +402,7 @@ contract Synthetic is Ownable {
         dolly.transfer(_msgSender(), liquidatorReceiveAmount); // transfer reward to to liquidator (5%)
         dolly.transfer(devAddress, platformReceiveAmount); // transfer liquidating fee to dev address (5%)
 
-        delete minter[_minter][address(_synthetic)];
+        delete contracts[_minter][address(_synthetic)];
     }
 
     // @dev for simulate all relevant amount of liqiodation
@@ -417,7 +417,7 @@ contract Synthetic is Ownable {
             uint256
         )
     {
-        MintingNote storage mn = minter[_minter][address(_synthetic)];
+        MintingNote storage mn = contracts[_minter][address(_synthetic)];
         require(
             mn.minter != address(0),
             "Synthetic::liquidate: empty contract"

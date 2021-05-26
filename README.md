@@ -71,3 +71,8 @@
 
 ## Miscellaneous
 - Deployer: 0xad1F66Acea98733D63cd8FC522118e4014Cb3F79
+
+## Diagrams
+![](https://raw.githubusercontent.com/nanmcpe/dopple-synthetic/main/diagrams/Minting.png)
+![](https://raw.githubusercontent.com/nanmcpe/dopple-synthetic/main/diagrams/Redeeming.png)
+![](https://raw.githubusercontent.com/nanmcpe/dopple-synthetic/main/diagrams/Liquidating.png)

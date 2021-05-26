@@ -117,12 +117,10 @@ contract Synthetic is Ownable {
         mn.assetBackedAmount = _backedAmount;
         mn.exchangeRateAtMinted = exchangeRate;
         mn.currentExchangeRate = exchangeRate;
-        mn.currentRatio = (
-            ((_backedAmount.mul(denominator)).div(assetBackedAtRateAmount)).mul(
-                denominator
-            )
-        )
-            .div(denominator); // must more than 1.5 ratio (15e17)
+        mn.currentRatio = getCurrentRatio(
+            _backedAmount,
+            assetBackedAtRateAmount
+        );
         mn.willLiquidateAtPrice = (
             exchangeRate.mul(
                 mn.currentRatio.sub(liquidationRatio - denominator)
@@ -189,11 +187,10 @@ contract Synthetic is Ownable {
 
             mn.assetAmount = assetRemainningAfterBurned;
             mn.assetBackedAmount = assetBackedAmountAfterRedeem;
-            mn.currentRatio = (
-                ((mn.assetBackedAmount * denominator) / assetBackedAtRateAmount)
-                    .mul(denominator)
-            )
-                .div(denominator); // must more than 1.5 ratio (15e17)
+            mn.currentRatio = getCurrentRatio(
+                mn.assetBackedAmount,
+                assetBackedAtRateAmount
+            );
             mn.willLiquidateAtPrice = (
                 exchangeRate.mul(
                     mn.currentRatio.sub(liquidationRatio - denominator)
@@ -232,15 +229,10 @@ contract Synthetic is Ownable {
         uint256 canWithdrawRemainning =
             mn.assetBackedAmount.sub(requiredAmount);
         require(dolly.transferFrom(_msgSender(), address(this), _addAmount));
-        mn.currentRatio = (
-            (
-                (mn.assetBackedAmount.mul(denominator)).div(
-                    assetBackedAtRateAmount
-                )
-            )
-                .mul(denominator)
-        )
-            .div(denominator); // must more than 1.5 ratio (15e17)
+        mn.currentRatio = getCurrentRatio(
+            mn.assetBackedAmount,
+            assetBackedAtRateAmount
+        );
         mn.willLiquidateAtPrice = (
             exchangeRate.mul(
                 mn.currentRatio.sub(liquidationRatio - denominator)
@@ -290,15 +282,10 @@ contract Synthetic is Ownable {
             "Synthetic::removeCollateral: canWithdrawRemainning less than zero"
         );
         dolly.transfer(_msgSender(), _removeBackedAmount);
-        mn.currentRatio = (
-            (
-                (mn.assetBackedAmount.mul(denominator)).div(
-                    assetBackedAtRateAmount
-                )
-            )
-                .mul(denominator)
-        )
-            .div(denominator); // must more than 1.5 ratio (15e17)
+        mn.currentRatio = getCurrentRatio(
+            mn.assetBackedAmount,
+            assetBackedAtRateAmount
+        );
         mn.willLiquidateAtPrice = (
             exchangeRate.mul(
                 mn.currentRatio.sub(liquidationRatio - denominator)
@@ -336,15 +323,10 @@ contract Synthetic is Ownable {
         uint256 assetBackedAtRateAmount =
             (mn.assetAmount.mul(exchangeRate)).div(denominator);
         dolly.transfer(_msgSender(), _removeAmount);
-        mn.currentRatio = (
-            (
-                (mn.assetBackedAmount.mul(denominator)).div(
-                    assetBackedAtRateAmount
-                )
-            )
-                .mul(denominator)
-        )
-            .div(denominator);
+        mn.currentRatio = getCurrentRatio(
+            mn.assetBackedAmount,
+            assetBackedAtRateAmount
+        );
         mn.willLiquidateAtPrice = (
             exchangeRate.mul(
                 mn.currentRatio.sub(liquidationRatio - denominator)
@@ -466,6 +448,18 @@ contract Synthetic is Ownable {
                 pairsToQuote[_pairs][1]
             );
         return data.rate;
+    }
+
+    function getCurrentRatio(
+        uint256 _backedAmount,
+        uint256 _assetBackedAtRateAmount
+    ) internal view returns (uint256) {
+        return
+            (
+                ((_backedAmount.mul(denominator)).div(_assetBackedAtRateAmount))
+                    .mul(denominator)
+            )
+                .div(denominator);
     }
 
     function isSupported(string memory _pairs) public view returns (bool) {

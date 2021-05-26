@@ -121,12 +121,10 @@ contract Synthetic is Ownable {
             _backedAmount,
             assetBackedAtRateAmount
         );
-        mn.willLiquidateAtPrice = (
-            exchangeRate.mul(
-                mn.currentRatio.sub(liquidationRatio - denominator)
-            )
-        )
-            .div(denominator);
+        mn.willLiquidateAtPrice = getWillLiquidateAtPrice(
+            exchangeRate,
+            mn.currentRatio
+        );
         mn.canWithdrawRemainning = canWithdrawRemainning;
         mn.canMintRemainning = (
             ((_backedAmount.mul(denominator)).div(collateralRatio)).mul(
@@ -191,12 +189,10 @@ contract Synthetic is Ownable {
                 mn.assetBackedAmount,
                 assetBackedAtRateAmount
             );
-            mn.willLiquidateAtPrice = (
-                exchangeRate.mul(
-                    mn.currentRatio.sub(liquidationRatio - denominator)
-                )
-            )
-                .div(denominator);
+            mn.willLiquidateAtPrice = getWillLiquidateAtPrice(
+                exchangeRate,
+                mn.currentRatio
+            );
             mn.canWithdrawRemainning = canWithdrawRemainning;
             mn.canMintRemainning = (
                 ((canWithdrawRemainning.mul(denominator)).div(exchangeRate))
@@ -233,12 +229,10 @@ contract Synthetic is Ownable {
             mn.assetBackedAmount,
             assetBackedAtRateAmount
         );
-        mn.willLiquidateAtPrice = (
-            exchangeRate.mul(
-                mn.currentRatio.sub(liquidationRatio - denominator)
-            )
-        )
-            .div(denominator);
+        mn.willLiquidateAtPrice = getWillLiquidateAtPrice(
+            exchangeRate,
+            mn.currentRatio
+        );
         mn.canWithdrawRemainning = canWithdrawRemainning;
         mn.canMintRemainning = (
             (
@@ -286,12 +280,10 @@ contract Synthetic is Ownable {
             mn.assetBackedAmount,
             assetBackedAtRateAmount
         );
-        mn.willLiquidateAtPrice = (
-            exchangeRate.mul(
-                mn.currentRatio.sub(liquidationRatio - denominator)
-            )
-        )
-            .div(denominator);
+        mn.willLiquidateAtPrice = getWillLiquidateAtPrice(
+            exchangeRate,
+            mn.currentRatio
+        );
         mn.canWithdrawRemainning = canWithdrawRemainning;
         mn.canMintRemainning = (
             (
@@ -327,12 +319,10 @@ contract Synthetic is Ownable {
             mn.assetBackedAmount,
             assetBackedAtRateAmount
         );
-        mn.willLiquidateAtPrice = (
-            exchangeRate.mul(
-                mn.currentRatio.sub(liquidationRatio - denominator)
-            )
-        )
-            .div(denominator);
+        mn.willLiquidateAtPrice = getWillLiquidateAtPrice(
+            exchangeRate,
+            mn.currentRatio
+        );
         mn.canWithdrawRemainning = 0;
         mn.canMintRemainning = 0;
         mn.currentExchangeRate = exchangeRate;
@@ -459,6 +449,16 @@ contract Synthetic is Ownable {
                 ((_backedAmount.mul(denominator)).div(_assetBackedAtRateAmount))
                     .mul(denominator)
             )
+                .div(denominator);
+    }
+
+    function getWillLiquidateAtPrice(uint256 exchangeRate, uint256 currentRatio)
+        internal
+        view
+        returns (uint256)
+    {
+        return
+            (exchangeRate.mul(currentRatio.sub(liquidationRatio - denominator)))
                 .div(denominator);
     }
 

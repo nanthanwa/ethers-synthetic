@@ -42,6 +42,7 @@
 - ⏰ Add function `mintMoreSynthetic()` and `redeemSomeSynthetic()` corresponding of user's collateral ratio.
 - ⏰ Make simple UI.
 - ⏰ Recheck over, underflow.
+- ⏰ Use [Chainlink oracle](https://docs.chain.link/docs/binance-smart-chain-addresses) for standby (or combine) mode.
 
 ## Deployment
 - Run `hh run scripts/deploy-initialized.js --network kovan`

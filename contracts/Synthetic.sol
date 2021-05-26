@@ -8,6 +8,8 @@ import "./utils/Pausable.sol";
 import "./IStdReference.sol";
 import "./math/SafeMath.sol";
 
+// @dev use this interface for burning systhetic asset.
+// @notic burnFrom() need to call approve() before call this function.
 interface IERC20Burnable is IERC20 {
     function burn(uint256 amount) external;
 
@@ -15,6 +17,20 @@ interface IERC20Burnable is IERC20 {
 
     function mint(address account, uint256 amount) external;
 }
+
+// @info Synthetic contract is the contract that minting systhetic asset by given amount of collateral
+// Minter can mint, redeem (some or all all them), add more collateral (to avoid liquidation),
+// remove some collateral (to withdraw the backed asset). If the ratio between collateral and synthetic value
+// goes lower than liquidation ratio, anyone can call the liquidate function to get the reward and close that contract.
+//
+// @requirements:
+// - Contract address of Dolly (constuctor parameter).
+// - Contract address of referrence of orale Band protocol (constuctor parameter).
+// - Contract address of synthetic token contract (e.g. TSLA).
+// - Set the ownership of synthetic token contract (e.g. TSLA) to this contract.
+// - Set the pairsToQuote of supported synthetic asset (e.g. pairsToQuote["TSLA/USD"] = ["TSLA", "USD"]).
+// - Set the pairsToAddress of supported synthetic asset (e.g. pairsToAddress["TSLA/USD"] = 0x65cAC0F09EFdB88195a002E8DD4CBF6Ec9BC7f60).
+// - Set the addressToPairs of supported synthetic asset (e.g.) addressToPairs[0x65cAC0F09EFdB88195a002E8DD4CBF6Ec9BC7f60] = "TSLA/USD".
 
 contract Synthetic is Ownable, Pausable {
     using SafeMath for uint256;
@@ -35,27 +51,26 @@ contract Synthetic is Ownable, Pausable {
     uint256 public liquidatorRewardRatio = 5e16; // 0.05 scaled by 1e18
     uint256 public platfromFeeRatio = 5e16; // 0.05 scaled by 1e18
     uint256 public remainingToMinterRatio = 9e17; // 0.9 scaled by 1e18
-    address public devAddress;
+    address public devAddress; // dev address to collect liquidation fee
 
+    // struct of minting the synthetic asset
     struct MintingNote {
-        address minter;
-        IERC20Burnable asset; // synthetic
-        IERC20 assetBacked; // dolly
-        uint256 assetAmount;
-        uint256 assetBackedAmount;
-        uint256 currentRatio;
-        uint256 willLiquidateAtPrice;
-        uint256 canMintRemainning;
-        uint256 canWithdrawRemainning;
+        address minter; // address of minter
+        IERC20Burnable asset; // synthetic asset address
+        IERC20 assetBacked; // dolly address
+        uint256 assetAmount; // amount of synthetic asset to be minted
+        uint256 assetBackedAmount; // amount of Dolly
+        uint256 currentRatio; // the current ratio between collateral value and minted systhetic value
+        uint256 willLiquidateAtPrice; // the price that will liquidate this contract
+        uint256 canMintRemainning; // amount of this synthetic asset that can be minted
+        uint256 canWithdrawRemainning; // amount of Dolly that can be withdraw
         uint256 updatedAt;
         uint256 updatedBlock;
-        uint256 exchangeRateAtMinted;
-        uint256 currentExchangeRate;
+        uint256 exchangeRateAtMinted; // exchange rate at minted
+        uint256 currentExchangeRate; // last exchage rate
     }
 
     mapping(address => mapping(address => MintingNote)) public contracts; // minter => asset => MintingNote
-
-    mapping(address => address[]) public pendingLiquidate; // synthetic address => minter
 
     event MintAsset(
         address minter,
@@ -75,14 +90,10 @@ contract Synthetic is Ownable, Pausable {
 
     event SetDevAddress(address oldDevAddress, address newDevAddress);
 
+    // @dev the constructor requires an address of Dolly and referrence of oracle Band Protocol
     constructor(IERC20 _dolly, IStdReference _ref) public {
         dolly = _dolly; // use Dolly as collateral
         bandOracle = _ref;
-        pairsToQuote["TSLA/USD"] = ["TSLA", "USD"];
-
-        pairsToAddress["TSLA/USD"] = 0x65cAC0F09EFdB88195a002E8DD4CBF6Ec9BC7f60;
-
-        addressToPairs[0x65cAC0F09EFdB88195a002E8DD4CBF6Ec9BC7f60] = "TSLA/USD";
         devAddress = _msgSender();
     }
 
@@ -137,7 +148,7 @@ contract Synthetic is Ownable, Pausable {
     }
 
     // @dev minter needs to approve for burn at SyntheticAsset before call this function.
-    // @notic no need to redeem entire colateral amount
+    // @notice no need to redeem entire colateral amount.
     function redeemSynthetic(IERC20Burnable _synthetic, uint256 _amount)
         external
         whenNotPaused
@@ -204,6 +215,9 @@ contract Synthetic is Ownable, Pausable {
         }
     }
 
+    // @info add more collateral for minted contract
+    // @param _synthetic: the address of synthetic asset
+    // @param _addAmount: amount of Dolly which want to add
     function addCollateral(IERC20Burnable _synthetic, uint256 _addAmount)
         external
         whenNotPaused
@@ -243,6 +257,9 @@ contract Synthetic is Ownable, Pausable {
         emit AddCollateral(_msgSender(), _addAmount);
     }
 
+    // @info remove some collateral for minted contract
+    // @param _synthetic: the address of synthetic asset
+    // @param _removeBackedAmount: amount of collateral which want to remove
     function removeCollateral(
         IERC20Burnable _synthetic,
         uint256 _removeBackedAmount
@@ -289,7 +306,10 @@ contract Synthetic is Ownable, Pausable {
         emit RemoveCollateral(_msgSender(), _removeBackedAmount);
     }
 
-    // @dev for testing purpose
+    // @dev for testing purpose.
+    // @notice this function will remove some collateral to simulate under collateral and need to be liquidated in the future.
+    // @param _synthetic: the address of synthetic asset.
+    // @param _removeAmount: amount of collateral which want to remove.
     function removeLowerCollateral(
         IERC20Burnable _synthetic,
         uint256 _removeAmount
@@ -321,6 +341,8 @@ contract Synthetic is Ownable, Pausable {
     }
 
     // @dev liquidator must approve Synthetic asset to spending Dolly
+    // @param _synthetic: the address of synthetic asset.
+    // @param _minter: address of minter.
     function liquidate(IERC20Burnable _synthetic, address _minter)
         external
         whenNotPaused
@@ -369,6 +391,9 @@ contract Synthetic is Ownable, Pausable {
         delete contracts[_minter][address(_synthetic)];
     }
 
+    // @info set the pairs and quotes to calling the oracle
+    // @param _pairs: string of pairs e.g. "TSLA/USD".
+    // @param baseAndQuote: 2 elements array e.g. ["TSLA"]["USD"].
     function setPairsToQuote(
         string memory _pairs,
         string[2] memory baseAndQuote
@@ -376,6 +401,9 @@ contract Synthetic is Ownable, Pausable {
         pairsToQuote[_pairs] = baseAndQuote;
     }
 
+    // @info use this function to get the synthetic token address by given string pairs
+    // @param _pairs: string of pairs e.g. "TSLA/USD".
+    // @param _syntheticAddress: address of synthetic asset.
     function setPairsToAddress(string memory _pairs, address _syntheticAddress)
         external
         onlyOwner
@@ -383,6 +411,9 @@ contract Synthetic is Ownable, Pausable {
         pairsToAddress[_pairs] = _syntheticAddress;
     }
 
+    // @info map synthetic token address to string of pairs. Used for getRate() function
+    // @param _pairs: string of pairs e.g. "TSLA/USD".
+    // @param _syntheticAddress: address of synthetic asset.
     function setAddressToPairs(address _syntheticAddress, string memory _pairs)
         external
         onlyOwner
@@ -390,6 +421,8 @@ contract Synthetic is Ownable, Pausable {
         addressToPairs[_syntheticAddress] = _pairs;
     }
 
+    // @info set dev address to receive liquidation fee.
+    // @param _devAddress: new developer address.
     function setDevAddress(address _devAddress) external onlyOwner {
         address oldDevAddress = devAddress;
         devAddress = _devAddress;
@@ -397,6 +430,9 @@ contract Synthetic is Ownable, Pausable {
     }
 
     // @dev for simulate all relevant amount of liqiodation
+    // @notice liquidate bot can call this function to estimate the profit.
+    // @param _synthetic: a contract address of synthetic asset.
+    // @param _minter: an address of minter.
     function viewRewardFromLiquidate(IERC20Burnable _synthetic, address _minter)
         external
         view
@@ -449,14 +485,18 @@ contract Synthetic is Ownable, Pausable {
         );
     }
 
+    // @dev for pause this smart contract to prevent mint, redeem, add collateral, remove collateral, liquidate process.
     function pause() external whenNotPaused onlyOwner {
         _pause();
     }
 
+    // @dev for unpause this smart contract to allow mint, redeem, add collateral, remove collateral, liquidate process.
     function unpause() external whenPaused onlyOwner {
         _unpause();
     }
 
+    // @dev get current rate of given asset by Oracle
+    // @param _pairs: the pairs of asset.
     function getRate(string memory _pairs) public view returns (uint256) {
         require(isSupported(_pairs));
         IStdReference.ReferenceData memory data =
@@ -467,6 +507,9 @@ contract Synthetic is Ownable, Pausable {
         return data.rate;
     }
 
+    // @dev get current ratio between collateral and minted synthetic asset
+    // @param _backedAmount: callateral value
+    // @param _assetBackedAtRateAmount: the value of minted synthetic asset
     function getCurrentRatio(
         uint256 _backedAmount,
         uint256 _assetBackedAtRateAmount
@@ -479,6 +522,9 @@ contract Synthetic is Ownable, Pausable {
                 .div(denominator);
     }
 
+    // @dev get liquidate price at current ratio
+    // @param exchangeRate: the current exchange rate
+    // @param currentRatio: the current ratio
     function getWillLiquidateAtPrice(uint256 exchangeRate, uint256 currentRatio)
         internal
         view
@@ -489,6 +535,9 @@ contract Synthetic is Ownable, Pausable {
                 .div(denominator);
     }
 
+    // @dev get the maximum amount of asset that can be minted depends on current collateral ratio.
+    // @param canWithdrawRemainning: the amount of Dolly that can be withdrawed.
+    // @param assetBackedAtRateAmount: the current value of minted synthetic asset.
     function getCanMintRemainning(
         uint256 canWithdrawRemainning,
         uint256 assetBackedAtRateAmount
@@ -505,6 +554,10 @@ contract Synthetic is Ownable, Pausable {
                 .div(denominator);
     }
 
+    // @dev get the percent of redeeming.
+    // @notice use this function for calculate partial redeeming.
+    // @param _amount: the number of synthetic asset that want to redeem.
+    // @param assetAmount: the number of minted synthetic asset.
     function getRedeemPercent(uint256 _amount, uint256 assetAmount)
         internal
         view
@@ -515,6 +568,8 @@ contract Synthetic is Ownable, Pausable {
                 .div(denominator);
     }
 
+    // @dev using for get supported asset before do the operation.
+    // @param _pairs: the string of pairs e.g. "TSLA/USD"
     function isSupported(string memory _pairs) public view returns (bool) {
         return pairsToQuote[_pairs].length > 0;
     }

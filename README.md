@@ -8,11 +8,11 @@
 ## Requirements
 - Dolly address (to deploy, run `hh run scripts/deploy-dolly.js  --network kovan`)
 - Synthetic asset address (to deploy, run `hh run scripts/deploy-dopple-synthetic-token.js  --network kovan`)
-- Band oracle referrence address [ref](https://docs.bandchain.org/band-standard-dataset/supported-blockchains.html)
+- Band oracle reference address [reference](https://docs.bandchain.org/band-standard-dataset/supported-blockchains.html)
 
 ## Features
-- Can mint synthetic asset by provide 150% of collateral (adjustable).
-- Can redeem (fully or partial) of synthetic asset to get collateral back.
+- Can mint synthetic asset by provide 150% of collateral (adjustable). (e.g. provide $DOLLY -> receive $dTSLA)
+- Can redeem (fully or partial) of synthetic asset to get collateral back. (e.g. repay $DOLLY -> burn $dTSLA)
 - Can add more collateral by provide backed asset ($Dolly) for extend liquidation ratio.
 - Can remove some collateral whereas the collateral ratio still satisfy.
 - Can liquidate open contract that hit the liquidation ratio.
@@ -21,13 +21,18 @@
 
 ## TODO
 - Add unit test!!
+- Gathering and monitor liquidation of minted asset (for liquidate bot).
+- Add function `mintMoreSynthetic()` and `redeemSomeSynthetic()` corresponding of user's collateral ratio.
+- Make simple UI.
+- Recheck over, underflow.
+- Add reentrancy guard.
 
 ## Deployment
 - Run `hh run scripts/deploy-initialized.js --network kovan`
 
 ## Step by step explanation
 1. Get deploayed `Dolly` instance 
-2. Deploy `Synthetic` contract by giving `Dolly address` and `Band oracle referrence`
+2. Deploy `Synthetic` contract by giving `Dolly address` and `Band oracle reference`
 3. Verify `Synthetic` contract
 4. Get deploayed `Synthetic Token` instance 
 5. call function `setPairsToAddress(string <Pairs>, address syntheticAsset)` to `Synthetic` contract.

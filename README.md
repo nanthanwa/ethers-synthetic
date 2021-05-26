@@ -8,7 +8,7 @@
 ## Requirements
 - Dolly address (to deploy, run `hh run scripts/deploy-dolly.js  --network kovan`)
 - Synthetic asset address (to deploy, run `hh run scripts/deploy-dopple-synthetic-token.js  --network kovan`)
-- Band oracle reference address [reference](https://docs.bandchain.org/band-standard-dataset/supported-blockchains.html)
+- Band oracle reference address [click here for more details](https://docs.bandchain.org/band-standard-dataset/supported-blockchains.html)
 - Create `.secret` file and provide credential following
 
 ```

@@ -30,6 +30,12 @@ contract Synthetic is Ownable {
     uint256 public collateralRatio = 1e18 + 5e17; // 1.5 scaled by 1e18 (> 1.5 is good)
     uint256 public liquidationRatio = 1e18 + 25e16; // 1.25 scaled by 1e18
 
+    // allocation of liquidating gap between closing contract and remainning backedAsset
+    uint256 public liquidatorRewardRatio = 5e16; // 0.05 scaled by 1e18
+    uint256 public platfromFeeRatio = 5e16; // 0.05 scaled by 1e18
+    uint256 public remainingToMinterRatio = 9e17; // 0.9 scaled by 1e18
+    address public devAddress;
+
     struct MintingNote {
         address minter;
         IERC20Burnable asset; // synthetic
@@ -46,7 +52,9 @@ contract Synthetic is Ownable {
         uint256 currentExchangeRate;
     }
 
-    mapping(address => mapping(address => MintingNote)) public minter; // lender => asset => MintingNote
+    mapping(address => mapping(address => MintingNote)) public minter; // minter => asset => MintingNote
+
+    mapping(address => address[]) public pendingLiquidate; // synthetic address => minter
 
     event MintAsset(
         address minter,
@@ -64,6 +72,8 @@ contract Synthetic is Ownable {
         uint256 timestamp
     );
 
+    event SetDevAddress(address oldDevAddress, address newDevAddress);
+
     constructor(IERC20 _dolly, IStdReference _ref) public {
         dolly = _dolly; // use Dolly as collateral
         bandOracle = _ref;
@@ -72,6 +82,7 @@ contract Synthetic is Ownable {
         pairsToAddress["TSLA/USD"] = 0x65cAC0F09EFdB88195a002E8DD4CBF6Ec9BC7f60;
 
         addressToPairs[0x65cAC0F09EFdB88195a002E8DD4CBF6Ec9BC7f60] = "TSLA/USD";
+        devAddress = _msgSender();
     }
 
     // user need to approve for synthetic mint at dolly contract first.
@@ -128,8 +139,8 @@ contract Synthetic is Ownable {
         emit MintAsset(_msgSender(), address(_synthetic), _amount);
     }
 
-    // minter needs to approve for burn at SyntheticAsset before call this function.
-    // ne need to redeem entire colateral amount
+    // @dev minter needs to approve for burn at SyntheticAsset before call this function.
+    // @notic no need to redeem entire colateral amount
     function redeemSynthetic(IERC20Burnable _synthetic, uint256 _amount)
         external
     {
@@ -333,7 +344,104 @@ contract Synthetic is Ownable {
         emit RemoveCollateral(_msgSender(), _removeAmount);
     }
 
-    function liquidate() external {}
+    // @dev liquidator must approve Synthetic asset to spending Dolly
+    function liquidate(IERC20Burnable _synthetic, address _minter) external {
+        MintingNote storage mn = minter[_minter][address(_synthetic)];
+        require(
+            mn.minter != address(0),
+            "Synthetic::liquidate: empty contract"
+        );
+
+        // if less than 1.25, will be liquidated
+        require(
+            mn.currentRatio < liquidationRatio,
+            "Synthetic::liquidate: ratio is sastisfy"
+        );
+        uint256 exchangeRate = getRate(addressToPairs[address(_synthetic)]);
+        require(
+            mn.willLiquidateAtPrice < exchangeRate,
+            "Synthetic::liquidate: asset price is sastisfy"
+        );
+
+        uint256 assetBackedAtRateAmount =
+            (mn.assetAmount.mul(exchangeRate)).div(denominator);
+
+        uint256 remainingGapAmount =
+            mn.assetBackedAmount.sub(assetBackedAtRateAmount);
+
+        uint256 minterReceiveAmount =
+            (remainingGapAmount.mul(remainingToMinterRatio)).div(denominator);
+
+        uint256 liquidatorReceiveAmount =
+            (remainingGapAmount.mul(liquidatorRewardRatio)).div(denominator);
+
+        uint256 platformReceiveAmount =
+            (remainingGapAmount.mul(platfromFeeRatio)).div(denominator);
+
+        dolly.transferFrom(
+            _msgSender(),
+            address(this),
+            assetBackedAtRateAmount
+        ); // deduct Doly from liquidator
+        dolly.transfer(mn.minter, minterReceiveAmount); // transfer remainning to minter (90%)
+        dolly.transfer(_msgSender(), liquidatorReceiveAmount); // transfer reward to to liquidator (5%)
+        dolly.transfer(devAddress, platformReceiveAmount); // transfer liquidating fee to dev address (5%)
+
+        delete minter[_minter][address(_synthetic)];
+    }
+
+    // @dev for simulate all relevant amount of liqiodation
+    function viewRewardFromLiquidate(IERC20Burnable _synthetic, address _minter)
+        external
+        view
+        returns (
+            uint256,
+            uint256,
+            uint256,
+            uint256,
+            uint256
+        )
+    {
+        MintingNote storage mn = minter[_minter][address(_synthetic)];
+        require(
+            mn.minter != address(0),
+            "Synthetic::liquidate: empty contract"
+        );
+
+        // if less than 1.25, will be liquidated
+        require(
+            mn.currentRatio < liquidationRatio,
+            "Synthetic::liquidate: ratio is sastisfy"
+        );
+        uint256 exchangeRate = getRate(addressToPairs[address(_synthetic)]);
+        require(
+            mn.willLiquidateAtPrice < exchangeRate,
+            "Synthetic::liquidate: asset price is sastisfy"
+        );
+
+        uint256 assetBackedAtRateAmount =
+            (mn.assetAmount.mul(exchangeRate)).div(denominator);
+
+        uint256 remainingGapAmount =
+            mn.assetBackedAmount.sub(assetBackedAtRateAmount);
+
+        uint256 minterReceiveAmount =
+            (remainingGapAmount.mul(remainingToMinterRatio)).div(denominator);
+
+        uint256 liquidatorReceiveAmount =
+            (remainingGapAmount.mul(liquidatorRewardRatio)).div(denominator);
+
+        uint256 platformReceiveAmount =
+            (remainingGapAmount.mul(platfromFeeRatio)).div(denominator);
+
+        return (
+            assetBackedAtRateAmount,
+            remainingGapAmount,
+            minterReceiveAmount,
+            liquidatorReceiveAmount,
+            platformReceiveAmount
+        );
+    }
 
     function getRate(string memory _pairs) public view returns (uint256) {
         require(isSupported(_pairs));
@@ -368,5 +476,11 @@ contract Synthetic is Ownable {
         onlyOwner
     {
         addressToPairs[_syntheticAddress] = _pairs;
+    }
+
+    function setDevAddress(address _devAddress) external onlyOwner {
+        address oldDevAddress = devAddress;
+        devAddress = _devAddress;
+        emit SetDevAddress(oldDevAddress, _devAddress);
     }
 }

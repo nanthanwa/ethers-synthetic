@@ -21,9 +21,9 @@ async function main() {
     //   ],
     // });
 
-    // const Synthetic = await ethers.getContractFactory('Synthetic');
-    // const synthetic = await Synthetic.deploy(dolly.address, bandRef); // dolly, bandRef
-    const synthetic = await ethers.getContractAt('Synthetic', '0xbceFa26F41E35D10b1BA595b2E7fb8D01146220D');
+    const Synthetic = await ethers.getContractFactory('Synthetic');
+    const synthetic = await Synthetic.deploy(dolly.address, bandRef); // dolly, bandRef
+    // const synthetic = await ethers.getContractAt('Synthetic', '0xAdde342E77525862Bf435fb85004Af9F40403BAe');
     await synthetic.deployed();
     console.log('Synthetic deployed to:', synthetic.address);
     console.log('verify Synthetic');
@@ -52,6 +52,9 @@ async function main() {
     console.log('hash', result.hash);
     console.log('setting setAddressToPairs');
     result = await synthetic.setAddressToPairs(doppleTSLA.address, 'TSLA/USD');
+    console.log('hash', result.hash);
+    console.log('setting setPairsToQuote');
+    result = await synthetic.setPairsToQuote('TSLA/USD', ['TSLA', 'USD']);
     console.log('hash', result.hash);
 
 

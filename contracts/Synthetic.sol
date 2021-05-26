@@ -126,13 +126,10 @@ contract Synthetic is Ownable {
             mn.currentRatio
         );
         mn.canWithdrawRemainning = canWithdrawRemainning;
-        mn.canMintRemainning = (
-            ((_backedAmount.mul(denominator)).div(collateralRatio)).mul(
-                denominator
-            )
-        )
-            .div(denominator)
-            .sub(_amount);
+        mn.canMintRemainning = getCanMintRemainning(
+            canWithdrawRemainning,
+            assetBackedAtRateAmount
+        );
         mn.updatedAt = block.timestamp;
         mn.updatedBlock = block.number;
         emit MintAsset(_msgSender(), address(_synthetic), _amount);
@@ -194,11 +191,10 @@ contract Synthetic is Ownable {
                 mn.currentRatio
             );
             mn.canWithdrawRemainning = canWithdrawRemainning;
-            mn.canMintRemainning = (
-                ((canWithdrawRemainning.mul(denominator)).div(exchangeRate))
-                    .mul(denominator)
-            )
-                .div(denominator);
+            mn.canMintRemainning = getCanMintRemainning(
+                canWithdrawRemainning,
+                assetBackedAtRateAmount
+            );
             mn.currentExchangeRate = exchangeRate;
             mn.updatedAt = block.timestamp;
             mn.updatedBlock = block.number;
@@ -234,15 +230,10 @@ contract Synthetic is Ownable {
             mn.currentRatio
         );
         mn.canWithdrawRemainning = canWithdrawRemainning;
-        mn.canMintRemainning = (
-            (
-                (canWithdrawRemainning.mul(denominator)).div(
-                    assetBackedAtRateAmount
-                )
-            )
-                .mul(denominator)
-        )
-            .div(denominator);
+        mn.canMintRemainning = getCanMintRemainning(
+            canWithdrawRemainning,
+            assetBackedAtRateAmount
+        );
         mn.currentExchangeRate = exchangeRate;
         mn.updatedAt = block.timestamp;
         mn.updatedBlock = block.number;
@@ -285,15 +276,10 @@ contract Synthetic is Ownable {
             mn.currentRatio
         );
         mn.canWithdrawRemainning = canWithdrawRemainning;
-        mn.canMintRemainning = (
-            (
-                (canWithdrawRemainning.mul(denominator)).div(
-                    assetBackedAtRateAmount
-                )
-            )
-                .mul(denominator)
-        )
-            .div(denominator);
+        mn.canMintRemainning = getCanMintRemainning(
+            canWithdrawRemainning,
+            assetBackedAtRateAmount
+        );
         mn.currentExchangeRate = exchangeRate;
         mn.updatedAt = block.timestamp;
         mn.updatedBlock = block.number;
@@ -459,6 +445,22 @@ contract Synthetic is Ownable {
     {
         return
             (exchangeRate.mul(currentRatio.sub(liquidationRatio - denominator)))
+                .div(denominator);
+    }
+
+    function getCanMintRemainning(
+        uint256 canWithdrawRemainning,
+        uint256 assetBackedAtRateAmount
+    ) internal view returns (uint256) {
+        return
+            (
+                (
+                    (canWithdrawRemainning.mul(denominator)).div(
+                        assetBackedAtRateAmount
+                    )
+                )
+                    .mul(denominator)
+            )
                 .div(denominator);
     }
 

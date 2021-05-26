@@ -161,13 +161,7 @@ contract Synthetic is Ownable {
             emit RedeemAsset(address(_synthetic), _amount);
         } else {
             // patial redeeming
-            uint256 percent =
-                (
-                    ((_amount.mul(denominator)).div(mn.assetAmount)).mul(
-                        denominator
-                    )
-                )
-                    .div(denominator);
+            uint256 percent = getRedeemPercent(_amount, mn.assetAmount);
             uint256 assetToBeBurned = (mn.assetAmount * percent) / denominator;
             uint256 assetBackedToBeRedeemed =
                 (mn.assetBackedAmount * percent) / denominator;
@@ -498,5 +492,15 @@ contract Synthetic is Ownable {
         address oldDevAddress = devAddress;
         devAddress = _devAddress;
         emit SetDevAddress(oldDevAddress, _devAddress);
+    }
+
+    function getRedeemPercent(uint256 _amount, uint256 assetAmount)
+        internal
+        view
+        returns (uint256)
+    {
+        return
+            (((_amount.mul(denominator)).div(assetAmount)).mul(denominator))
+                .div(denominator);
     }
 }

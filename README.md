@@ -36,12 +36,12 @@
 - Can adjust some parameters e.g. `collateralRatio`, `liquidationRatio`, `liquidatorRewardRatio`, `platfromFeeRatio`, `remainingToMinterRatio`.
 
 ## TODO
-- Add unit test!!
-- Gathering and monitor liquidation of minted asset (for liquidate bot).
-- Add function `mintMoreSynthetic()` and `redeemSomeSynthetic()` corresponding of user's collateral ratio.
-- Make simple UI.
-- Recheck over, underflow.
-- Add reentrancy guard.
+✅ Add reentrancy guard.
+⏰ Add unit test!!
+⏰ Gathering and monitor liquidation of minted asset (for liquidate bot).
+⏰ Add function `mintMoreSynthetic()` and `redeemSomeSynthetic()` corresponding of user's collateral ratio.
+⏰ Make simple UI.
+⏰ Recheck over, underflow.
 
 ## Deployment
 - Run `hh run scripts/deploy-initialized.js --network kovan`

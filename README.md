@@ -1,4 +1,4 @@
-# Dopply Synthetic
+# Dopple Synthetic
 
 ## Installation
 - `git clone https://github.com/nanmcpe/dopple-synthetic.git`

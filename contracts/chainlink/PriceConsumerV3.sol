@@ -4,8 +4,8 @@
 
 pragma solidity 0.6.12;
 
-import "./chainlink/AggregatorV3Interface.sol";
-import "./access/Ownable.sol";
+import "../chainlink/AggregatorV3Interface.sol";
+import "../access/Ownable.sol";
 
 contract PriceConsumerV3 is Ownable {
     AggregatorV3Interface internal priceFeed;

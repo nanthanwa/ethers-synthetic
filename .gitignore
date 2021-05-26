@@ -11,4 +11,13 @@ artifacts/contracts/*
 artifacts/contracts/Dolly.sol/*
 !artifacts/contracts/Dolly.sol/Dolly.json
 artifacts/contracts/Synthetic.sol/*
-!artifacts/contracts/Synthetic.sol/Synthetic.sol
+!artifacts/contracts/Synthetic.sol/Synthetic.json
+
+
+artifacts/contracts/DoppleSyntheticToken.sol/*
+!artifacts/contracts/DoppleSyntheticToken.sol/DoppleAAPL.json
+!artifacts/contracts/DoppleSyntheticToken.sol/DoppleAMZN.json
+!artifacts/contracts/DoppleSyntheticToken.sol/DoppleCOIN.json
+!artifacts/contracts/DoppleSyntheticToken.sol/DoppleQQQ.json
+!artifacts/contracts/DoppleSyntheticToken.sol/DoppleTSLA.json
+!artifacts/contracts/DoppleSyntheticToken.sol/DoppleXAU.json

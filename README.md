@@ -61,7 +61,7 @@
 ## Deployed contract (Kovan Testnet)
 - Dolly: 0x172018C14eeA6312BF4243BFa3d07249feA7E542
 - Band protocol: 0x9106f09bf08dfb23fca61a9829543f1c80a81a4b (bypass proxy)
-- Synthetic: 0xbceFa26F41E35D10b1BA595b2E7fb8D01146220D
+- Synthetic: 0xAdde342E77525862Bf435fb85004Af9F40403BAe
 - dTSLA: 0xdC47e2C0b6046cD58d3B21583DA19B45Ebf679ad (synthetic asset)
 - dCOIN: 0x6B4Bf2BEa14A000445e9f0bd59883AE5d3398651 (synthetic asset)
 - dAAPL: 0x93cb5A0806f8e682b03FCbA4633eEEd65c5a107E (synthetic asset)

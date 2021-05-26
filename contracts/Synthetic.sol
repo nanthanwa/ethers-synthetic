@@ -4,6 +4,7 @@ pragma solidity 0.6.12;
 pragma experimental ABIEncoderV2;
 import "./token/ERC20/IERC20.sol";
 import "./access/Ownable.sol";
+import "./utils/Pausable.sol";
 import "./IStdReference.sol";
 import "./math/SafeMath.sol";
 
@@ -15,7 +16,7 @@ interface IERC20Burnable is IERC20 {
     function mint(address account, uint256 amount) external;
 }
 
-contract Synthetic is Ownable {
+contract Synthetic is Ownable, Pausable {
     using SafeMath for uint256;
 
     IERC20Burnable public systheticAsset;
@@ -90,7 +91,7 @@ contract Synthetic is Ownable {
         IERC20Burnable _synthetic,
         uint256 _amount, // amount of synthetic that want to mint
         uint256 _backedAmount // amount of Dolly that you want to collateral
-    ) external {
+    ) external whenNotPaused {
         MintingNote storage mn = contracts[_msgSender()][address(_synthetic)];
         require(
             mn.minter == address(0),
@@ -139,6 +140,7 @@ contract Synthetic is Ownable {
     // @notic no need to redeem entire colateral amount
     function redeemSynthetic(IERC20Burnable _synthetic, uint256 _amount)
         external
+        whenNotPaused
     {
         MintingNote storage mn = contracts[_msgSender()][address(_synthetic)];
         require(
@@ -204,6 +206,7 @@ contract Synthetic is Ownable {
 
     function addCollateral(IERC20Burnable _synthetic, uint256 _addAmount)
         external
+        whenNotPaused
     {
         MintingNote storage mn = contracts[_msgSender()][address(_synthetic)];
         require(
@@ -243,7 +246,7 @@ contract Synthetic is Ownable {
     function removeCollateral(
         IERC20Burnable _synthetic,
         uint256 _removeBackedAmount
-    ) external {
+    ) external whenNotPaused {
         MintingNote storage mn = contracts[_msgSender()][address(_synthetic)];
         require(
             mn.assetAmount > 0,
@@ -290,7 +293,7 @@ contract Synthetic is Ownable {
     function removeLowerCollateral(
         IERC20Burnable _synthetic,
         uint256 _removeAmount
-    ) external onlyOwner {
+    ) external onlyOwner whenNotPaused {
         MintingNote storage mn = contracts[_msgSender()][address(_synthetic)];
         require(
             mn.assetAmount > 0,
@@ -318,7 +321,10 @@ contract Synthetic is Ownable {
     }
 
     // @dev liquidator must approve Synthetic asset to spending Dolly
-    function liquidate(IERC20Burnable _synthetic, address _minter) external {
+    function liquidate(IERC20Burnable _synthetic, address _minter)
+        external
+        whenNotPaused
+    {
         MintingNote storage mn = contracts[_minter][address(_synthetic)];
         require(
             mn.minter != address(0),
@@ -361,6 +367,33 @@ contract Synthetic is Ownable {
         dolly.transfer(devAddress, platformReceiveAmount); // transfer liquidating fee to dev address (5%)
 
         delete contracts[_minter][address(_synthetic)];
+    }
+
+    function setPairsToQuote(
+        string memory _pairs,
+        string[2] memory baseAndQuote
+    ) external onlyOwner {
+        pairsToQuote[_pairs] = baseAndQuote;
+    }
+
+    function setPairsToAddress(string memory _pairs, address _syntheticAddress)
+        external
+        onlyOwner
+    {
+        pairsToAddress[_pairs] = _syntheticAddress;
+    }
+
+    function setAddressToPairs(address _syntheticAddress, string memory _pairs)
+        external
+        onlyOwner
+    {
+        addressToPairs[_syntheticAddress] = _pairs;
+    }
+
+    function setDevAddress(address _devAddress) external onlyOwner {
+        address oldDevAddress = devAddress;
+        devAddress = _devAddress;
+        emit SetDevAddress(oldDevAddress, _devAddress);
     }
 
     // @dev for simulate all relevant amount of liqiodation
@@ -416,6 +449,14 @@ contract Synthetic is Ownable {
         );
     }
 
+    function pause() external whenNotPaused onlyOwner {
+        _pause();
+    }
+
+    function unpause() external whenPaused onlyOwner {
+        _unpause();
+    }
+
     function getRate(string memory _pairs) public view returns (uint256) {
         require(isSupported(_pairs));
         IStdReference.ReferenceData memory data =
@@ -464,37 +505,6 @@ contract Synthetic is Ownable {
                 .div(denominator);
     }
 
-    function isSupported(string memory _pairs) public view returns (bool) {
-        return pairsToQuote[_pairs].length > 0;
-    }
-
-    function setPairsToQuote(
-        string memory _pairs,
-        string[2] memory baseAndQuote
-    ) external onlyOwner {
-        pairsToQuote[_pairs] = baseAndQuote;
-    }
-
-    function setPairsToAddress(string memory _pairs, address _syntheticAddress)
-        external
-        onlyOwner
-    {
-        pairsToAddress[_pairs] = _syntheticAddress;
-    }
-
-    function setAddressToPairs(address _syntheticAddress, string memory _pairs)
-        external
-        onlyOwner
-    {
-        addressToPairs[_syntheticAddress] = _pairs;
-    }
-
-    function setDevAddress(address _devAddress) external onlyOwner {
-        address oldDevAddress = devAddress;
-        devAddress = _devAddress;
-        emit SetDevAddress(oldDevAddress, _devAddress);
-    }
-
     function getRedeemPercent(uint256 _amount, uint256 assetAmount)
         internal
         view
@@ -503,5 +513,9 @@ contract Synthetic is Ownable {
         return
             (((_amount.mul(denominator)).div(assetAmount)).mul(denominator))
                 .div(denominator);
+    }
+
+    function isSupported(string memory _pairs) public view returns (bool) {
+        return pairsToQuote[_pairs].length > 0;
     }
 }

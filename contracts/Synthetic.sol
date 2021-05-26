@@ -5,6 +5,7 @@ pragma experimental ABIEncoderV2;
 import "./token/ERC20/IERC20.sol";
 import "./access/Ownable.sol";
 import "./utils/Pausable.sol";
+import "./utils/ReentrancyGuard.sol";
 import "./IStdReference.sol";
 import "./math/SafeMath.sol";
 
@@ -32,7 +33,7 @@ interface IERC20Burnable is IERC20 {
 // - Set the pairsToAddress of supported synthetic asset (e.g. pairsToAddress["TSLA/USD"] = 0x65cAC0F09EFdB88195a002E8DD4CBF6Ec9BC7f60).
 // - Set the addressToPairs of supported synthetic asset (e.g.) addressToPairs[0x65cAC0F09EFdB88195a002E8DD4CBF6Ec9BC7f60] = "TSLA/USD".
 
-contract Synthetic is Ownable, Pausable {
+contract Synthetic is Ownable, Pausable, ReentrancyGuard {
     using SafeMath for uint256;
 
     IERC20Burnable public systheticAsset;
@@ -102,7 +103,7 @@ contract Synthetic is Ownable, Pausable {
         IERC20Burnable _synthetic,
         uint256 _amount, // amount of synthetic that want to mint
         uint256 _backedAmount // amount of Dolly that you want to collateral
-    ) external whenNotPaused {
+    ) external whenNotPaused nonReentrant {
         MintingNote storage mn = contracts[_msgSender()][address(_synthetic)];
         require(
             mn.minter == address(0),
@@ -152,6 +153,7 @@ contract Synthetic is Ownable, Pausable {
     function redeemSynthetic(IERC20Burnable _synthetic, uint256 _amount)
         external
         whenNotPaused
+        nonReentrant
     {
         MintingNote storage mn = contracts[_msgSender()][address(_synthetic)];
         require(
@@ -221,6 +223,7 @@ contract Synthetic is Ownable, Pausable {
     function addCollateral(IERC20Burnable _synthetic, uint256 _addAmount)
         external
         whenNotPaused
+        nonReentrant
     {
         MintingNote storage mn = contracts[_msgSender()][address(_synthetic)];
         require(
@@ -263,7 +266,7 @@ contract Synthetic is Ownable, Pausable {
     function removeCollateral(
         IERC20Burnable _synthetic,
         uint256 _removeBackedAmount
-    ) external whenNotPaused {
+    ) external whenNotPaused nonReentrant {
         MintingNote storage mn = contracts[_msgSender()][address(_synthetic)];
         require(
             mn.assetAmount > 0,
@@ -313,7 +316,7 @@ contract Synthetic is Ownable, Pausable {
     function removeLowerCollateral(
         IERC20Burnable _synthetic,
         uint256 _removeAmount
-    ) external onlyOwner whenNotPaused {
+    ) external onlyOwner whenNotPaused nonReentrant {
         MintingNote storage mn = contracts[_msgSender()][address(_synthetic)];
         require(
             mn.assetAmount > 0,
@@ -346,6 +349,7 @@ contract Synthetic is Ownable, Pausable {
     function liquidate(IERC20Burnable _synthetic, address _minter)
         external
         whenNotPaused
+        nonReentrant
     {
         MintingNote storage mn = contracts[_minter][address(_synthetic)];
         require(

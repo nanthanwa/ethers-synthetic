@@ -279,7 +279,7 @@ contract Synthetic is Ownable {
         );
         uint256 exchangeRate = getRate(addressToPairs[address(_synthetic)]);
         uint256 assetBackedAtRateAmount =
-            (mn.assetAmount.mul(exchangeRate)).div(denominator); // 606872500000000000000
+            (mn.assetAmount.mul(exchangeRate)).div(denominator);
         uint256 requiredAmount =
             (assetBackedAtRateAmount.mul(collateralRatio)).div(denominator);
 
@@ -333,11 +333,16 @@ contract Synthetic is Ownable {
         );
         mn.assetBackedAmount = mn.assetBackedAmount.sub(_removeAmount);
         uint256 exchangeRate = getRate(addressToPairs[address(_synthetic)]);
+        uint256 assetBackedAtRateAmount =
+            (mn.assetAmount.mul(exchangeRate)).div(denominator);
         dolly.transfer(_msgSender(), _removeAmount);
         mn.currentRatio = (
-            ((mn.assetBackedAmount.mul(denominator)).div(exchangeRate)).mul(
-                denominator
+            (
+                (mn.assetBackedAmount.mul(denominator)).div(
+                    assetBackedAtRateAmount
+                )
             )
+                .mul(denominator)
         )
             .div(denominator);
         mn.willLiquidateAtPrice = (

@@ -13,7 +13,7 @@ async function main() {
     console.log('Dolly deployed to:', dolly.address);
     // console.log('verify Synthetic');
     // await run('verify:verify', {
-    //   address: '0x172018C14eeA6312BF4243BFa3d07249feA7E542',
+    //   address: dollyAddress,
     //   constructorArguments: [
     //     'Dolly Stable Coin',
     //     'DOLLY',
@@ -21,9 +21,9 @@ async function main() {
     //   ],
     // });
 
-    // const Synthetic = await ethers.getContractFactory('Synthetic');
-    // const synthetic = await Synthetic.deploy(dolly.address, bandRef); // dolly, bandRef
-    const synthetic = await ethers.getContractAt('Synthetic', '0x6A23889CbA84D8E3D3e66Dad086c67Dd69909fFD');
+    const Synthetic = await ethers.getContractFactory('Synthetic');
+    const synthetic = await Synthetic.deploy(dolly.address, bandRef); // dolly, bandRef
+    // const synthetic = await ethers.getContractAt('Synthetic', '0x6A23889CbA84D8E3D3e66Dad086c67Dd69909fFD');
     await synthetic.deployed();
     console.log('Synthetic deployed to:', synthetic.address);
     console.log('verify Synthetic');

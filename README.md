@@ -20,12 +20,6 @@
         "",
         ""
         ],
-    "privateKeyGanache": [
-        "",
-        "",
-        "",
-        ""
-        ],
     "etherApiKey": "",
     "bscApiKey": ""
 }

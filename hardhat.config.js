@@ -5,7 +5,7 @@ require('hardhat-spdx-license-identifier');
 require('hardhat-deploy');
 const { removeConsoleLog } = require('hardhat-preprocessor');
 const fs = require('fs');
-const { infuraProjectId, privateKey, privateKeyGanache, etherApiKey, bscApiKey } = JSON.parse(fs.readFileSync('.secret').toString().trim());
+const { infuraProjectId, privateKey, etherApiKey, bscApiKey } = JSON.parse(fs.readFileSync('.secret').toString().trim());
 
 // This is a sample Hardhat task. To learn how to create your own go to
 // https://hardhat.org/guides/create-task.html
@@ -29,7 +29,7 @@ module.exports = {
   networks: {
     hardhat: {
       forking: {
-        url: 'https://kovan.infura.io/v3/86f947e6d8ad4483a95d5a53864e7a8e',
+        url: `https://kovan.infura.io/v3/${infuraProjectId}`,
         blockNumber: 25036674
       },
       saveDeployments: true,

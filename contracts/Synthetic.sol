@@ -124,7 +124,9 @@ contract Synthetic is Ownable {
         )
             .div(denominator); // must more than 1.5 ratio (15e17)
         mn.willLiquidateAtPrice = (
-            assetBackedAtRateAmount.mul(liquidationRatio)
+            exchangeRate.mul(
+                (mn.currentRatio.sub(liquidationRatio)).sub(denominator)
+            )
         )
             .div(denominator); // more assetBacked, more liquidatePrice
         mn.canWithdrawRemainning = canWithdrawRemainning;
@@ -199,7 +201,9 @@ contract Synthetic is Ownable {
             )
                 .div(denominator); // must more than 1.5 ratio (15e17)
             mn.willLiquidateAtPrice = (
-                assetBackedAmountAfterRedeem.mul(liquidationRatio)
+                exchangeRate.mul(
+                    (mn.currentRatio.sub(liquidationRatio)).sub(denominator)
+                )
             )
                 .div(denominator); // more assetBacked, more liquidatePrice
             mn.canWithdrawRemainning = canWithdrawRemainning;
@@ -244,7 +248,9 @@ contract Synthetic is Ownable {
         )
             .div(denominator); // must more than 1.5 ratio (15e17)
         mn.willLiquidateAtPrice = (
-            assetBackedAtRateAmount.mul(liquidationRatio)
+            exchangeRate.mul(
+                (mn.currentRatio.sub(liquidationRatio)).sub(denominator)
+            )
         )
             .div(denominator); // more assetBacked, more liquidatePrice
         mn.canWithdrawRemainning = canWithdrawRemainning;
@@ -300,7 +306,9 @@ contract Synthetic is Ownable {
         )
             .div(denominator); // must more than 1.5 ratio (15e17)
         mn.willLiquidateAtPrice = (
-            assetBackedAtRateAmount.mul(liquidationRatio)
+            exchangeRate.mul(
+                (mn.currentRatio.sub(liquidationRatio)).sub(denominator)
+            )
         )
             .div(denominator); // more assetBacked, more liquidatePrice
         mn.canWithdrawRemainning = canWithdrawRemainning;
@@ -331,8 +339,6 @@ contract Synthetic is Ownable {
         );
         mn.assetBackedAmount = mn.assetBackedAmount.sub(_removeAmount);
         uint256 exchangeRate = getRate(addressToPairs[address(_synthetic)]);
-        uint256 assetBackedAtRateAmount =
-            (mn.assetAmount.mul(exchangeRate)).div(denominator); // 606872500000000000000
         dolly.transfer(_msgSender(), _removeAmount);
         mn.currentRatio = (
             ((mn.assetBackedAmount.mul(denominator)).div(exchangeRate)).mul(
@@ -341,7 +347,9 @@ contract Synthetic is Ownable {
         )
             .div(denominator);
         mn.willLiquidateAtPrice = (
-            assetBackedAtRateAmount.mul(liquidationRatio)
+            exchangeRate.mul(
+                (mn.currentRatio.sub(liquidationRatio)).sub(denominator)
+            )
         )
             .div(denominator);
         mn.canWithdrawRemainning = 0;

@@ -13,7 +13,7 @@
 ## Features
 - Can mint synthetic asset by provide 150% of collateral (adjustable). (e.g. provide $DOLLY -> receive $dTSLA)
 - Can redeem (fully or partial) of synthetic asset to get collateral back. (e.g. repay $DOLLY -> burn $dTSLA)
-- Can add more collateral by provide backed asset ($Dolly) for extend liquidation ratio.
+- Can add more collateral by provide backed asset ($DOLLY) for extend liquidation ratio.
 - Can remove some collateral whereas the collateral ratio still satisfy.
 - Can liquidate open contract that hit the liquidation ratio.
 - Liquidation fee will be transfered to dev address (optional).

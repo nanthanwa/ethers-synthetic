@@ -7,7 +7,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
         log: true,
     });
     const dolly = await ethers.getContract('Dolly', deployer);
-    const dollyAmount = ethers.utils.parseEther('50000').toString();
+    const dollyAmount = ethers.utils.parseEther('30000').toString();
     await dolly.transfer(minter, dollyAmount);
     await dolly.transfer(liquidator, dollyAmount);
 };

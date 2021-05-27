@@ -52,6 +52,7 @@ module.exports = {
     deployer: 0,
     minter: 1,
     liquidator: 2,
+    devAddress: 3,
   },
   solidity: {
     version: '0.6.12',

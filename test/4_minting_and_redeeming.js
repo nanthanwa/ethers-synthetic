@@ -6,7 +6,7 @@ const { BigNumber } = ethers.utils;
 const fs = require('fs');
 chai.use(require('chai-bignumber')());
 
-describe('Advance Testing', async () => {
+describe('Minting and Redeeming Testing', async () => {
     let actual, synthetic, networkName, dolly, doppleTSLA;
     let deployer, minter, liquidator;
     before(async () => {

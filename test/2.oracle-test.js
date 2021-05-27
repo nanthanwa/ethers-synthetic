@@ -1,21 +1,21 @@
 const { expect, assert } = require('chai');
 const { deployments } = require('hardhat');
 const { BigNumber } = require('ethers');
+const { ethers, getNamedAccounts } = require('hardhat');
 
 describe('Oracle Testing', async () => {
-    const bandRef = '0xDA7a001b254CD22e46d3eAB04d937489c93174C3'; // use proxy
-    let dolly, synthetic;
+    let synthetic;
     before(async () => {
-        await deployments.fixture();
+        await deployments.fixture(); // ensure you start from a fresh deployments
         const Synthetic = await deployments.get('Synthetic');
-        console.log(Synthetic.address);
-        // const Synthetic = await ethers.getContractFactory('Synthetic');
-        // synthetic = await Synthetic.deploy(dolly.address, bandRef);
-        // await synthetic.deployed();
-        // console.log("Synthetic deployed to:", synthetic.address);
+        synthetic = await ethers.getContractAt('Synthetic', Synthetic.address);
+        // const { deployer } = await getNamedAccounts();
+        // synthetic = await ethers.getContract('Synthetic', deployer);
         // assert.ok(synthetic.address);
     });
-    it('Can deploy Synthetic contract', async () => {
-
+    it('Can get TSLA/USD price', async () => {
+        console.log('synthetic', synthetic.address);
+        const price = await synthetic.getRate('BTC/USD');
+        console.log('price', price);
     });
 });

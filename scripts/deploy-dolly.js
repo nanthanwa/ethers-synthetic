@@ -5,7 +5,7 @@ async function main() {
   console.log('Network name:', network.name);
 
   if (network.name === 'kovan') {
-    const Dolly = await ethers.getContractFactory("contracts/Dolly.sol:Dolly");
+    const Dolly = await ethers.getContractFactory("Dolly.sol");
     const dolly = await Dolly.deploy("Dolly Stable Coin", "DOLLY", "18");
     await dolly.deployed();
     console.log("Dolly deployed to:", dolly.address);

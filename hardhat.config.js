@@ -31,6 +31,8 @@ module.exports = {
     hardhat: {
       // forking: {
       //   url: `https://kovan.infura.io/v3/${infuraProjectId}`,
+      //   url: `https://eth-kovan.alchemyapi.io/v2/kzTpbwIPy_KjG1bG0omquzJ6tKi5i0XB`,
+      //   blockNumber: 25080687
       // },
       saveDeployments: true,
       tags: ["test", "local"],
@@ -39,7 +41,7 @@ module.exports = {
       // url: 'https://eth-kovan.alchemyapi.io/v2/kzTpbwIPy_KjG1bG0omquzJ6tKi5i0XB',
       url: `https://kovan.infura.io/v3/${infuraProjectId}`,
       accounts: privateKey,
-      saveDeployments: true,
+      // saveDeployments: true,
       tags: ["test", "local"],
     },
     bscTestnet: {
@@ -73,7 +75,7 @@ module.exports = {
     imports: './imports'
   },
   mocha: {
-    timeout: 20000
+    timeout: 50000
   },
   etherscan: {
     // Your API key for Etherscan

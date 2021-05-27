@@ -44,7 +44,7 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
     mapping(string => address) public pairsToAddress;
     mapping(address => string) public addressToPairs;
 
-    uint256 public denominator = 1e18; // 1 scaled by 1e18
+    uint256 public constant denominator = 1e18; // 1 scaled by 1e18
     uint256 public collateralRatio = 1e18 + 5e17; // 1.5 scaled by 1e18 (> 1.5 is good)
     uint256 public liquidationRatio = 1e18 + 25e16; // 1.25 scaled by 1e18
 
@@ -517,7 +517,7 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
     function getCurrentRatio(
         uint256 _backedAmount,
         uint256 _assetBackedAtRateAmount
-    ) internal view returns (uint256) {
+    ) internal pure returns (uint256) {
         return
             (
                 ((_backedAmount.mul(denominator)).div(_assetBackedAtRateAmount))
@@ -545,7 +545,7 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
     function getCanMintRemainning(
         uint256 canWithdrawRemainning,
         uint256 assetBackedAtRateAmount
-    ) internal view returns (uint256) {
+    ) internal pure returns (uint256) {
         return
             (
                 (
@@ -564,7 +564,7 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
     // @param assetAmount: the number of minted synthetic asset.
     function getRedeemPercent(uint256 _amount, uint256 assetAmount)
         internal
-        view
+        pure
         returns (uint256)
     {
         return

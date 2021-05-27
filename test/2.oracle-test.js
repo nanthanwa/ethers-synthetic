@@ -12,7 +12,7 @@ describe('Oracle Testing', async () => {
     before(async () => {
         networkName = (await ethers.provider.getNetwork()).name;
         console.log('network', networkName);
-        if(networkName !== 'unknown' && networkName !== 'hardhat'){
+        if(networkName === 'kovan'){
             const { address } = JSON.parse(fs.readFileSync(`./deployments/${networkName}/Synthetic.json`).toString().trim());
             synthetic = await ethers.getContractAt('Synthetic', address);
             assert.ok(synthetic.address);

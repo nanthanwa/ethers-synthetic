@@ -36,7 +36,6 @@ interface IERC20Burnable is IERC20 {
 contract Synthetic is Ownable, Pausable, ReentrancyGuard {
     using SafeMath for uint256;
 
-    IERC20Burnable public systheticAsset;
     IERC20 public dolly;
     IStdReference public bandOracle;
 

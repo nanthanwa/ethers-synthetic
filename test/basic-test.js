@@ -1,6 +1,6 @@
 const { expect, assert } = require('chai');
 const { BigNumber } = require('ethers');
 
-describe('Oracle Testing', async () => {
+describe('Basic Testing', async () => {
 
 });

@@ -25,7 +25,7 @@ task('accounts', 'Prints the list of accounts', async () => {
  */
 
 module.exports = {
-  defaultNetwork: 'kovan',
+  defaultNetwork: 'hardhat',
   networks: {
     hardhat: {
       forking: {

@@ -389,7 +389,7 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
             assetBackedAtRateAmount
         ); // deduct Doly from liquidator
         dolly.transfer(mn.minter, minterReceiveAmount); // transfer remainning to minter (90%)
-        dolly.transfer(_msgSender(), liquidatorReceiveAmount); // transfer reward to to liquidator (5%)
+        dolly.transfer(_msgSender(), assetBackedAtRateAmount.add(liquidatorReceiveAmount)); // transfer reward to to liquidator (5%) + original amount
         dolly.transfer(devAddress, platformReceiveAmount); // transfer liquidating fee to dev address (5%)
 
         delete contracts[_minter][address(_synthetic)];

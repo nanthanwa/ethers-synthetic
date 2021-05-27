@@ -1,7 +1,6 @@
 const chai = require('chai');
 const { expect, assert } = chai;
 const { deployments } = require('hardhat');
-const { BigNumber } = require('ethers');
 const { ethers, getNamedAccounts } = require('hardhat');
 const fs = require('fs');
 chai.use(require('chai-bignumber')());
@@ -9,13 +8,18 @@ chai.use(require('chai-bignumber')());
 
 // @dev this test can run on Kovan network only
 describe('Oracle Testing', async () => {
-    let synthetic;
+    let synthetic, networkName;
     before(async () => {
-        const networkName = (await ethers.provider.getNetwork()).name;
-        const { address } = JSON.parse(fs.readFileSync(`./deployments/${networkName}/Synthetic.json`).toString().trim());
+        networkName = (await ethers.provider.getNetwork()).name;
         console.log('network', networkName);
-        synthetic = await ethers.getContractAt('Synthetic', address);
-        assert.ok(synthetic.address);
+        if(networkName !== 'unknown' && networkName !== 'hardhat'){
+            const { address } = JSON.parse(fs.readFileSync(`./deployments/${networkName}/Synthetic.json`).toString().trim());
+            synthetic = await ethers.getContractAt('Synthetic', address);
+            assert.ok(synthetic.address);
+        } else {
+            console.error('This unit test can run on Kovan network only');
+            assert.ok(false);
+        }
     });
 
     it('Can get TSLA/USD price', async () => {

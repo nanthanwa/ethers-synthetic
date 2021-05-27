@@ -9,14 +9,14 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
         log: true,
     });
 
-    console.log('verify Synthetic');
-    await run('verify:verify', {
-        address: result.address,
-        constructorArguments: [
-            dolly.address,
-            bandRef,
-        ],
-    });
+    // console.log('verify Synthetic');
+    // await run('verify:verify', {
+    //     address: result.address,
+    //     constructorArguments: [
+    //         dolly.address,
+    //         bandRef,
+    //     ],
+    // });
 };
 
 module.exports.tags = ['Synthetic'];

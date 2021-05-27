@@ -9,11 +9,11 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
     });
     let tx;
     tx = await synthetic.setPairsToAddress('AMZN/USD', result.address, { from: deployer });
-    console.log('setPairsToAddress: hash', tx.hash);
+    // console.log('setPairsToAddress: hash', tx.hash);
     tx = await synthetic.setAddressToPairs(result.address, 'AMZN/USD', { from: deployer });
-    console.log('setAddressToPairs: hash', tx.hash);
+    // console.log('setAddressToPairs: hash', tx.hash);
     tx = await synthetic.setPairsToQuote('AMZN/USD', ['AMZN', 'USD'], { from: deployer });
-    console.log('setPairsToQuote: hash', tx.hash);
+    // console.log('setPairsToQuote: hash', tx.hash);
 };
 
 module.exports.tags = ['DoppleAMZN'];

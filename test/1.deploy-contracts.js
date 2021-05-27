@@ -25,7 +25,7 @@ describe('Deploy Contract', () => {
   });
 
   it('Can deploy Dolly contract', async () => {
-    const Dolly = await ethers.getContractFactory("contracts/Dolly.sol:Dolly");
+    const Dolly = await ethers.getContractFactory("Dolly");
     dolly = await Dolly.deploy("Dolly Stable Coin", "DOLLY", "18");
     await dolly.deployed();
     console.log("Dolly deployed to:", dolly.address);

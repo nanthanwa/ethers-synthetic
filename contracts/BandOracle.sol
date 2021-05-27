@@ -5,7 +5,7 @@ pragma experimental ABIEncoderV2;
 import "./IStdReference.sol";
 
 contract BandOracle {
-    IStdReference ref;
+    IStdReference immutable ref;
 
     uint256 public price;
 

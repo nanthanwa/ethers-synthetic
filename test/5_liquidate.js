@@ -328,7 +328,7 @@ describe('Liquidation Testing', async () => {
         // console.log('bDollyBal4', bDollyBal4);
     });
 
-    // 3288
+    // 3288 => 3932
     it('Can liquidate $dAMZN', async () => {
         // ========================================================
         // MINTING
@@ -343,7 +343,7 @@ describe('Liquidation Testing', async () => {
         assert.ok(doppleAMZN.address);
 
         const syntheticAmount = ethers.utils.parseEther('1');
-        const dollyAmount = ethers.utils.parseEther('5500');
+        const dollyAmount = ethers.utils.parseEther('5000');
         const aDollyBal = await dolly.balanceOf(deployer);
         const aAMZNBal = await doppleAMZN.balanceOf(deployer);
         // console.log('dollyAmount', dollyAmount.toString());
@@ -368,8 +368,7 @@ describe('Liquidation Testing', async () => {
         // ========================================================
         // REMOVE COLLATERAL
         // ========================================================
-        console.log('dollyAmount.div(2)', dollyAmount.div(2).toString());
-        actual = await synthetic.removeLowerCollateral(doppleAMZN.address, dollyAmount.div(2));
+        actual = await synthetic.removeLowerCollateral(doppleAMZN.address, dollyAmount.mul(20).div(100));
         const bDollyBal2 = await dolly.balanceOf(deployer);
         assert.ok(bDollyBal2.gt(bDollyBal1));
 
@@ -378,7 +377,6 @@ describe('Liquidation Testing', async () => {
         // ========================================================
         synthetic = await ethers.getContractAt('Synthetic', synthetic.address, liquidator);
         assert.ok(synthetic.address);
-
         actual = await synthetic.viewRewardFromLiquidate(doppleAMZN.address, deployer);
         const [assetBackedAtRateAmount,
             remainingGapAmount,
@@ -443,7 +441,7 @@ describe('Liquidation Testing', async () => {
         assert.ok(doppleQQQ.address);
 
         const syntheticAmount = ethers.utils.parseEther('1');
-        const dollyAmount = ethers.utils.parseEther('600');
+        const dollyAmount = ethers.utils.parseEther('510');
         const aDollyBal = await dolly.balanceOf(deployer);
         const aQQQBal = await doppleQQQ.balanceOf(deployer);
         // console.log('dollyAmount', dollyAmount.toString());
@@ -468,7 +466,7 @@ describe('Liquidation Testing', async () => {
         // ========================================================
         // REMOVE COLLATERAL
         // ========================================================
-        actual = await synthetic.removeLowerCollateral(doppleQQQ.address, dollyAmount.div(2));
+        actual = await synthetic.removeLowerCollateral(doppleQQQ.address, dollyAmount.mul(20).div(100));
         const bDollyBal2 = await dolly.balanceOf(deployer);
         assert.ok(bDollyBal2.gt(bDollyBal1));
 
@@ -484,11 +482,11 @@ describe('Liquidation Testing', async () => {
             minterReceiveAmount,
             liquidatorReceiveAmount,
             platformReceiveAmount] = actual;
-        // console.log('assetBackedAtRateAmount', assetBackedAtRateAmount);
-        // console.log('remainingGapAmount', remainingGapAmount);
-        // console.log('minterReceiveAmount', minterReceiveAmount);
-        // console.log('liquidatorReceiveAmount', liquidatorReceiveAmount);
-        // console.log('platformReceiveAmount', platformReceiveAmount);
+        // console.log('assetBackedAtRateAmount', assetBackedAtRateAmount.toString());
+        // console.log('remainingGapAmount', remainingGapAmount.toString());
+        // console.log('minterReceiveAmount', minterReceiveAmount.toString());
+        // console.log('liquidatorReceiveAmount', liquidatorReceiveAmount.toString());
+        // console.log('platformReceiveAmount', platformReceiveAmount.toString());
 
         actual = await synthetic.contracts(deployer, doppleQQQ.address);
         const [

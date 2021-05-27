@@ -28,10 +28,9 @@ module.exports = {
   defaultNetwork: 'hardhat',
   networks: {
     hardhat: {
-      forking: {
-        url: `https://kovan.infura.io/v3/${infuraProjectId}`,
-        blockNumber: 25036674
-      },
+      // forking: {
+      //   url: `https://kovan.infura.io/v3/${infuraProjectId}`,
+      // },
       saveDeployments: true,
       tags: ["test", "local"],
     },

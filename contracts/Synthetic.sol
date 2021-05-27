@@ -90,6 +90,11 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
     );
 
     event SetDevAddress(address oldDevAddress, address newDevAddress);
+    event SetCollateralRatio(uint256 oldCollateralRatio, uint256 newCollateralRatio);
+    event SetLiquidationRatio(uint256 oldLiquidationRatio, uint256 newLiquidationRatio);
+    event SetLiquidatorRewardRatio(uint256 oldLiquidatorRewardRatio, uint256 newLiquidatorRewardRatio);
+    event SetPlatfromFeeRatio(uint256 oldPlatfromFeeRatio, uint256 newPlatfromFeeRatio);
+    event SetRemainingToMinterRatio(uint256 oldRemainingToMinterRatio, uint256 newRemainingToMinterRatio);
 
     // @dev the constructor requires an address of Dolly and referrence of oracle Band Protocol
     constructor(IERC20 _dolly, IStdReference _ref) public {
@@ -431,6 +436,46 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
         address oldDevAddress = devAddress;
         devAddress = _devAddress;
         emit SetDevAddress(oldDevAddress, _devAddress);
+    }
+
+    // @info set collateral ratio.
+    // @param _collateralRatio: new collateral ratio.
+    function setCollateralRatio(uint256 _collateralRatio) external onlyOwner {
+        uint256 oldCollateralRatio = collateralRatio;
+        collateralRatio = _collateralRatio;
+        emit SetCollateralRatio(oldCollateralRatio, _collateralRatio);
+    }
+
+    // @info set liquidation ratio.
+    // @param _liquidationRatio: new liquidation ratio.
+    function setLiquidationRatio(uint256 _liquidationRatio) external onlyOwner {
+        uint256 oldLiquidationRatio = liquidationRatio;
+        liquidationRatio = _liquidationRatio;
+        emit SetLiquidationRatio(oldLiquidationRatio, _liquidationRatio);
+    }
+
+    // @info set liquidator reward ratio.
+    // @param _liquidatorRewardRatio: new liquidator reward ratio.
+    function setLiquidatorRewardRatio(uint256 _liquidatorRewardRatio) external onlyOwner {
+        uint256 oldLiquidatorRewardRatio = liquidatorRewardRatio;
+        liquidatorRewardRatio = _liquidatorRewardRatio;
+        emit SetLiquidatorRewardRatio(oldLiquidatorRewardRatio, _liquidatorRewardRatio);
+    }
+
+    // @info set platfrom fee ratio.
+    // @param _platfromFeeRatio: new platfrom fee ratio.
+    function setPlatfromFeeRatio(uint256 _platfromFeeRatio) external onlyOwner {
+        uint256 oldPlatfromFeeRatio = platfromFeeRatio;
+        platfromFeeRatio = _platfromFeeRatio;
+        emit SetPlatfromFeeRatio(oldPlatfromFeeRatio, _platfromFeeRatio);
+    }
+
+    // @info set remaining of backed asset to minter ratio.
+    // @param _setRemainingToMinterRatio: new remaining to minter ratio.
+    function setRemainingToMinterRatio(uint256 _remainingToMinterRatio) external onlyOwner {
+        uint256 oldRemainingToMinterRatio = remainingToMinterRatio;
+        remainingToMinterRatio = _remainingToMinterRatio;
+        emit SetRemainingToMinterRatio(oldRemainingToMinterRatio, _remainingToMinterRatio);
     }
 
     // @dev for simulate all relevant amount of liqiodation

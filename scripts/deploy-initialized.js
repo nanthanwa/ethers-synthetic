@@ -7,7 +7,7 @@ async function main() {
   if (network.name === 'kovan') {
     let result;
     const dollyAddress = '0x172018C14eeA6312BF4243BFa3d07249feA7E542';
-    const bandRef = '0xDA7a001b254CD22e46d3eAB04d937489c93174C3'; // use proxy
+    const bandRef = '0xDA7a001b254CD22e46d3eAB04d937489c93174C3';
     const dolly = await ethers.getContractAt('contracts/Dolly.sol:Dolly', dollyAddress);
     await dolly.deployed();
     console.log('Dolly deployed to:', dolly.address);

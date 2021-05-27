@@ -1,11 +1,27 @@
 const { expect, assert } = require('chai');
 const { BigNumber } = require('ethers');
+const { deployments } = require('hardhat');
 
 describe('Deploy Contract', () => {
   const bandRef = '0xDA7a001b254CD22e46d3eAB04d937489c93174C3'; // use proxy
   let dolly, synthetic, doppleTSLA, doppleCOIN, doppleAAPL, doppleQQQ, doppleAMZN, doppleXAU;
-  before(async (done) => {
-    done();
+  before(async () => {
+
+  });
+
+  afterEach(async () => {
+    // const setupTest = deployments.createFixture(async ({ deployments, getNamedAccounts, ethers }, options) => {
+    //   await deployments.fixture(); // ensure you start from a fresh deployments
+    //   const { owner } = await getNamedAccounts();
+    //   const TokenContract = await ethers.getContract("Token", owner);
+    //   await TokenContract.mint(10).then(tx => tx.wait()); //this mint is executed once and then `createFixture` will ensure it is snapshotted
+    //   return {
+    //     tokenOwner: {
+    //       address: tokenOwner,
+    //       TokenContract
+    //     }
+    //   };
+    // };
   });
 
   it('Can deploy Dolly contract', async () => {

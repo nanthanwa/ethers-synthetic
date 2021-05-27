@@ -3,6 +3,7 @@ require('@nomiclabs/hardhat-waffle');
 require('@nomiclabs/hardhat-etherscan');
 require('hardhat-spdx-license-identifier');
 require('hardhat-deploy');
+require('hardhat-deploy-ethers');
 const { removeConsoleLog } = require('hardhat-preprocessor');
 const fs = require('fs');
 const { infuraProjectId, privateKey, etherApiKey, bscApiKey } = JSON.parse(fs.readFileSync('.secret').toString().trim());
@@ -48,6 +49,11 @@ module.exports = {
       tags: ["test", "local"],
     }
   },
+  namedAccounts: {
+    deployer: 0,
+    minter: 1,
+    liquidator: 2,
+  },
   solidity: {
     version: '0.6.12',
     settings: {
@@ -61,10 +67,10 @@ module.exports = {
     sources: './contracts',
     tests: './test',
     cache: './cache',
-    artifacts: './artifacts'
-    // deploy: './deploy',
-    // deployments: './deployments',
-    // imports: './imports'
+    artifacts: './artifacts',
+    deploy: './deploy',
+    deployments: './deployments',
+    imports: './imports'
   },
   mocha: {
     timeout: 20000

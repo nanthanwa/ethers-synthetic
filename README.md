@@ -50,7 +50,7 @@
 - ⏰ Recheck over, underflow.
 - ⏰ Use [Chainlink oracle](https://docs.chain.link/docs/binance-smart-chain-addresses) for standby (or combine) mode.
 
-## Deployment
+## Running a script (without hardhat deployment)
 - Run `hh run scripts/deploy-initialized.js --network kovan`
 
 ## Step by step explanation

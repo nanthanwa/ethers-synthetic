@@ -6,7 +6,7 @@ const fs = require('fs');
 chai.use(require('chai-bignumber')());
 
 
-// @dev this test can run on Kovan network only
+// @dev this test can run on Kovan network or forked Kovan network only
 describe('Oracle Testing', async () => {
     let synthetic, networkName;
     before(async () => {
@@ -17,8 +17,10 @@ describe('Oracle Testing', async () => {
             synthetic = await ethers.getContractAt('Synthetic', address);
             assert.ok(synthetic.address);
         } else {
-            console.error('This unit test can run on Kovan network only');
-            assert.ok(false);
+            await deployments.fixture(); // ensure you start from a fresh deployments
+            Synthetic = await deployments.get('Synthetic');
+            synthetic = await ethers.getContractAt('Synthetic', Synthetic.address);
+            assert.ok(synthetic.address);
         }
     });
 

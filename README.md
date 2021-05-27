@@ -27,10 +27,10 @@
 ```
 
 # Deployment
-- Run `hh deploy` to deploy on local network or `hh deploy --network kovan` (some tests are required Kovan network to get Oracle price).
+- Run `hh deploy` to deploy on local network
 
 # Runing the unit tests
-- Run `hh test` for test on local network or `hh test --network kovan`
+- Run `hh test` for test on local network (some tests are required "Kovan network forked" to get Oracle price).
 
 ## Features
 - Can mint synthetic asset by provide 150% of collateral (adjustable). (e.g. provide $DOLLY -> receive $dTSLA)

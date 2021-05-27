@@ -6,7 +6,7 @@ require('hardhat-deploy');
 require('hardhat-deploy-ethers');
 const { removeConsoleLog } = require('hardhat-preprocessor');
 const fs = require('fs');
-const { infuraProjectId, privateKey, etherApiKey, bscApiKey } = JSON.parse(fs.readFileSync('.secret').toString().trim());
+const { infuraProjectId, alchemyProjectId, privateKey, etherApiKey, bscApiKey } = JSON.parse(fs.readFileSync('.secret').toString().trim());
 
 // This is a sample Hardhat task. To learn how to create your own go to
 // https://hardhat.org/guides/create-task.html
@@ -29,17 +29,14 @@ module.exports = {
   defaultNetwork: 'hardhat',
   networks: {
     hardhat: {
-      // forking: {
-      //   url: `https://kovan.infura.io/v3/${infuraProjectId}`,
-      //   url: `https://eth-kovan.alchemyapi.io/v2/kzTpbwIPy_KjG1bG0omquzJ6tKi5i0XB`,
-      //   blockNumber: 25080687
-      // },
+      forking: {
+        url: `https://kovan.infura.io/v3/${infuraProjectId}`,
+      },
       saveDeployments: true,
       tags: ["test", "local"],
     },
     kovan: {
-      url: 'https://eth-kovan.alchemyapi.io/v2/kzTpbwIPy_KjG1bG0omquzJ6tKi5i0XB',
-      // url: `https://kovan.infura.io/v3/${infuraProjectId}`,
+      url: `https://eth-kovan.alchemyapi.io/v2/${alchemyProjectId}`,
       accounts: privateKey,
       saveDeployments: true,
       tags: ["test", "local"],

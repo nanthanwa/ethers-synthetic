@@ -98,7 +98,7 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
         devAddress = _msgSender();
     }
 
-    // user need to approve for synthetic mint at dolly contract first.
+    // user need to approve for deducting $DOLLY at Dolly contract first.
     function mintSynthetic(
         IERC20Burnable _synthetic,
         uint256 _amount, // amount of synthetic that want to mint

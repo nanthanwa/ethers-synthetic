@@ -575,6 +575,6 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
     // @dev using for get supported asset before do the operation.
     // @param _pairs: the string of pairs e.g. "TSLA/USD"
     function isSupported(string memory _pairs) public view returns (bool) {
-        return pairsToQuote[_pairs].length > 0;
+        return pairsToAddress[_pairs] != address(0);
     }
 }

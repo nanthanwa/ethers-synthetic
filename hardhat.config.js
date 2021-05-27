@@ -38,10 +38,10 @@ module.exports = {
       tags: ["test", "local"],
     },
     kovan: {
-      // url: 'https://eth-kovan.alchemyapi.io/v2/kzTpbwIPy_KjG1bG0omquzJ6tKi5i0XB',
-      url: `https://kovan.infura.io/v3/${infuraProjectId}`,
+      url: 'https://eth-kovan.alchemyapi.io/v2/kzTpbwIPy_KjG1bG0omquzJ6tKi5i0XB',
+      // url: `https://kovan.infura.io/v3/${infuraProjectId}`,
       accounts: privateKey,
-      // saveDeployments: true,
+      saveDeployments: true,
       tags: ["test", "local"],
     },
     bscTestnet: {

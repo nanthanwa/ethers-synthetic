@@ -193,4 +193,153 @@ describe('Advance Testing', async () => {
         assert.ok(bXAUBal.eq(aXAUBal.add(syntheticAmount)));
     });
 
+    it('Can fully redeem $dTSLA', async () => {
+        const DoppleTSLA = await deployments.get('DoppleTSLA');
+        doppleTSLA = await ethers.getContractAt('DoppleTSLA', DoppleTSLA.address, minter);
+        assert.ok(doppleTSLA.address);
+
+        const aDollyBal = await dolly.balanceOf(minter);
+        const aTSLABal = await doppleTSLA.balanceOf(minter);
+        // console.log('aDollyBal', aDollyBal);
+        // console.log('aTSLABal', aTSLABal);
+        actual = await doppleTSLA.approve(synthetic.address, aTSLABal);
+        assert.ok(actual.hash);
+        const allowance = await doppleTSLA.allowance(minter, synthetic.address);
+        // console.log('allowance', allowance);
+        actual = await synthetic.redeemSynthetic(doppleTSLA.address, aTSLABal);
+        assert.ok(actual.hash);
+
+        const bDollyBal = await dolly.balanceOf(minter);
+        const bTSLABal = await doppleTSLA.balanceOf(minter);
+        // console.log('bDollyBal', bDollyBal);
+        // console.log('bTSLABal', bTSLABal);
+
+        assert.ok(bDollyBal.gt(aDollyBal));
+        assert.ok(bTSLABal.lt(aTSLABal));
+    });
+
+    it('Can fully redeem $dCOIN', async () => {
+        const DoppleCOIN = await deployments.get('DoppleCOIN');
+        doppleCOIN = await ethers.getContractAt('DoppleCOIN', DoppleCOIN.address, minter);
+        assert.ok(doppleCOIN.address);
+
+        const aDollyBal = await dolly.balanceOf(minter);
+        const aCOINBal = await doppleCOIN.balanceOf(minter);
+        // console.log('aDollyBal', aDollyBal);
+        // console.log('aCOINBal', aCOINBal);
+        actual = await doppleCOIN.approve(synthetic.address, aCOINBal);
+        assert.ok(actual.hash);
+        const allowance = await doppleCOIN.allowance(minter, synthetic.address);
+        // console.log('allowance', allowance);
+        actual = await synthetic.redeemSynthetic(doppleCOIN.address, aCOINBal);
+        assert.ok(actual.hash);
+
+        const bDollyBal = await dolly.balanceOf(minter);
+        const bCOINBal = await doppleCOIN.balanceOf(minter);
+        // console.log('bDollyBal', bDollyBal);
+        // console.log('bCOINBal', bCOINBal);
+
+        assert.ok(bDollyBal.gt(aDollyBal));
+        assert.ok(bCOINBal.lt(aCOINBal));
+    });
+
+    it('Can fully redeem $dAAPL', async () => {
+        const DoppleAAPL = await deployments.get('DoppleAAPL');
+        doppleAAPL = await ethers.getContractAt('DoppleAAPL', DoppleAAPL.address, minter);
+        assert.ok(doppleAAPL.address);
+
+        const aDollyBal = await dolly.balanceOf(minter);
+        const aAAPLBal = await doppleAAPL.balanceOf(minter);
+        // console.log('aDollyBal', aDollyBal);
+        // console.log('aAAPLBal', aAAPLBal);
+        actual = await doppleAAPL.approve(synthetic.address, aAAPLBal);
+        assert.ok(actual.hash);
+        const allowance = await doppleAAPL.allowance(minter, synthetic.address);
+        // console.log('allowance', allowance);
+        actual = await synthetic.redeemSynthetic(doppleAAPL.address, aAAPLBal);
+        assert.ok(actual.hash);
+
+        const bDollyBal = await dolly.balanceOf(minter);
+        const bAAPLBal = await doppleAAPL.balanceOf(minter);
+        // console.log('bDollyBal', bDollyBal);
+        // console.log('bAAPLBal', bAAPLBal);
+
+        assert.ok(bDollyBal.gt(aDollyBal));
+        assert.ok(bAAPLBal.lt(aAAPLBal));
+    });
+
+    it('Can fully redeem $dQQQ', async () => {
+        const DoppleQQQ = await deployments.get('DoppleQQQ');
+        doppleQQQ = await ethers.getContractAt('DoppleQQQ', DoppleQQQ.address, minter);
+        assert.ok(doppleQQQ.address);
+
+        const aDollyBal = await dolly.balanceOf(minter);
+        const aQQQBal = await doppleQQQ.balanceOf(minter);
+        // console.log('aDollyBal', aDollyBal);
+        // console.log('aQQQBal', aQQQBal);
+        actual = await doppleQQQ.approve(synthetic.address, aQQQBal);
+        assert.ok(actual.hash);
+        const allowance = await doppleQQQ.allowance(minter, synthetic.address);
+        // console.log('allowance', allowance);
+        actual = await synthetic.redeemSynthetic(doppleQQQ.address, aQQQBal);
+        assert.ok(actual.hash);
+
+        const bDollyBal = await dolly.balanceOf(minter);
+        const bQQQBal = await doppleQQQ.balanceOf(minter);
+        // console.log('bDollyBal', bDollyBal);
+        // console.log('bQQQBal', bQQQBal);
+
+        assert.ok(bDollyBal.gt(aDollyBal));
+        assert.ok(bQQQBal.lt(aQQQBal));
+    });
+
+    it('Can fully redeem $dAMZN', async () => {
+        const DoppleAMZN = await deployments.get('DoppleAMZN');
+        doppleAMZN = await ethers.getContractAt('DoppleAMZN', DoppleAMZN.address, minter);
+        assert.ok(doppleAMZN.address);
+
+        const aDollyBal = await dolly.balanceOf(minter);
+        const aAMZNBal = await doppleAMZN.balanceOf(minter);
+        // console.log('aDollyBal', aDollyBal);
+        // console.log('aAMZNBal', aAMZNBal);
+        actual = await doppleAMZN.approve(synthetic.address, aAMZNBal);
+        assert.ok(actual.hash);
+        const allowance = await doppleAMZN.allowance(minter, synthetic.address);
+        // console.log('allowance', allowance);
+        actual = await synthetic.redeemSynthetic(doppleAMZN.address, aAMZNBal);
+        assert.ok(actual.hash);
+
+        const bDollyBal = await dolly.balanceOf(minter);
+        const bAMZNBal = await doppleAMZN.balanceOf(minter);
+        // console.log('bDollyBal', bDollyBal);
+        // console.log('bAMZNBal', bAMZNBal);
+
+        assert.ok(bDollyBal.gt(aDollyBal));
+        assert.ok(bAMZNBal.lt(aAMZNBal));
+    });
+
+    it('Can fully redeem $dXAU', async () => {
+        const DoppleXAU = await deployments.get('DoppleXAU');
+        doppleXAU = await ethers.getContractAt('DoppleXAU', DoppleXAU.address, minter);
+        assert.ok(doppleXAU.address);
+
+        const aDollyBal = await dolly.balanceOf(minter);
+        const aXAUBal = await doppleXAU.balanceOf(minter);
+        // console.log('aDollyBal', aDollyBal);
+        // console.log('aXAUBal', aXAUBal);
+        actual = await doppleXAU.approve(synthetic.address, aXAUBal);
+        assert.ok(actual.hash);
+        const allowance = await doppleXAU.allowance(minter, synthetic.address);
+        // console.log('allowance', allowance);
+        actual = await synthetic.redeemSynthetic(doppleXAU.address, aXAUBal);
+        assert.ok(actual.hash);
+
+        const bDollyBal = await dolly.balanceOf(minter);
+        const bXAUBal = await doppleXAU.balanceOf(minter);
+        // console.log('bDollyBal', bDollyBal);
+        // console.log('bXAUBal', bXAUBal);
+
+        assert.ok(bDollyBal.gt(aDollyBal));
+        assert.ok(bXAUBal.lt(aXAUBal));
+    });
 });

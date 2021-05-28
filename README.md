@@ -64,14 +64,14 @@
 10. call function `setSyntheticAddress(address synthetic)` to `Synthetic Asset` contract. _for only Synthetic contract can mint synthetic asset._
 
 ## Deployed contract (Kovan Testnet)
-- Dolly: 0x9a54482dbB3710A4C207d57A07be6413768f14E5
-- Synthetic: 0x9b644189D230BF9a937fc429f4Aeb5B68D1E432C
-- dTSLA: 0x23D68Fb0A5266C6dE8cF5391f9af833f3990aE22 (synthetic asset)
-- dCOIN: 0xD46650753c30D183D1f83d698Db3B634AE1271dc (synthetic asset)
-- dAAPL: 0xfFABc951A44F692a209f6260DE2DaBF95E0E0d2B (synthetic asset)
-- dQQQ: 0x89Ff826079a08E3Dc8aC56490B45FD7C9434E169 (synthetic asset)
-- dAMZN: 0x976386e2B14317C9b773A65DB3590e3CCF5cbA01 (synthetic asset)
-- dXAU: 0x3AC0E5c8662A88037b80353Fd3D1429a4fB51c94 (synthetic asset)
+- Dolly: [0x9a54482dbB3710A4C207d57A07be6413768f14E5](https://kovan.etherscan.io/address/0x9a54482dbB3710A4C207d57A07be6413768f14E5#code)
+- Synthetic: [0x9b644189D230BF9a937fc429f4Aeb5B68D1E432C](https://kovan.etherscan.io/address/0x9b644189D230BF9a937fc429f4Aeb5B68D1E432C#code)
+- dTSLA: [0x23D68Fb0A5266C6dE8cF5391f9af833f3990aE22](https://kovan.etherscan.io/address/0x23D68Fb0A5266C6dE8cF5391f9af833f3990aE22#code)
+- dCOIN: [0xD46650753c30D183D1f83d698Db3B634AE1271dc](https://kovan.etherscan.io/address/0xD46650753c30D183D1f83d698Db3B634AE1271dc#code)
+- dAAPL: [0xfFABc951A44F692a209f6260DE2DaBF95E0E0d2B](https://kovan.etherscan.io/address/0xfFABc951A44F692a209f6260DE2DaBF95E0E0d2B#code)
+- dQQQ: [0x89Ff826079a08E3Dc8aC56490B45FD7C9434E169](https://kovan.etherscan.io/address/0x89Ff826079a08E3Dc8aC56490B45FD7C9434E169#code)
+- dAMZN: [0x976386e2B14317C9b773A65DB3590e3CCF5cbA01](https://kovan.etherscan.io/address/0x976386e2B14317C9b773A65DB3590e3CCF5cbA01#code)
+- dXAU: [0x3AC0E5c8662A88037b80353Fd3D1429a4fB51c94](https://kovan.etherscan.io/address/0x3AC0E5c8662A88037b80353Fd3D1429a4fB51c94#code)
 
 ## Miscellaneous
 - Deployer: 0xad1F66Acea98733D63cd8FC522118e4014Cb3F79

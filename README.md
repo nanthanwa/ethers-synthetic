@@ -43,11 +43,12 @@
 
 ## TODO
 - ✅ Add reentrancy guard.
-- ⏰ Add unit test!!
+- ⏰ Use factory pattern for synthetic asset contracts.
+- ⏰ Fix [this issue](https://github.com/nanmcpe/dopple-synthetic/issues/2).
+- ⏰ Add more unit test!!
 - ⏰ Gathering and monitor liquidation of minted asset (for liquidate bot).
 - ⏰ Add function `mintMoreSynthetic()` and `redeemSomeSynthetic()` corresponding of user's collateral ratio.
 - ⏰ Make simple UI.
-- ⏰ Recheck over, underflow.
 - ⏰ Use [Chainlink oracle](https://docs.chain.link/docs/binance-smart-chain-addresses) for standby (or combine) mode.
 
 ## Running a script (without hardhat deployment)

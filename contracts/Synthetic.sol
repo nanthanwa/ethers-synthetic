@@ -369,75 +369,39 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
         whenNotPaused
         nonReentrant
     {
-        MintingNote storage mn = contracts[_minter][address(_synthetic)];
-        require(
-            mn.minter != address(0),
-            "Synthetic::liquidate: empty contract"
-        );
+        (
+            uint256 assetBackedAtRateAmount,
+            uint256 remainingGapAmount,
+            uint256 minterReceiveAmount,
+            uint256 liquidatorReceiveAmount,
+            uint256 platformReceiveAmount
+        ) = getRewardFromLiquidate(_synthetic, _minter);
 
-        // if less than 1.25, will be liquidated
-        require(
-            mn.currentRatio < liquidationRatio,
-            "Synthetic::liquidate: ratio is sastisfy"
-        );
-        uint256 exchangeRate = getRate(addressToPairs[address(_synthetic)]);
-        require(
-            mn.willLiquidateAtPrice < exchangeRate,
-            "Synthetic::liquidate: asset price is sastisfy"
-        );
-
-        uint256 assetBackedAtRateAmount =
-            getProductOf(mn.assetAmount, exchangeRate);
-
-        uint256 remainingGapAmount;
-        uint256 minterReceiveAmount;
-        uint256 liquidatorReceiveAmount;
-        uint256 platformReceiveAmount;
-
-        if (mn.assetBackedAmount > assetBackedAtRateAmount) {
-            // liquidator will receive the reward because liquidation ratio is more than 1.0 (and less than 1.25)
-            remainingGapAmount = mn.assetBackedAmount - assetBackedAtRateAmount; // no need to check overflow
-
-            minterReceiveAmount = getProductOf(
-                remainingGapAmount,
-                remainingToMinterRatio
-            );
-
-            liquidatorReceiveAmount = getProductOf(
-                remainingGapAmount,
-                liquidatorRewardRatio
-            );
-
-            platformReceiveAmount = getProductOf(
-                remainingGapAmount,
-                platfromFeeRatio
-            );
-
+        if (remainingGapAmount > 0) {
+            // collateral ratio is between 1.0 - 1.25, so liquidator will get the reward.
             dolly.transferFrom(
                 _msgSender(),
                 address(this),
                 assetBackedAtRateAmount
-            ); // deduct Doly from liquidator
-            dolly.transfer(mn.minter, minterReceiveAmount); // transfer remainning to minter (90%)
+            ); // deduct Doly from liquidator.
+            dolly.transfer(_minter, minterReceiveAmount); // transfer remainning to minter (90%).
             dolly.transfer(
                 _msgSender(),
                 assetBackedAtRateAmount.add(liquidatorReceiveAmount)
-            ); // transfer reward to to liquidator (5%) + original amount
-            dolly.transfer(devAddress, platformReceiveAmount); // transfer liquidating fee to dev address (5%)
+            ); // transfer reward to to liquidator (5%) + original amount.
+            dolly.transfer(devAddress, platformReceiveAmount); // transfer liquidating fee to dev address (5%).
         } else {
-            // too late to liquidate, liquidator need to pay extra amount because
-            // the current collateral value is less than minted synthetic value (collateral ratio < 1)
-            // to close this contract, liquidator must pay off 100% of collateral value
+            // collateral ratio is less than 1.0.
             dolly.transferFrom(
                 _msgSender(),
                 address(this),
                 assetBackedAtRateAmount
-            ); // deduct Doly from liquidator
+            ); // deduct Doly from liquidator.
         }
         delete contracts[_minter][address(_synthetic)];
     }
 
-    // @info set the pairs and quotes to calling the oracle
+    // @info set the pairs and quotes to calling the oracle.
     // @param _pairs: string of pairs e.g. "TSLA/USD".
     // @param baseAndQuote: 2 elements array e.g. ["TSLA"]["USD"].
     function setPairsToQuote(
@@ -447,7 +411,7 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
         pairsToQuote[_pairs] = baseAndQuote;
     }
 
-    // @info use this function to get the synthetic token address by given string pairs
+    // @info use this function to get the synthetic token address by given string pairs.
     // @param _pairs: string of pairs e.g. "TSLA/USD".
     // @param _syntheticAddress: address of synthetic asset.
     function setPairsToAddress(string memory _pairs, address _syntheticAddress)
@@ -528,11 +492,11 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
     }
 
     // @dev for simulate all relevant amount of liqiodation
-    // @notice liquidate bot can call this function to estimate the profit.
+    // @notice both liquidate bot and this contract can call this function to estimate the profit.
     // @param _synthetic: a contract address of synthetic asset.
     // @param _minter: an address of minter.
-    function viewRewardFromLiquidate(IERC20Burnable _synthetic, address _minter)
-        external
+    function getRewardFromLiquidate(IERC20Burnable _synthetic, address _minter)
+        public
         view
         returns (
             uint256,
@@ -562,17 +526,33 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
         uint256 assetBackedAtRateAmount =
             getProductOf(mn.assetAmount, exchangeRate);
 
-        uint256 remainingGapAmount =
-            mn.assetBackedAmount.sub(assetBackedAtRateAmount);
+        uint256 remainingGapAmount;
+        uint256 minterReceiveAmount;
+        uint256 liquidatorReceiveAmount;
+        uint256 platformReceiveAmount;
 
-        uint256 minterReceiveAmount =
-            getProductOf(remainingGapAmount, remainingToMinterRatio);
+        if (mn.assetBackedAmount > assetBackedAtRateAmount) {
+            // liquidator will receive the reward because liquidation ratio is more than 1.0 (and less than 1.25)
+            remainingGapAmount = mn.assetBackedAmount - assetBackedAtRateAmount; // no need to check overflow
+            minterReceiveAmount = getProductOf(
+                remainingGapAmount,
+                remainingToMinterRatio
+            );
 
-        uint256 liquidatorReceiveAmount =
-            getProductOf(remainingGapAmount, liquidatorRewardRatio);
+            liquidatorReceiveAmount = getProductOf(
+                remainingGapAmount,
+                liquidatorRewardRatio
+            );
 
-        uint256 platformReceiveAmount =
-            getProductOf(remainingGapAmount, platfromFeeRatio);
+            platformReceiveAmount = getProductOf(
+                remainingGapAmount,
+                platfromFeeRatio
+            );
+        }
+        // ELSE
+        // Too late to liquidate, liquidator need to pay extra amount because
+        // the current collateral value is less than minted synthetic value (collateral ratio < 1)
+        // to close this contract, liquidator must pay off 100% of collateral value
 
         return (
             assetBackedAtRateAmount,

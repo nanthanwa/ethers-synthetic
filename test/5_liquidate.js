@@ -83,7 +83,7 @@ describe('Liquidation Testing', async () => {
         synthetic = await ethers.getContractAt('Synthetic', synthetic.address, liquidator);
         assert.ok(synthetic.address);
 
-        actual = await synthetic.viewRewardFromLiquidate(doppleTSLA.address, deployer);
+        actual = await synthetic.getRewardFromLiquidate(doppleTSLA.address, deployer);
         const [assetBackedAtRateAmount,
             remainingGapAmount,
             minterReceiveAmount,
@@ -180,7 +180,7 @@ describe('Liquidation Testing', async () => {
         synthetic = await ethers.getContractAt('Synthetic', synthetic.address, liquidator);
         assert.ok(synthetic.address);
 
-        actual = await synthetic.viewRewardFromLiquidate(doppleAAPL.address, deployer);
+        actual = await synthetic.getRewardFromLiquidate(doppleAAPL.address, deployer);
         const [assetBackedAtRateAmount,
             remainingGapAmount,
             minterReceiveAmount,
@@ -279,7 +279,7 @@ describe('Liquidation Testing', async () => {
         synthetic = await ethers.getContractAt('Synthetic', synthetic.address, liquidator);
         assert.ok(synthetic.address);
 
-        actual = await synthetic.viewRewardFromLiquidate(doppleCOIN.address, deployer);
+        actual = await synthetic.getRewardFromLiquidate(doppleCOIN.address, deployer);
         const [assetBackedAtRateAmount,
             remainingGapAmount,
             minterReceiveAmount,
@@ -377,7 +377,7 @@ describe('Liquidation Testing', async () => {
         // ========================================================
         synthetic = await ethers.getContractAt('Synthetic', synthetic.address, liquidator);
         assert.ok(synthetic.address);
-        actual = await synthetic.viewRewardFromLiquidate(doppleAMZN.address, deployer);
+        actual = await synthetic.getRewardFromLiquidate(doppleAMZN.address, deployer);
         const [assetBackedAtRateAmount,
             remainingGapAmount,
             minterReceiveAmount,
@@ -476,7 +476,7 @@ describe('Liquidation Testing', async () => {
         synthetic = await ethers.getContractAt('Synthetic', synthetic.address, liquidator);
         assert.ok(synthetic.address);
 
-        actual = await synthetic.viewRewardFromLiquidate(doppleQQQ.address, deployer);
+        actual = await synthetic.getRewardFromLiquidate(doppleQQQ.address, deployer);
         const [assetBackedAtRateAmount,
             remainingGapAmount,
             minterReceiveAmount,
@@ -575,7 +575,7 @@ describe('Liquidation Testing', async () => {
         synthetic = await ethers.getContractAt('Synthetic', synthetic.address, liquidator);
         assert.ok(synthetic.address);
 
-        actual = await synthetic.viewRewardFromLiquidate(doppleXAU.address, deployer);
+        actual = await synthetic.getRewardFromLiquidate(doppleXAU.address, deployer);
         const [assetBackedAtRateAmount,
             remainingGapAmount,
             minterReceiveAmount,

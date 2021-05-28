@@ -74,7 +74,10 @@
 - dXAU: [0x3AC0E5c8662A88037b80353Fd3D1429a4fB51c94](https://kovan.etherscan.io/address/0x3AC0E5c8662A88037b80353Fd3D1429a4fB51c94#code)
 
 ## Miscellaneous
-- Deployer: 0xad1F66Acea98733D63cd8FC522118e4014Cb3F79
+- Deployer: [0xad1F66Acea98733D63cd8FC522118e4014Cb3F79](https://kovan.etherscan.io/address/0xad1F66Acea98733D63cd8FC522118e4014Cb3F79)
+- Minter: [0xa11cec4fF714C34775318544e97842344A9F3aDc](https://kovan.etherscan.io/address/0xa11cec4fF714C34775318544e97842344A9F3aDc)
+- Liquidator: [0xb0b38D35775d93eC72928d2Cf9619fb3291aD8D6](https://kovan.etherscan.io/address/0xb0b38D35775d93eC72928d2Cf9619fb3291aD8D6)
+- Developer: [0xca101e15B0A9b091624122eEa12FC981Fee77523](https://kovan.etherscan.io/address/0xca101e15B0A9b091624122eEa12FC981Fee77523)
 
 ## Diagrams
 ![](https://raw.githubusercontent.com/nanmcpe/dopple-synthetic/main/diagrams/Minting.png)

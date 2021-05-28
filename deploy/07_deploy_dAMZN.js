@@ -2,14 +2,14 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
     const { deploy } = deployments;
     const { deployer } = await getNamedAccounts();
     const synthetic = await ethers.getContract('Synthetic', deployer);
-    const result = await deploy('DoppleCOIN', {
+    const result = await deploy('DoppleAMZN', {
         from: deployer,
         args: [synthetic.address],
         log: true,
     });
-    await synthetic.setPairsToAddress('COIN/USD', result.address);
-    await synthetic.setAddressToPairs(result.address, 'COIN/USD');
-    await synthetic.setPairsToQuote('COIN/USD', ['COIN', 'USD']);
+    await synthetic.setPairsToAddress('AMZN/USD', result.address);
+    await synthetic.setAddressToPairs(result.address, 'AMZN/USD');
+    await synthetic.setPairsToQuote('AMZN/USD', ['AMZN', 'USD']);
 };
 
-module.exports.tags = ['DoppleCOIN'];
+module.exports.tags = ['DoppleAMZN', 'Token'];

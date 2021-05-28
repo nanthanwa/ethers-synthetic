@@ -3,7 +3,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
     const { deployer, minter, liquidator } = await getNamedAccounts();
     await deploy('Dolly', {
         from: deployer,
-        args: ["Dolly Stable Coin", "DOLLY", "18"],
+        args: ['Dolly Stable Coin', 'DOLLY', '18'],
         log: true,
     });
     // const dolly = await ethers.getContract('Dolly', deployer);

@@ -12,4 +12,4 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
     await synthetic.setPairsToQuote('QQQ/USD', ['QQQ', 'USD']);
 };
 
-module.exports.tags = ['DoppleQQQ'];
+module.exports.tags = ['DoppleQQQ', 'Token'];

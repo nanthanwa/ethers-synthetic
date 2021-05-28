@@ -89,11 +89,26 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
     );
 
     event SetDevAddress(address oldDevAddress, address newDevAddress);
-    event SetCollateralRatio(uint256 oldCollateralRatio, uint256 newCollateralRatio);
-    event SetLiquidationRatio(uint256 oldLiquidationRatio, uint256 newLiquidationRatio);
-    event SetLiquidatorRewardRatio(uint256 oldLiquidatorRewardRatio, uint256 newLiquidatorRewardRatio);
-    event SetPlatfromFeeRatio(uint256 oldPlatfromFeeRatio, uint256 newPlatfromFeeRatio);
-    event SetRemainingToMinterRatio(uint256 oldRemainingToMinterRatio, uint256 newRemainingToMinterRatio);
+    event SetCollateralRatio(
+        uint256 oldCollateralRatio,
+        uint256 newCollateralRatio
+    );
+    event SetLiquidationRatio(
+        uint256 oldLiquidationRatio,
+        uint256 newLiquidationRatio
+    );
+    event SetLiquidatorRewardRatio(
+        uint256 oldLiquidatorRewardRatio,
+        uint256 newLiquidatorRewardRatio
+    );
+    event SetPlatfromFeeRatio(
+        uint256 oldPlatfromFeeRatio,
+        uint256 newPlatfromFeeRatio
+    );
+    event SetRemainingToMinterRatio(
+        uint256 oldRemainingToMinterRatio,
+        uint256 newRemainingToMinterRatio
+    );
 
     // @dev the constructor requires an address of Dolly and referrence of oracle Band Protocol
     constructor(IERC20 _dolly, IStdReference _ref) public {
@@ -116,7 +131,7 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
 
         uint256 exchangeRate = getRate(addressToPairs[address(_synthetic)]);
         uint256 assetBackedAtRateAmount =
-            (_amount.mul(exchangeRate)).div(denominator); // 606872500000000000000
+            (_amount.mul(exchangeRate)).div(denominator);
         uint256 requiredAmount =
             (assetBackedAtRateAmount.mul(collateralRatio)).div(denominator);
         require(
@@ -174,10 +189,9 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
         } else {
             // patial redeeming
             uint256 percent = getRedeemPercent(_amount, mn.assetAmount);
-            uint256 assetToBeBurned = (mn.assetAmount * percent) / denominator;
+            uint256 assetToBeBurned = getProductOf(mn.assetAmount, percent);
             uint256 assetBackedToBeRedeemed =
-                (mn.assetBackedAmount * percent) / denominator;
-
+                getProductOf(mn.assetBackedAmount, percent);
             uint256 exchangeRate = getRate(addressToPairs[address(_synthetic)]);
             uint256 assetBackedAmountAfterRedeem =
                 mn.assetBackedAmount.sub(assetBackedToBeRedeemed);
@@ -373,29 +387,53 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
         );
 
         uint256 assetBackedAtRateAmount =
-            (mn.assetAmount.mul(exchangeRate)).div(denominator);
+            getProductOf(mn.assetAmount, exchangeRate);
 
-        uint256 remainingGapAmount =
-            mn.assetBackedAmount.sub(assetBackedAtRateAmount);
+        uint256 remainingGapAmount;
+        uint256 minterReceiveAmount;
+        uint256 liquidatorReceiveAmount;
+        uint256 platformReceiveAmount;
 
-        uint256 minterReceiveAmount =
-            (remainingGapAmount.mul(remainingToMinterRatio)).div(denominator);
+        if (mn.assetBackedAmount > assetBackedAtRateAmount) {
+            // liquidator will receive the reward because liquidation ratio is more than 1.0 (and less than 1.25)
+            remainingGapAmount = mn.assetBackedAmount - assetBackedAtRateAmount; // no need to check overflow
 
-        uint256 liquidatorReceiveAmount =
-            (remainingGapAmount.mul(liquidatorRewardRatio)).div(denominator);
+            minterReceiveAmount = getProductOf(
+                remainingGapAmount,
+                remainingToMinterRatio
+            );
 
-        uint256 platformReceiveAmount =
-            (remainingGapAmount.mul(platfromFeeRatio)).div(denominator);
+            liquidatorReceiveAmount = getProductOf(
+                remainingGapAmount,
+                liquidatorRewardRatio
+            );
 
-        dolly.transferFrom(
-            _msgSender(),
-            address(this),
-            assetBackedAtRateAmount
-        ); // deduct Doly from liquidator
-        dolly.transfer(mn.minter, minterReceiveAmount); // transfer remainning to minter (90%)
-        dolly.transfer(_msgSender(), assetBackedAtRateAmount.add(liquidatorReceiveAmount)); // transfer reward to to liquidator (5%) + original amount
-        dolly.transfer(devAddress, platformReceiveAmount); // transfer liquidating fee to dev address (5%)
+            platformReceiveAmount = getProductOf(
+                remainingGapAmount,
+                platfromFeeRatio
+            );
 
+            dolly.transferFrom(
+                _msgSender(),
+                address(this),
+                assetBackedAtRateAmount
+            ); // deduct Doly from liquidator
+            dolly.transfer(mn.minter, minterReceiveAmount); // transfer remainning to minter (90%)
+            dolly.transfer(
+                _msgSender(),
+                assetBackedAtRateAmount.add(liquidatorReceiveAmount)
+            ); // transfer reward to to liquidator (5%) + original amount
+            dolly.transfer(devAddress, platformReceiveAmount); // transfer liquidating fee to dev address (5%)
+        } else {
+            // too late to liquidate, liquidator need to pay extra amount because
+            // the current collateral value is less than minted synthetic value (collateral ratio < 1)
+            // to close this contract, liquidator must pay off 100% of collateral value
+            dolly.transferFrom(
+                _msgSender(),
+                address(this),
+                assetBackedAtRateAmount
+            ); // deduct Doly from liquidator
+        }
         delete contracts[_minter][address(_synthetic)];
     }
 
@@ -455,10 +493,16 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
 
     // @info set liquidator reward ratio.
     // @param _liquidatorRewardRatio: new liquidator reward ratio.
-    function setLiquidatorRewardRatio(uint256 _liquidatorRewardRatio) external onlyOwner {
+    function setLiquidatorRewardRatio(uint256 _liquidatorRewardRatio)
+        external
+        onlyOwner
+    {
         uint256 oldLiquidatorRewardRatio = liquidatorRewardRatio;
         liquidatorRewardRatio = _liquidatorRewardRatio;
-        emit SetLiquidatorRewardRatio(oldLiquidatorRewardRatio, _liquidatorRewardRatio);
+        emit SetLiquidatorRewardRatio(
+            oldLiquidatorRewardRatio,
+            _liquidatorRewardRatio
+        );
     }
 
     // @info set platfrom fee ratio.
@@ -471,10 +515,16 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
 
     // @info set remaining of backed asset to minter ratio.
     // @param _setRemainingToMinterRatio: new remaining to minter ratio.
-    function setRemainingToMinterRatio(uint256 _remainingToMinterRatio) external onlyOwner {
+    function setRemainingToMinterRatio(uint256 _remainingToMinterRatio)
+        external
+        onlyOwner
+    {
         uint256 oldRemainingToMinterRatio = remainingToMinterRatio;
         remainingToMinterRatio = _remainingToMinterRatio;
-        emit SetRemainingToMinterRatio(oldRemainingToMinterRatio, _remainingToMinterRatio);
+        emit SetRemainingToMinterRatio(
+            oldRemainingToMinterRatio,
+            _remainingToMinterRatio
+        );
     }
 
     // @dev for simulate all relevant amount of liqiodation
@@ -510,19 +560,19 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
         );
 
         uint256 assetBackedAtRateAmount =
-            (mn.assetAmount.mul(exchangeRate)).div(denominator);
+            getProductOf(mn.assetAmount, exchangeRate);
 
         uint256 remainingGapAmount =
             mn.assetBackedAmount.sub(assetBackedAtRateAmount);
 
         uint256 minterReceiveAmount =
-            (remainingGapAmount.mul(remainingToMinterRatio)).div(denominator);
+            getProductOf(remainingGapAmount, remainingToMinterRatio);
 
         uint256 liquidatorReceiveAmount =
-            (remainingGapAmount.mul(liquidatorRewardRatio)).div(denominator);
+            getProductOf(remainingGapAmount, liquidatorRewardRatio);
 
         uint256 platformReceiveAmount =
-            (remainingGapAmount.mul(platfromFeeRatio)).div(denominator);
+            getProductOf(remainingGapAmount, platfromFeeRatio);
 
         return (
             assetBackedAtRateAmount,
@@ -620,5 +670,13 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
     // @param _pairs: the string of pairs e.g. "TSLA/USD"
     function isSupported(string memory _pairs) public view returns (bool) {
         return pairsToAddress[_pairs] != address(0);
+    }
+
+    function getProductOf(uint256 _amount, uint256 _multiplier)
+        internal
+        pure
+        returns (uint256)
+    {
+        return (_amount.mul(_multiplier)).div(denominator);
     }
 }

@@ -1,10 +1,7 @@
-const chai = require('chai');
-const { expect, assert } = chai;
+const { assert } = require('chai');
 const { deployments } = require('hardhat');
-const { ethers, getNamedAccounts } = require('hardhat');
-const { BigNumber } = ethers.utils;
+const { ethers } = require('hardhat');
 const fs = require('fs');
-chai.use(require('chai-bignumber')());
 
 // @dev We will simulate liquidate condition with remove almost entire collateral
 // @notice Synthetic's contract owner (deployer) can call special method called removeLowerCollateral()

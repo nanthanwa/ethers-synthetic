@@ -1,6 +1,4 @@
-const { expect, assert } = require('chai');
-const { BigNumber } = require('ethers');
-const { deployments } = require('hardhat');
+const { assert } = require('chai');
 
 describe('Deploy Contract', () => {
   const bandRef = '0xDA7a001b254CD22e46d3eAB04d937489c93174C3'; // use proxy

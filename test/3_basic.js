@@ -1,9 +1,7 @@
-const chai = require('chai');
-const { expect, assert } = chai;
+const { assert } = require('chai');
 const { deployments } = require('hardhat');
 const { ethers, getNamedAccounts } = require('hardhat');
 const fs = require('fs');
-chai.use(require('chai-bignumber')());
 
 describe('Basic Testing', async () => {
     let synthetic, networkName, minter, deployer;

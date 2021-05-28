@@ -1,10 +1,7 @@
-const chai = require('chai');
-const { expect, assert } = chai;
+const { assert } = require('chai');
 const { deployments } = require('hardhat');
 const { ethers, getNamedAccounts } = require('hardhat');
-const { BigNumber } = ethers.utils;
 const fs = require('fs');
-chai.use(require('chai-bignumber')());
 
 describe('Minting and Redeeming Testing', async () => {
     let actual, synthetic, networkName, dolly;

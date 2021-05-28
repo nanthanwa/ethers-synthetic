@@ -6,14 +6,15 @@
 - `yarn install`
 
 ## Requirements
-- Dolly address (to deploy, run `hh run scripts/deploy-dolly.js  --network kovan`)
-- Synthetic asset address (to deploy, run `hh run scripts/deploy-dopple-synthetic-token.js  --network kovan`)
+- Dolly address (to deploy, run `hh deploy --tags Dolly`)
+- Synthetic asset address (to deploy, run `hh deploy --tags DoppleTSLA,DoppleCOIN,DoppleAAPL,DoppleQQQ,DoppleAMZN,DoppleXAU`)
 - Band oracle reference address [click here for more details](https://docs.bandchain.org/band-standard-dataset/supported-blockchains.html)
 - Create `.secret` file and provide credential following
 
 ```
 {
     "infuraProjectId": "",
+    "alchemyProjectId": "",
     "privateKey": [
         "",
         "",
@@ -27,10 +28,10 @@
 ```
 
 # Deployment
-- Run `hh deploy` to deploy on local network
+- Run `hh deploy`
 
 # Runing the unit tests
-- Run `hh test` for test on local network (some tests are required "Kovan network forked" to get Oracle price).
+- Run `hh test` (some tests are required "Kovan network forked" to get Oracle price).
 
 ## Features
 - Can mint synthetic asset by provide 150% of collateral (adjustable). (e.g. provide $DOLLY -> receive $dTSLA)

@@ -64,15 +64,14 @@
 10. call function `setSyntheticAddress(address synthetic)` to `Synthetic Asset` contract. _for only Synthetic contract can mint synthetic asset._
 
 ## Deployed contract (Kovan Testnet)
-- Dolly: 0x172018C14eeA6312BF4243BFa3d07249feA7E542
-- Band protocol: 0x9106f09bf08dfb23fca61a9829543f1c80a81a4b (use proxy)
-- Synthetic: 0x192B42F9a72d0b382194288fBEe3e9bC65602A42
-- dTSLA: 0xdC47e2C0b6046cD58d3B21583DA19B45Ebf679ad (synthetic asset)
-- dCOIN: 0x6B4Bf2BEa14A000445e9f0bd59883AE5d3398651 (synthetic asset)
-- dAAPL: 0x93cb5A0806f8e682b03FCbA4633eEEd65c5a107E (synthetic asset)
-- dQQQ: 0xf18b915D65E7139cc5F04FaF49ae2a3465eA5E04 (synthetic asset)
-- dAMZN: 0xd305b6bC1Bb5E12EF7751B82a0342A12CbfaEc90 (synthetic asset)
-- dXAU: 0x78126a97618c67694F553b8769a8591cA3114F41 (synthetic asset)
+- Dolly: 0x9a54482dbB3710A4C207d57A07be6413768f14E5
+- Synthetic: 0x9b644189D230BF9a937fc429f4Aeb5B68D1E432C
+- dTSLA: 0x23D68Fb0A5266C6dE8cF5391f9af833f3990aE22 (synthetic asset)
+- dCOIN: 0xD46650753c30D183D1f83d698Db3B634AE1271dc (synthetic asset)
+- dAAPL: 0xfFABc951A44F692a209f6260DE2DaBF95E0E0d2B (synthetic asset)
+- dQQQ: 0x89Ff826079a08E3Dc8aC56490B45FD7C9434E169 (synthetic asset)
+- dAMZN: 0x976386e2B14317C9b773A65DB3590e3CCF5cbA01 (synthetic asset)
+- dXAU: 0x3AC0E5c8662A88037b80353Fd3D1429a4fB51c94 (synthetic asset)
 
 ## Miscellaneous
 - Deployer: 0xad1F66Acea98733D63cd8FC522118e4014Cb3F79

@@ -7,13 +7,9 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
         args: [synthetic.address],
         log: true,
     });
-    let tx;
-    tx = await synthetic.setPairsToAddress('QQQ/USD', result.address);
-    // console.log('setPairsToAddress: hash', tx.hash);
-    tx = await synthetic.setAddressToPairs(result.address, 'QQQ/USD');
-    // console.log('setAddressToPairs: hash', tx.hash);
-    tx = await synthetic.setPairsToQuote('QQQ/USD', ['QQQ', 'USD']);
-    // console.log('setPairsToQuote: hash', tx.hash);
+    await synthetic.setPairsToAddress('QQQ/USD', result.address);
+    await synthetic.setAddressToPairs(result.address, 'QQQ/USD');
+    await synthetic.setPairsToQuote('QQQ/USD', ['QQQ', 'USD']);
 };
 
 module.exports.tags = ['DoppleQQQ'];

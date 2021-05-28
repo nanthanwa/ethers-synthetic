@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
 
 pragma solidity 0.6.12;
-import "./Thing.sol";
+import "./DoppleSyntheticToken.sol";
 import "./CloneFactory.sol";
 import "./access/Ownable.sol";
 
-contract ThingFactory is Ownable, CloneFactory {
+contract DoppleSyntheticTokenFactory is Ownable, CloneFactory {
     address public libraryAddress;
 
-    event ThingCreated(address newThingAddress);
+    event SyntheticTokenCreated(address syntheticTokenAddress);
 
     constructor(address _libraryAddress) public {
         libraryAddress = _libraryAddress;
@@ -18,9 +18,13 @@ contract ThingFactory is Ownable, CloneFactory {
         libraryAddress = _libraryAddress;
     }
 
-    function createThing(string memory _name) public onlyOwner {
+    function createSyntheticToken(
+        string memory _name,
+        string memory _symbol,
+        address _owner
+    ) public onlyOwner {
         address clone = createClone(libraryAddress);
-        Thing(clone).initialize(_name);
-        ThingCreated(clone);
+        DoppleSyntheticToken(clone).initialize(_name, _symbol, _owner);
+        emit SyntheticTokenCreated(clone);
     }
 }

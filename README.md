@@ -51,9 +51,6 @@
 - ⏰ Make simple UI.
 - ⏰ Use [Chainlink oracle](https://docs.chain.link/docs/binance-smart-chain-addresses) for standby (or combine) mode.
 
-## Running a script (without hardhat deployment)
-- Run `hh run scripts/deploy-initialized.js --network kovan`
-
 ## Step by step explanation
 1. Get deploayed `Dolly` instance 
 2. Deploy `Synthetic` contract by giving `Dolly address` and `Band oracle reference`

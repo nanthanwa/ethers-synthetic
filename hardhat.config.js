@@ -73,7 +73,7 @@ module.exports = {
     imports: './imports'
   },
   mocha: {
-    timeout: 80000
+    timeout: 100000 // liquidation test on Mainnet consume time around 100 seconds
   },
   etherscan: {
     // Your API key for Etherscan

@@ -10,7 +10,8 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
     });
     const synthetic = await ethers.getContract('Synthetic');
     const devAddress = await synthetic.devAddress();
-    if (devAddress === '0x0000000000000000000000000000000000000000') {
+    console.log('developer', developer);
+    if (devAddress !== developer) {
         await synthetic.setDevAddress(developer);
     }
 };

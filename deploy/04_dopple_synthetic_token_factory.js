@@ -9,7 +9,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
     });
     const synthetic = await ethers.getContract('Synthetic');
     const doppleSyntheticTokenFactory = await ethers.getContract('DoppleSyntheticTokenFactory', deployer);
-    const clonedCount = await doppleSyntheticTokenFactory.clonedCount();
+    let clonedCount = await doppleSyntheticTokenFactory.clonedCount();
     console.log('clonedCount', clonedCount);
 
     if (clonedCount === 0) {
@@ -74,6 +74,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
         console.log('setAddressToPairs', (await synthetic.setAddressToPairs(contractAddress, `${assetName}/USD`)).hash);
         console.log('setPairsToQuote', (await synthetic.setPairsToQuote(`${assetName}/USD`, [assetName, 'USD'])).hash);
     }
+    clonedCount = await doppleSyntheticTokenFactory.clonedCount();
     console.log('clonedCount', clonedCount);
 
 };

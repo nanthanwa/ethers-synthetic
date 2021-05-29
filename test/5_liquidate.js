@@ -6,23 +6,21 @@ const fs = require('fs');
 // @dev We will simulate liquidate condition with remove almost entire collateral
 // @notice Synthetic's contract owner (deployer) can call special method called removeLowerCollateral()
 describe('Liquidation Testing', async () => {
-    let actual, synthetic, networkName, dolly;
+    let actual, synthetic, doppleSyntheticTokenFactory, dolly, networkName;
     let deployer, minter, liquidator, developer;
     before(async () => {
         networkName = (await ethers.provider.getNetwork()).name;
         console.log('network', networkName);
         [deployer, minter, liquidator, developer] = await ethers.getSigners();
-        if (networkName === 'kovan') {
-            const data = JSON.parse(fs.readFileSync(`./deployments/${networkName}/Synthetic.json`).toString().trim());
-            synthetic = await ethers.getContractAt('Synthetic', data.address);
-            assert.ok(synthetic.address);
-        } else {
+        if (networkName !== 'kovan') {
             await deployments.fixture(); // ensure you start from a fresh deployments
-            dolly = await ethers.getContract('Dolly');
-            assert.ok(dolly.address);
-            synthetic = await ethers.getContract('Synthetic');
-            assert.ok(synthetic.address);
         }
+        dolly = await ethers.getContract('Dolly');
+        assert.ok(dolly.address);
+        synthetic = await ethers.getContract('Synthetic');
+        assert.ok(synthetic.address);
+        doppleSyntheticTokenFactory = await ethers.getContract('DoppleSyntheticTokenFactory', minter);
+        assert.ok(doppleSyntheticTokenFactory.address);
     });
 
     // current price 629.9875, collateral 944.98125, liquidate at 787.484375
@@ -31,7 +29,9 @@ describe('Liquidation Testing', async () => {
         // ========================================================
         // MINTING
         // ========================================================
-        const doppleTSLA = await ethers.getContract('DoppleTSLA');
+        const contractAddress = await doppleSyntheticTokenFactory.cloned('dTSLA');
+        const doppleTSLA = await ethers.getContractAt('DoppleSyntheticToken', contractAddress, minter);
+        assert.ok(doppleTSLA.address);
 
         const syntheticAmount = ethers.utils.parseEther('1');
         const dollyAmount = ethers.utils.parseEther('1000');
@@ -84,13 +84,15 @@ describe('Liquidation Testing', async () => {
         assert.ok(bDevBal.gt(aDevBal)); // developer receive liquidation fee.
     });
 
-    // current price 246.92, collateral 370.38, liquidate at 308.65
-    // we put collateral 1000, remove 70% of collateral = 300 => liquidation ratio is 1.214
+    // current price 239.285, collateral 358.9275, liquidate at 299.10625
+    // we put collateral 1000, remove 73% of collateral = 270 => liquidation ratio is 1.129707113
     it('Can liquidate $dCOIN', async () => {
         // ========================================================
         // MINTING
         // ========================================================
-        const doppleCOIN = await ethers.getContract('DoppleCOIN');
+        const contractAddress = await doppleSyntheticTokenFactory.cloned('dCOIN');
+        const doppleCOIN = await ethers.getContractAt('DoppleSyntheticToken', contractAddress, minter);
+        assert.ok(doppleCOIN.address);
 
         const syntheticAmount = ethers.utils.parseEther('1');
         const dollyAmount = ethers.utils.parseEther('1000');
@@ -113,7 +115,7 @@ describe('Liquidation Testing', async () => {
         // ========================================================
         // REMOVE COLLATERAL
         // ========================================================
-        actual = await synthetic.connect(deployer).removeLowerCollateral(doppleCOIN.address, dollyAmount.mul(70).div(100));
+        actual = await synthetic.connect(deployer).removeLowerCollateral(doppleCOIN.address, dollyAmount.mul(73).div(100));
         const bDollyBal2 = await dolly.balanceOf(deployer.address);
         assert.ok(bDollyBal2.gt(bDollyBal1));
 
@@ -149,7 +151,9 @@ describe('Liquidation Testing', async () => {
         // ========================================================
         // MINTING
         // ========================================================
-        const doppleAAPL = await ethers.getContract('DoppleAAPL');
+        const contractAddress = await doppleSyntheticTokenFactory.cloned('dAAPL');
+        const doppleAAPL = await ethers.getContractAt('DoppleSyntheticToken', contractAddress, minter);
+        assert.ok(doppleAAPL.address);
 
         const syntheticAmount = ethers.utils.parseEther('1');
         const dollyAmount = ethers.utils.parseEther('1000');
@@ -208,7 +212,9 @@ describe('Liquidation Testing', async () => {
         // ========================================================
         // MINTING
         // ========================================================
-        const doppleQQQ = await ethers.getContract('DoppleQQQ');
+        const contractAddress = await doppleSyntheticTokenFactory.cloned('dQQQ');
+        const doppleQQQ = await ethers.getContractAt('DoppleSyntheticToken', contractAddress, minter);
+        assert.ok(doppleQQQ.address);
 
         const syntheticAmount = ethers.utils.parseEther('1');
         const dollyAmount = ethers.utils.parseEther('1000');
@@ -267,7 +273,9 @@ describe('Liquidation Testing', async () => {
         // ========================================================
         // MINTING
         // ========================================================
-        const doppleAMZN = await ethers.getContract('DoppleAMZN');
+        const contractAddress = await doppleSyntheticTokenFactory.cloned('dAMZN');
+        const doppleAMZN = await ethers.getContractAt('DoppleSyntheticToken', contractAddress, minter);
+        assert.ok(doppleAMZN.address);
 
         const syntheticAmount = ethers.utils.parseEther('1');
         const dollyAmount = ethers.utils.parseEther('10000');
@@ -326,7 +334,9 @@ describe('Liquidation Testing', async () => {
         // ========================================================
         // MINTING
         // ========================================================
-        const doppleXAU = await ethers.getContract('DoppleXAU');
+        const contractAddress = await doppleSyntheticTokenFactory.cloned('dXAU');
+        const doppleXAU = await ethers.getContractAt('DoppleSyntheticToken', contractAddress, minter);
+        assert.ok(doppleXAU.address);
 
         const syntheticAmount = ethers.utils.parseEther('1');
         const dollyAmount = ethers.utils.parseEther('10000');

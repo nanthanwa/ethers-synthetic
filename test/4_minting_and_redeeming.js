@@ -7,6 +7,8 @@ describe('Minting and Redeeming Testing', async () => {
     let actual, synthetic, dolly, doppleSyntheticTokenFactory, networkName;
     let minter;
     before(async () => {
+        const { deployer, minter, liquidator, developer } = await getNamedAccounts();
+        console.log(deployer, minter, liquidator, developer);
         networkName = (await ethers.provider.getNetwork()).name;
         console.log('network', networkName);
         if (networkName !== 'kovan') {

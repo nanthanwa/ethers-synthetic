@@ -39,14 +39,20 @@ describe('Liquidation Testing', async () => {
         const aTSLABal = await doppleTSLA.balanceOf(deployer.address);
         const aDevBal = await dolly.balanceOf(developer.address);
 
-        actual = await dolly.connect(deployer).approve(synthetic.address, dollyAmount);
-        assert.ok(actual.hash);
+        let allowance = await dolly.allowance(deployer.address, synthetic.address);
+        console.log('minter allowance', allowance.toString());
+        if (allowance.lte(dollyAmount)) {
+            actual = await dolly.connect(deployer).approve(synthetic.address, dollyAmount);
+            assert.ok(actual.hash);
+        }
 
         actual = await synthetic.connect(deployer).mintSynthetic(doppleTSLA.address, syntheticAmount, dollyAmount);
         assert.ok(actual.hash);
 
         const bDollyBal1 = await dolly.balanceOf(deployer.address);
         const bTSLABal1 = await doppleTSLA.balanceOf(deployer.address);
+        // console.log(bDollyBal1.toString());
+        // console.log(bTSLABal1.toString());
 
         assert.ok(bDollyBal1.eq(aDollyBal.sub(dollyAmount)));
         assert.ok(bTSLABal1.eq(aTSLABal.add(syntheticAmount)));
@@ -70,17 +76,24 @@ describe('Liquidation Testing', async () => {
 
         assert.ok(liquidatorReceiveAmount.gt(0)); // ensure liquidator will receive the money.
 
-        actual = await dolly.connect(liquidator).approve(synthetic.address, assetBackedAtRateAmount);
-        assert.ok(actual.hash);
+        allowance = await dolly.allowance(liquidator.address, synthetic.address);
+        console.log('liquidator allowance', allowance.toString());
+        if (allowance.lte(assetBackedAtRateAmount)) {
+            actual = await dolly.connect(liquidator).approve(synthetic.address, assetBackedAtRateAmount);
+            assert.ok(actual.hash);
+        }
 
         const bDollyBal3 = await dolly.balanceOf(liquidator.address);
+        // console.log(bDollyBal3.toString());
         actual = await synthetic.connect(liquidator).liquidate(doppleTSLA.address, deployer.address);
         assert.ok(actual.hash);
 
         const bDollyBal4 = await dolly.balanceOf(liquidator.address);
+        // console.log(bDollyBal4.toString());
         assert.ok(bDollyBal4.gt(bDollyBal3)); // liquidator receive reward.
 
         const bDevBal = await dolly.balanceOf(developer.address);
+        // console.log(bDevBal.toString());
         assert.ok(bDevBal.gt(aDevBal)); // developer receive liquidation fee.
     });
 
@@ -100,8 +113,12 @@ describe('Liquidation Testing', async () => {
         const aCOINBal = await doppleCOIN.balanceOf(deployer.address);
         const aDevBal = await dolly.balanceOf(developer.address);
 
-        actual = await dolly.connect(deployer).approve(synthetic.address, dollyAmount);
-        assert.ok(actual.hash);
+        let allowance = await dolly.allowance(deployer.address, synthetic.address);
+        console.log('minter allowance', allowance.toString());
+        if (allowance.lte(dollyAmount)) {
+            actual = await dolly.connect(deployer).approve(synthetic.address, dollyAmount);
+            assert.ok(actual.hash);
+        }
 
         actual = await synthetic.connect(deployer).mintSynthetic(doppleCOIN.address, syntheticAmount, dollyAmount);
         assert.ok(actual.hash);
@@ -131,8 +148,12 @@ describe('Liquidation Testing', async () => {
 
         assert.ok(liquidatorReceiveAmount.gt(0)); // ensure liquidator will receive the money.
 
-        actual = await dolly.connect(liquidator).approve(synthetic.address, assetBackedAtRateAmount);
-        assert.ok(actual.hash);
+        allowance = await dolly.allowance(liquidator.address, synthetic.address);
+        console.log('liquidator allowance', allowance.toString());
+        if (allowance.lte(assetBackedAtRateAmount)) {
+            actual = await dolly.connect(liquidator).approve(synthetic.address, assetBackedAtRateAmount);
+            assert.ok(actual.hash);
+        }
 
         const bDollyBal3 = await dolly.balanceOf(liquidator.address);
         actual = await synthetic.connect(liquidator).liquidate(doppleCOIN.address, deployer.address);
@@ -161,8 +182,12 @@ describe('Liquidation Testing', async () => {
         const aAAPLBal = await doppleAAPL.balanceOf(deployer.address);
         const aDevBal = await dolly.balanceOf(developer.address);
 
-        actual = await dolly.connect(deployer).approve(synthetic.address, dollyAmount);
-        assert.ok(actual.hash);
+        let allowance = await dolly.allowance(deployer.address, synthetic.address);
+        console.log('minter allowance', allowance.toString());
+        if (allowance.lte(dollyAmount)) {
+            actual = await dolly.connect(deployer).approve(synthetic.address, dollyAmount);
+            assert.ok(actual.hash);
+        }
 
         actual = await synthetic.connect(deployer).mintSynthetic(doppleAAPL.address, syntheticAmount, dollyAmount);
         assert.ok(actual.hash);
@@ -192,8 +217,12 @@ describe('Liquidation Testing', async () => {
 
         assert.ok(liquidatorReceiveAmount.gt(0)); // ensure liquidator will receive the money.
 
-        actual = await dolly.connect(liquidator).approve(synthetic.address, assetBackedAtRateAmount);
-        assert.ok(actual.hash);
+        allowance = await dolly.allowance(liquidator.address, synthetic.address);
+        console.log('liquidator allowance', allowance.toString());
+        if (allowance.lte(assetBackedAtRateAmount)) {
+            actual = await dolly.connect(liquidator).approve(synthetic.address, assetBackedAtRateAmount);
+            assert.ok(actual.hash);
+        }
 
         const bDollyBal3 = await dolly.balanceOf(liquidator.address);
         actual = await synthetic.connect(liquidator).liquidate(doppleAAPL.address, deployer.address);
@@ -222,8 +251,12 @@ describe('Liquidation Testing', async () => {
         const aQQQBal = await doppleQQQ.balanceOf(deployer.address);
         const aDevBal = await dolly.balanceOf(developer.address);
 
-        actual = await dolly.connect(deployer).approve(synthetic.address, dollyAmount);
-        assert.ok(actual.hash);
+        let allowance = await dolly.allowance(deployer.address, synthetic.address);
+        console.log('minter allowance', allowance.toString());
+        if (allowance.lte(dollyAmount)) {
+            actual = await dolly.connect(deployer).approve(synthetic.address, dollyAmount);
+            assert.ok(actual.hash);
+        }
 
         actual = await synthetic.connect(deployer).mintSynthetic(doppleQQQ.address, syntheticAmount, dollyAmount);
         assert.ok(actual.hash);
@@ -253,8 +286,12 @@ describe('Liquidation Testing', async () => {
 
         assert.ok(liquidatorReceiveAmount.gt(0)); // ensure liquidator will receive the money.
 
-        actual = await dolly.connect(liquidator).approve(synthetic.address, assetBackedAtRateAmount);
-        assert.ok(actual.hash);
+        allowance = await dolly.allowance(liquidator.address, synthetic.address);
+        console.log('liquidator allowance', allowance.toString());
+        if (allowance.lte(assetBackedAtRateAmount)) {
+            actual = await dolly.connect(liquidator).approve(synthetic.address, assetBackedAtRateAmount);
+            assert.ok(actual.hash);
+        }
 
         const bDollyBal3 = await dolly.balanceOf(liquidator.address);
         actual = await synthetic.connect(liquidator).liquidate(doppleQQQ.address, deployer.address);
@@ -283,8 +320,12 @@ describe('Liquidation Testing', async () => {
         const aAMZNBal = await doppleAMZN.balanceOf(deployer.address);
         const aDevBal = await dolly.balanceOf(developer.address);
 
-        actual = await dolly.connect(deployer).approve(synthetic.address, dollyAmount);
-        assert.ok(actual.hash);
+        let allowance = await dolly.allowance(deployer.address, synthetic.address);
+        console.log('minter allowance', allowance.toString());
+        if (allowance.lte(dollyAmount)) {
+            actual = await dolly.connect(deployer).approve(synthetic.address, dollyAmount);
+            assert.ok(actual.hash);
+        }
 
         actual = await synthetic.connect(deployer).mintSynthetic(doppleAMZN.address, syntheticAmount, dollyAmount);
         assert.ok(actual.hash);
@@ -314,8 +355,12 @@ describe('Liquidation Testing', async () => {
 
         assert.ok(liquidatorReceiveAmount.gt(0)); // ensure liquidator will receive the money.
 
-        actual = await dolly.connect(liquidator).approve(synthetic.address, assetBackedAtRateAmount);
-        assert.ok(actual.hash);
+        allowance = await dolly.allowance(liquidator.address, synthetic.address);
+        console.log('liquidator allowance', allowance.toString());
+        if (allowance.lte(assetBackedAtRateAmount)) {
+            actual = await dolly.connect(liquidator).approve(synthetic.address, assetBackedAtRateAmount);
+            assert.ok(actual.hash);
+        }
 
         const bDollyBal3 = await dolly.balanceOf(liquidator.address);
         actual = await synthetic.connect(liquidator).liquidate(doppleAMZN.address, deployer.address);
@@ -344,8 +389,12 @@ describe('Liquidation Testing', async () => {
         const aXAUBal = await doppleXAU.balanceOf(deployer.address);
         const aDevBal = await dolly.balanceOf(developer.address);
 
-        actual = await dolly.connect(deployer).approve(synthetic.address, dollyAmount);
-        assert.ok(actual.hash);
+        let allowance = await dolly.allowance(deployer.address, synthetic.address);
+        console.log('minter allowance', allowance.toString());
+        if (allowance.lte(dollyAmount)) {
+            actual = await dolly.connect(deployer).approve(synthetic.address, dollyAmount);
+            assert.ok(actual.hash);
+        }
 
         actual = await synthetic.connect(deployer).mintSynthetic(doppleXAU.address, syntheticAmount, dollyAmount);
         assert.ok(actual.hash);
@@ -375,8 +424,12 @@ describe('Liquidation Testing', async () => {
 
         assert.ok(liquidatorReceiveAmount.gt(0)); // ensure liquidator will receive the money.
 
-        actual = await dolly.connect(liquidator).approve(synthetic.address, assetBackedAtRateAmount);
-        assert.ok(actual.hash);
+        allowance = await dolly.allowance(liquidator.address, synthetic.address);
+        console.log('liquidator allowance', allowance.toString());
+        if (allowance.lte(assetBackedAtRateAmount)) {
+            actual = await dolly.connect(liquidator).approve(synthetic.address, assetBackedAtRateAmount);
+            assert.ok(actual.hash);
+        }
 
         const bDollyBal3 = await dolly.balanceOf(liquidator.address);
         actual = await synthetic.connect(liquidator).liquidate(doppleXAU.address, deployer.address);

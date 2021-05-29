@@ -1,7 +1,8 @@
 module.exports = async ({ getNamedAccounts, deployments }) => {
     const { deploy } = deployments;
-    const { deployer, minter, liquidator } = await getNamedAccounts();
-    console.log('deployer', deployer);
+    const { deployer, minter, liquidator, developer } = await getNamedAccounts();
+    // console.log(deployer, minter, liquidator, developer);
+    // console.log('deployer', deployer);
     await deploy('Dolly', {
         from: deployer,
         args: ['Dolly Stable Coin', 'DOLLY', '18'],

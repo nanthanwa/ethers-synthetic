@@ -73,7 +73,7 @@ module.exports = {
     imports: './imports'
   },
   mocha: {
-    timeout: 50000
+    timeout: 80000
   },
   etherscan: {
     // Your API key for Etherscan

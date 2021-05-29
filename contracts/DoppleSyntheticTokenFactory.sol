@@ -6,15 +6,13 @@ import "./CloneFactory.sol";
 import "./access/Ownable.sol";
 
 contract DoppleSyntheticTokenFactory is Ownable, CloneFactory {
-    address public libraryAddress;
+    address public immutable libraryAddress;
+    mapping(string => address) public cloned;
+    uint16 public clonedCount; // MAX 0-65535
 
-    event SyntheticTokenCreated(address syntheticTokenAddress);
+    event SyntheticTokenCreated(address syntheticTokenAddress, string symbol);
 
     constructor(address _libraryAddress) public {
-        libraryAddress = _libraryAddress;
-    }
-
-    function setLibraryAddress(address _libraryAddress) public onlyOwner {
         libraryAddress = _libraryAddress;
     }
 
@@ -25,6 +23,26 @@ contract DoppleSyntheticTokenFactory is Ownable, CloneFactory {
     ) public onlyOwner {
         address clone = createClone(libraryAddress);
         DoppleSyntheticToken(clone).initialize(_name, _symbol, _owner);
-        emit SyntheticTokenCreated(clone);
+        cloned[_symbol] = clone;
+        require(
+            clonedCount < uint16(65535),
+            "DoppleSyntheticTokenFactory::createSyntheticToken: clonedCount overflow"
+        );
+        clonedCount = clonedCount + 1;
+        emit SyntheticTokenCreated(clone, _symbol);
+    }
+
+    function pauseAndRemoveCloned(string memory _symbol) public onlyOwner {
+        require(
+            cloned[_symbol] != address(0),
+            "DoppleSyntheticTokenFactory::removeCloned: symbol not found"
+        );
+        require(
+            clonedCount > uint16(0),
+            "DoppleSyntheticTokenFactory::createSyntheticToken: clonedCount underflow"
+        );
+        clonedCount = clonedCount - 1;
+        DoppleSyntheticToken(cloned[_symbol]).pause();
+        delete cloned[_symbol];
     }
 }

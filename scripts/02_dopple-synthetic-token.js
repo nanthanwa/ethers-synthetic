@@ -5,6 +5,16 @@ async function main() {
   console.log('Network name:', network.name);
 
   if (network.name === 'kovan') {
+
+    // const dTSLAContractAddress = (await dTSLA.wait()).events[2].args[0];
+    // console.log('dTSLA contract address', dTSLAContractAddress);
+    // const artifact = await deployments.getArtifact('DoppleSyntheticToken');
+    // // console.log('artifact', artifact.abi);
+    // const dTSLAContract = await ethers.getContractAt(artifact.abi, dTSLAContractAddress);
+    // const dTSLAName = await dTSLAContract.name();
+    // console.log('dTSLAName', dTSLAName);
+
+
     const syntheticAddress = '0xAdde342E77525862Bf435fb85004Af9F40403BAe';
     const DoppleTSLA = await ethers.getContractFactory('DoppleTSLA');
     const doppleTSLA = await DoppleTSLA.deploy(syntheticAddress);

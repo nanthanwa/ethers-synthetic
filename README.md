@@ -52,7 +52,7 @@
 - ⏰ Make simple UI.
 - ⏰ Use [Chainlink oracle](https://docs.chain.link/docs/binance-smart-chain-addresses) for standby (or combine) mode.
 
-## Step by step explanation
+## Breakdown the deployments
 1. Get deploayed `Dolly` instance 
 2. Deploy `Synthetic` contract by giving `Dolly address` and `Band oracle reference`
 3. Verify `Synthetic` contract

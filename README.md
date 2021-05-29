@@ -7,7 +7,7 @@
 
 ## Requirements
 - Dolly address (to deploy, run `hh deploy --tags Dolly`)
-- Synthetic asset address (to deploy, run `hh deploy --tags DoppleTSLA,DoppleCOIN,DoppleAAPL,DoppleQQQ,DoppleAMZN,DoppleXAU`)
+- Synthetic asset address (to deploy, run `hh deploy --tags DoppleSyntheticTokenFactory`)
 - Band oracle reference address [click here for more details](https://docs.bandchain.org/band-standard-dataset/supported-blockchains.html)
 - Create `.secret` file and provide credential following
 
@@ -44,7 +44,7 @@
 
 ## TODO
 - ✅ Add reentrancy guard.
-- ✅ Use factory pattern for synthetic asset contracts.
+- ✅ Use factory pattern for synthetic asset contracts. [From this issue](https://github.com/nanmcpe/dopple-synthetic/issues/2).
 - ✅ Fix [this issue](https://github.com/nanmcpe/dopple-synthetic/issues/2).
 - ⏰ Add more unit test!!
 - ⏰ Gathering and monitor liquidation of minted asset (for liquidate bot).
@@ -52,7 +52,7 @@
 - ⏰ Make simple UI.
 - ⏰ Use [Chainlink oracle](https://docs.chain.link/docs/binance-smart-chain-addresses) for standby (or combine) mode.
 
-## Step by step explanation
+## Breakdown the deployments
 1. Get deploayed `Dolly` instance 
 2. Deploy `Synthetic` contract by giving `Dolly address` and `Band oracle reference`
 3. Verify `Synthetic` contract

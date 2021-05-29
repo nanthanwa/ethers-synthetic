@@ -44,7 +44,7 @@
 
 ## TODO
 - ✅ Add reentrancy guard.
-- ✅ Use factory pattern for synthetic asset contracts.
+- ✅ Use factory pattern for synthetic asset contracts. (From this issue)[https://github.com/nanmcpe/dopple-synthetic/issues/2].
 - ✅ Fix [this issue](https://github.com/nanmcpe/dopple-synthetic/issues/2).
 - ⏰ Add more unit test!!
 - ⏰ Gathering and monitor liquidation of minted asset (for liquidate bot).

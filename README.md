@@ -7,7 +7,7 @@
 
 ## Requirements
 - Dolly address (to deploy, run `hh deploy --tags Dolly`)
-- Synthetic asset address (to deploy, run `hh deploy --tags DoppleTSLA,DoppleCOIN,DoppleAAPL,DoppleQQQ,DoppleAMZN,DoppleXAU`)
+- Synthetic asset address (to deploy, run `hh deploy --tags DoppleSyntheticTokenFactory`)
 - Band oracle reference address [click here for more details](https://docs.bandchain.org/band-standard-dataset/supported-blockchains.html)
 - Create `.secret` file and provide credential following
 

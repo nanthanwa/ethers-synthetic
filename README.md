@@ -65,14 +65,14 @@
 10. call function `setSyntheticAddress(address synthetic)` to `Synthetic Asset` contract. _for only Synthetic contract can mint synthetic asset._
 
 ## Deployed contract (Kovan Testnet)
-- Dolly: [0x9a54482dbB3710A4C207d57A07be6413768f14E5](https://kovan.etherscan.io/address/0x9a54482dbB3710A4C207d57A07be6413768f14E5#code)
-- Synthetic: [0x9b644189D230BF9a937fc429f4Aeb5B68D1E432C](https://kovan.etherscan.io/address/0x9b644189D230BF9a937fc429f4Aeb5B68D1E432C#code)
-- dTSLA: [0x23D68Fb0A5266C6dE8cF5391f9af833f3990aE22](https://kovan.etherscan.io/address/0x23D68Fb0A5266C6dE8cF5391f9af833f3990aE22#code)
-- dCOIN: [0xD46650753c30D183D1f83d698Db3B634AE1271dc](https://kovan.etherscan.io/address/0xD46650753c30D183D1f83d698Db3B634AE1271dc#code)
-- dAAPL: [0xfFABc951A44F692a209f6260DE2DaBF95E0E0d2B](https://kovan.etherscan.io/address/0xfFABc951A44F692a209f6260DE2DaBF95E0E0d2B#code)
-- dQQQ: [0x89Ff826079a08E3Dc8aC56490B45FD7C9434E169](https://kovan.etherscan.io/address/0x89Ff826079a08E3Dc8aC56490B45FD7C9434E169#code)
-- dAMZN: [0x976386e2B14317C9b773A65DB3590e3CCF5cbA01](https://kovan.etherscan.io/address/0x976386e2B14317C9b773A65DB3590e3CCF5cbA01#code)
-- dXAU: [0x3AC0E5c8662A88037b80353Fd3D1429a4fB51c94](https://kovan.etherscan.io/address/0x3AC0E5c8662A88037b80353Fd3D1429a4fB51c94#code)
+- Dolly: [0x2a49FF95c52Abb5d0302Bd59877B7CF32134f4E8](https://kovan.etherscan.io/address/0x2a49FF95c52Abb5d0302Bd59877B7CF32134f4E8#code)
+- Synthetic: [0x3b41CdB2010C6e49cbe510Adf0131222C2fe114a](https://kovan.etherscan.io/address/0x3b41CdB2010C6e49cbe510Adf0131222C2fe114a#code)
+- dTSLA: [0x229Fe83DDc6727edA814fc3174B326a8A9e3E065](https://kovan.etherscan.io/address/0x229Fe83DDc6727edA814fc3174B326a8A9e3E065#code)
+- dCOIN: [0x48C5247A13C96c90df85Fc0208fbC2BF36EAbCD6](https://kovan.etherscan.io/address/0x48C5247A13C96c90df85Fc0208fbC2BF36EAbCD6#code)
+- dAAPL: [0x524ec10031d766090cEb1Dc68D30F1E18f3cBB50](https://kovan.etherscan.io/address/0x524ec10031d766090cEb1Dc68D30F1E18f3cBB50#code)
+- dQQQ: [0x3c7886011523F4d5e3ADB8Db34D75E1c911490f0](https://kovan.etherscan.io/address/0x3c7886011523F4d5e3ADB8Db34D75E1c911490f0#code)
+- dAMZN: [0x5d74036295D54e4a0E1B9248854fc91dDb44C4bE](https://kovan.etherscan.io/address/0x5d74036295D54e4a0E1B9248854fc91dDb44C4bE#code)
+- dXAU: [0x0a150E06426FF930fB4Db961CBd349eAe7FC6603](https://kovan.etherscan.io/address/0x0a150E06426FF930fB4Db961CBd349eAe7FC6603#code)
 
 ## Miscellaneous
 - Deployer: [0xad1F66Acea98733D63cd8FC522118e4014Cb3F79](https://kovan.etherscan.io/address/0xad1F66Acea98733D63cd8FC522118e4014Cb3F79)

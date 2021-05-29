@@ -4,28 +4,28 @@ const { ethers, getNamedAccounts } = require('hardhat');
 const fs = require('fs');
 
 describe('Minting and Redeeming Testing', async () => {
-    let actual, synthetic, networkName, dolly;
+    let actual, synthetic, dolly, doppleSyntheticTokenFactory, networkName;
     let minter;
     before(async () => {
         networkName = (await ethers.provider.getNetwork()).name;
         console.log('network', networkName);
-        if (networkName === 'kovan') {
-            const data = JSON.parse(fs.readFileSync(`./deployments/${networkName}/Synthetic.json`).toString().trim());
-            synthetic = await ethers.getContractAt('Synthetic', data.address, minter);
-            assert.ok(synthetic.address);
-        } else {
+        if (networkName !== 'kovan') {
             await deployments.fixture(); // ensure you start from a fresh deployments
-            const namedAccounts = await getNamedAccounts();
-            minter = namedAccounts.minter;
-            synthetic = await ethers.getContract('Synthetic', minter);
-            assert.ok(synthetic.address);
-            dolly = await ethers.getContract('Dolly', minter);
-            assert.ok(dolly.address);
         }
+        const namedAccounts = await getNamedAccounts();
+        minter = namedAccounts.minter;
+        synthetic = await ethers.getContract('Synthetic', minter);
+        assert.ok(synthetic.address);
+        dolly = await ethers.getContract('Dolly', minter);
+        assert.ok(dolly.address);
+        doppleSyntheticTokenFactory = await ethers.getContract('DoppleSyntheticTokenFactory', minter);
+        assert.ok(doppleSyntheticTokenFactory.address);
     });
 
     it('Can mint $dTSLA', async () => {
-        const doppleTSLA = await ethers.getContract('DoppleTSLA', minter);
+        const contractAddress = await doppleSyntheticTokenFactory.cloned('dTSLA');
+        console.log('contract address', contractAddress);
+        const doppleTSLA = await ethers.getContractAt('DoppleSyntheticToken', contractAddress, minter);
         assert.ok(doppleTSLA.address);
 
         const syntheticAmount = ethers.utils.parseEther('1');
@@ -46,7 +46,9 @@ describe('Minting and Redeeming Testing', async () => {
     });
 
     it('Can mint $dCOIN', async () => {
-        const doppleCOIN = await ethers.getContract('DoppleCOIN', minter);
+        const contractAddress = await doppleSyntheticTokenFactory.cloned('dCOIN');
+        console.log('contract address', contractAddress);
+        const doppleCOIN = await ethers.getContractAt('DoppleSyntheticToken', contractAddress, minter);
         assert.ok(doppleCOIN.address);
 
         const syntheticAmount = ethers.utils.parseEther('1');
@@ -67,7 +69,9 @@ describe('Minting and Redeeming Testing', async () => {
     });
 
     it('Can mint $dAAPL', async () => {
-        const doppleAAPL = await ethers.getContract('DoppleAAPL', minter);
+        const contractAddress = await doppleSyntheticTokenFactory.cloned('dAAPL');
+        console.log('contract address', contractAddress);
+        const doppleAAPL = await ethers.getContractAt('DoppleSyntheticToken', contractAddress, minter);
         assert.ok(doppleAAPL.address);
 
         const syntheticAmount = ethers.utils.parseEther('1');
@@ -88,7 +92,9 @@ describe('Minting and Redeeming Testing', async () => {
     });
 
     it('Can mint $dQQQ', async () => {
-        const doppleQQQ = await ethers.getContract('DoppleQQQ', minter);
+        const contractAddress = await doppleSyntheticTokenFactory.cloned('dQQQ');
+        console.log('contract address', contractAddress);
+        const doppleQQQ = await ethers.getContractAt('DoppleSyntheticToken', contractAddress, minter);
         assert.ok(doppleQQQ.address);
 
         const syntheticAmount = ethers.utils.parseEther('1');
@@ -111,7 +117,9 @@ describe('Minting and Redeeming Testing', async () => {
     // 3288.069999999
     // @notice do not foget to give 150% of collateral
     it('Can mint $dAMZN', async () => {
-        const doppleAMZN = await ethers.getContract('DoppleAMZN', minter);
+        const contractAddress = await doppleSyntheticTokenFactory.cloned('dAMZN');
+        console.log('contract address', contractAddress);
+        const doppleAMZN = await ethers.getContractAt('DoppleSyntheticToken', contractAddress, minter);
         assert.ok(doppleAMZN.address);
 
         const syntheticAmount = ethers.utils.parseEther('1');
@@ -133,7 +141,9 @@ describe('Minting and Redeeming Testing', async () => {
 
     // 1889.019475
     it('Can mint $dXAU', async () => {
-        const doppleXAU = await ethers.getContract('DoppleXAU', minter);
+        const contractAddress = await doppleSyntheticTokenFactory.cloned('dXAU');
+        console.log('contract address', contractAddress);
+        const doppleXAU = await ethers.getContractAt('DoppleSyntheticToken', contractAddress, minter);
         assert.ok(doppleXAU.address);
 
         const syntheticAmount = ethers.utils.parseEther('1');
@@ -154,7 +164,9 @@ describe('Minting and Redeeming Testing', async () => {
     });
 
     it('Can fully redeem $dTSLA', async () => {
-        const doppleTSLA = await ethers.getContract('DoppleTSLA', minter);
+        const contractAddress = await doppleSyntheticTokenFactory.cloned('dTSLA');
+        console.log('contract address', contractAddress);
+        const doppleTSLA = await ethers.getContractAt('DoppleSyntheticToken', contractAddress, minter);
         assert.ok(doppleTSLA.address);
 
         const aDollyBal = await dolly.balanceOf(minter);
@@ -173,7 +185,9 @@ describe('Minting and Redeeming Testing', async () => {
     });
 
     it('Can fully redeem $dCOIN', async () => {
-        const doppleCOIN = await ethers.getContract('DoppleCOIN', minter);
+        const contractAddress = await doppleSyntheticTokenFactory.cloned('dCOIN');
+        console.log('contract address', contractAddress);
+        const doppleCOIN = await ethers.getContractAt('DoppleSyntheticToken', contractAddress, minter);
         assert.ok(doppleCOIN.address);
 
         const aDollyBal = await dolly.balanceOf(minter);
@@ -193,7 +207,9 @@ describe('Minting and Redeeming Testing', async () => {
     });
 
     it('Can fully redeem $dAAPL', async () => {
-        const doppleAAPL = await ethers.getContract('DoppleAAPL', minter);
+        const contractAddress = await doppleSyntheticTokenFactory.cloned('dAAPL');
+        console.log('contract address', contractAddress);
+        const doppleAAPL = await ethers.getContractAt('DoppleSyntheticToken', contractAddress, minter);
         assert.ok(doppleAAPL.address);
 
         const aDollyBal = await dolly.balanceOf(minter);
@@ -213,7 +229,9 @@ describe('Minting and Redeeming Testing', async () => {
     });
 
     it('Can fully redeem $dQQQ', async () => {
-        const doppleQQQ = await ethers.getContract('DoppleQQQ', minter);
+        const contractAddress = await doppleSyntheticTokenFactory.cloned('dQQQ');
+        console.log('contract address', contractAddress);
+        const doppleQQQ = await ethers.getContractAt('DoppleSyntheticToken', contractAddress, minter);
         assert.ok(doppleQQQ.address);
 
         const aDollyBal = await dolly.balanceOf(minter);
@@ -233,7 +251,9 @@ describe('Minting and Redeeming Testing', async () => {
     });
 
     it('Can fully redeem $dAMZN', async () => {
-        const doppleAMZN = await ethers.getContract('DoppleAMZN', minter);
+        const contractAddress = await doppleSyntheticTokenFactory.cloned('dAMZN');
+        console.log('contract address', contractAddress);
+        const doppleAMZN = await ethers.getContractAt('DoppleSyntheticToken', contractAddress, minter);
         assert.ok(doppleAMZN.address);
 
         const aDollyBal = await dolly.balanceOf(minter);
@@ -253,7 +273,9 @@ describe('Minting and Redeeming Testing', async () => {
     });
 
     it('Can fully redeem $dXAU', async () => {
-        const doppleXAU = await ethers.getContract('DoppleXAU', minter);
+        const contractAddress = await doppleSyntheticTokenFactory.cloned('dXAU');
+        console.log('contract address', contractAddress);
+        const doppleXAU = await ethers.getContractAt('DoppleSyntheticToken', contractAddress, minter);
         assert.ok(doppleXAU.address);
 
         const aDollyBal = await dolly.balanceOf(minter);

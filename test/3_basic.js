@@ -4,25 +4,19 @@ const { ethers, getNamedAccounts } = require('hardhat');
 const fs = require('fs');
 
 describe('Basic Testing', async () => {
-    let synthetic, doppleSyntheticTokenFactory, networkName, minter, deployer;
+    let synthetic, doppleSyntheticTokenFactory, networkName, minter;
     before(async () => {
         networkName = (await ethers.provider.getNetwork()).name;
         console.log('network', networkName);
-        if (networkName === 'kovan') {
-            const data = JSON.parse(fs.readFileSync(`./deployments/${networkName}/Synthetic.json`).toString().trim());
-            synthetic = await ethers.getContractAt('Synthetic', data.address);
-            assert.ok(synthetic.address);
-            doppleSyntheticTokenFactory = await ethers.getContract('DoppleSyntheticTokenFactory', minter);
-            assert.ok(synthetic.address);
-        } else {
+        const namedAccounts = await getNamedAccounts();
+        minter = namedAccounts.minter;
+        if (networkName !== 'kovan') {
             await deployments.fixture(); // ensure you start from a fresh deployments
-            const namedAccounts = await getNamedAccounts();
-            minter = namedAccounts.minter;
-            deployer = namedAccounts.deployer;
-            synthetic = await ethers.getContract('Synthetic', minter);
-            doppleSyntheticTokenFactory = await ethers.getContract('DoppleSyntheticTokenFactory', minter);
-            assert.ok(synthetic.address);
         }
+        synthetic = await ethers.getContract('Synthetic', minter);
+        assert.ok(synthetic.address);
+        doppleSyntheticTokenFactory = await ethers.getContract('DoppleSyntheticTokenFactory', minter);
+        assert.ok(doppleSyntheticTokenFactory.address);
     });
 
     it('Can approve dolly before mint', async () => {

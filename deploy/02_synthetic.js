@@ -16,4 +16,4 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
     }
 };
 
-module.exports.tags = ['Synthetic'];
+module.exports.tags = ['DoppleSyntheticToken', 'Synthetic'];

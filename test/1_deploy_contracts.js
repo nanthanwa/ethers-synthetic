@@ -2,7 +2,7 @@ const { assert } = require('chai');
 
 describe('Deploy Contract', () => {
   const bandRef = '0xDA7a001b254CD22e46d3eAB04d937489c93174C3'; // use proxy
-  let dolly, synthetic, doppleTSLA, doppleCOIN, doppleAAPL, doppleQQQ, doppleAMZN, doppleXAU;
+  let dolly, synthetic, doppleSyntheticToken, doppleSyntheticTokenFactory;
 
   it('Can deploy Dolly contract', async () => {
     const Dolly = await ethers.getContractFactory("Dolly");
@@ -20,45 +20,65 @@ describe('Deploy Contract', () => {
     assert.ok(synthetic.address);
   });
 
-  it('Can deploy DoppleTSLA TSLA contract', async () => {
-    const DoppleTSLA = await ethers.getContractFactory('DoppleTSLA');
-    doppleTSLA = await DoppleTSLA.deploy(synthetic.address);
-    console.log("DoppleTSLA deployed to:", doppleTSLA.address);
-    assert.ok(doppleTSLA.address);
+  it('Can deploy DoppleSyntheticToken contract', async () => {
+    const DoppleSyntheticToken = await ethers.getContractFactory('DoppleSyntheticToken');
+    doppleSyntheticToken = await DoppleSyntheticToken.deploy();
+    console.log("DoppleSyntheticToken deployed to:", doppleSyntheticToken.address);
+    assert.ok(doppleSyntheticToken.address);
   });
 
-  it('Can deploy DoppleCOIN TSLA contract', async () => {
-    const DoppleCOIN = await ethers.getContractFactory('DoppleCOIN');
-    doppleCOIN = await DoppleCOIN.deploy(synthetic.address);
-    console.log("DoppleCOIN deployed to:", doppleCOIN.address);
-    assert.ok(doppleCOIN.address);
+  it('Can deploy DoppleSyntheticTokenFactory contract', async () => {
+    const DoppleSyntheticTokenFactory = await ethers.getContractFactory('DoppleSyntheticTokenFactory');
+    doppleSyntheticTokenFactory = await DoppleSyntheticTokenFactory.deploy(doppleSyntheticToken.address);
+    console.log("DoppleSyntheticTokenFactory deployed to:", doppleSyntheticTokenFactory.address);
+    assert.ok(doppleSyntheticTokenFactory.address);
   });
 
-  it('Can deploy DoppleAAPL TSLA contract', async () => {
-    const DoppleAAPL = await ethers.getContractFactory('DoppleAAPL');
-    doppleAAPL = await DoppleAAPL.deploy(synthetic.address);
-    console.log("DoppleAAPL deployed to:", doppleAAPL.address);
-    assert.ok(doppleAAPL.address);
+  it('Can deploy DoppleTSLA contract', async () => {
+    const tx = await doppleSyntheticTokenFactory.createSyntheticToken('Dopple Synthetic TSLA Token', 'dTSLA', synthetic.address);
+    const contractAddress = (await tx.wait()).events[2].args[0];
+    const assetName = (await tx.wait()).events[2].args[1].substr(1);
+    console.log('contractAddress', contractAddress);
+    console.log('assetName', assetName);
   });
 
-  it('Can deploy DoppleQQQ TSLA contract', async () => {
-    const DoppleQQQ = await ethers.getContractFactory('DoppleQQQ');
-    doppleQQQ = await DoppleQQQ.deploy(synthetic.address);
-    console.log("DoppleQQQ deployed to:", doppleQQQ.address);
-    assert.ok(doppleQQQ.address);
+  it('Can deploy DoppleCOIN contract', async () => {
+    const tx = await doppleSyntheticTokenFactory.createSyntheticToken('Dopple Synthetic COIN Token', 'dCOIN', synthetic.address);
+    const contractAddress = (await tx.wait()).events[2].args[0];
+    const assetName = (await tx.wait()).events[2].args[1].substr(1);
+    console.log('contractAddress', contractAddress);
+    console.log('assetName', assetName);
   });
 
-  it('Can deploy DoppleAMZN TSLA contract', async () => {
-    const DoppleAMZN = await ethers.getContractFactory('DoppleAMZN');
-    doppleAMZN = await DoppleAMZN.deploy(synthetic.address);
-    console.log("DoppleAMZN deployed to:", doppleAMZN.address);
-    assert.ok(doppleAMZN.address);
+  it('Can deploy DoppleAAPL contract', async () => {
+    const tx = await doppleSyntheticTokenFactory.createSyntheticToken('Dopple Synthetic AAPL Token', 'dAAPL', synthetic.address);
+    const contractAddress = (await tx.wait()).events[2].args[0];
+    const assetName = (await tx.wait()).events[2].args[1].substr(1);
+    console.log('contractAddress', contractAddress);
+    console.log('assetName', assetName);
   });
 
-  it('Can deploy DoppleXAU TSLA contract', async () => {
-    const DoppleXAU = await ethers.getContractFactory('DoppleXAU');
-    doppleXAU = await DoppleXAU.deploy(synthetic.address);
-    console.log("DoppleXAU deployed to:", doppleXAU.address);
-    assert.ok(doppleXAU.address);
+  it('Can deploy DoppleQQQ contract', async () => {
+    const tx = await doppleSyntheticTokenFactory.createSyntheticToken('Dopple Synthetic QQQ Token', 'dQQQ', synthetic.address);
+    const contractAddress = (await tx.wait()).events[2].args[0];
+    const assetName = (await tx.wait()).events[2].args[1].substr(1);
+    console.log('contractAddress', contractAddress);
+    console.log('assetName', assetName);
+  });
+
+  it('Can deploy DoppleAMZN contract', async () => {
+    const tx = await doppleSyntheticTokenFactory.createSyntheticToken('Dopple Synthetic AMZN Token', 'dAMZN', synthetic.address);
+    const contractAddress = (await tx.wait()).events[2].args[0];
+    const assetName = (await tx.wait()).events[2].args[1].substr(1);
+    console.log('contractAddress', contractAddress);
+    console.log('assetName', assetName);
+  });
+
+  it('Can deploy DoppleXAU contract', async () => {
+    const tx = await doppleSyntheticTokenFactory.createSyntheticToken('Dopple Synthetic XAU Token', 'dXAU', synthetic.address);
+    const contractAddress = (await tx.wait()).events[2].args[0];
+    const assetName = (await tx.wait()).events[2].args[1].substr(1);
+    console.log('contractAddress', contractAddress);
+    console.log('assetName', assetName);
   });
 });

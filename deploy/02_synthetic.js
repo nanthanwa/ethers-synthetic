@@ -9,7 +9,10 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
         log: true,
     });
     const synthetic = await ethers.getContract('Synthetic');
-    await synthetic.setDevAddress(developer);
+    const devAddress = await synthetic.devAddress();
+    if (devAddress === '0x0000000000000000000000000000000000000000') {
+        await synthetic.setDevAddress(developer);
+    }
 };
 
 module.exports.tags = ['Synthetic'];

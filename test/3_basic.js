@@ -12,6 +12,8 @@ describe('Basic Testing', async () => {
             const data = JSON.parse(fs.readFileSync(`./deployments/${networkName}/Synthetic.json`).toString().trim());
             synthetic = await ethers.getContractAt('Synthetic', data.address);
             assert.ok(synthetic.address);
+            doppleSyntheticTokenFactory = await ethers.getContract('DoppleSyntheticTokenFactory', minter);
+            assert.ok(synthetic.address);
         } else {
             await deployments.fixture(); // ensure you start from a fresh deployments
             const namedAccounts = await getNamedAccounts();
@@ -24,18 +26,10 @@ describe('Basic Testing', async () => {
     });
 
     it('Can approve dolly before mint', async () => {
-        if (networkName === 'kovan') {
-            const data = JSON.parse(fs.readFileSync(`./deployments/${networkName}/Dolly.json`).toString().trim());
-            const dolly = await ethers.getContractAt('Dolly', data.address, minter);
-            assert.ok(dolly.address);
-            const actual = await dolly.approve(synthetic.address, ethers.utils.parseEther('1000000000000').toString());
-            assert.ok(actual.hash);
-        } else {
-            const dolly = await ethers.getContract('Dolly', minter);
-            assert.ok(dolly.address);
-            const actual = await dolly.approve(synthetic.address, ethers.utils.parseEther('1000000000000').toString());
-            assert.ok(actual.hash);
-        }
+        const dolly = await ethers.getContract('Dolly', minter);
+        assert.ok(dolly.address);
+        const actual = await dolly.approve(synthetic.address, ethers.utils.parseEther('1000000000000').toString());
+        assert.ok(actual.hash);
     });
 
     it('Can approve doppleTSLA before redeem', async () => {

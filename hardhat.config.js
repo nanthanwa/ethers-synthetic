@@ -29,14 +29,14 @@ module.exports = {
   defaultNetwork: 'hardhat',
   networks: {
     hardhat: {
-      // forking: {
-      //   url: `https://kovan.infura.io/v3/${infuraProjectId}`,
-      // },
+      forking: {
+        url: `https://kovan.infura.io/v3/${infuraProjectId}`,
+      },
       saveDeployments: true,
       tags: ["test", "local"],
     },
     kovan: {
-      url: `https://eth-kovan.alchemyapi.io/v2/${alchemyProjectId}`,
+      url: `https://kovan.infura.io/v3/${infuraProjectId}`,
       accounts: privateKey,
       saveDeployments: true,
       tags: ["test", "local"],

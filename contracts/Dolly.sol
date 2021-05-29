@@ -25,7 +25,7 @@ contract Dolly is ERC20Burnable, Ownable {
         string memory symbol_,
         uint8 decimals_
     ) public ERC20(name_, symbol_, decimals_) {
-        _mint(msg.sender, 100000 ether);
+        _mint(msg.sender, 1000000 ether);
     }
 
     /**

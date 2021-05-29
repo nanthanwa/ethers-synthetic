@@ -124,10 +124,6 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
         uint256 _backedAmount // amount of Dolly that you want to collateral
     ) external whenNotPaused nonReentrant {
         MintingNote storage mn = contracts[_msgSender()][address(_synthetic)];
-        require(
-            mn.minter == address(0),
-            "Synthetic::mintSynthetic: transfer to address(0)"
-        );
 
         uint256 exchangeRate = getRate(addressToPairs[address(_synthetic)]);
         uint256 assetBackedAtRateAmount =

@@ -14,7 +14,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
 
     if (clonedCount === 0) {
         let tx, contractAddress, assetName;
-        tx = await doppleSyntheticTokenFactory.createSyntheticToken('Dopple Synthetic TSLA Token', 'dTSLA', synthetic.address);
+        tx = await doppleSyntheticTokenFactory.createSyntheticToken('Dopple Synthetic TSLA Token', 'dTSLA', deployer, synthetic.address);
         contractAddress = (await tx.wait()).events[2].args[0];
         assetName = (await tx.wait()).events[2].args[1].substr(1);
         console.log('contractAddress', contractAddress);
@@ -24,7 +24,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
         console.log('setAddressToPairs', (await synthetic.setAddressToPairs(contractAddress, `${assetName}/USD`)).hash);
         console.log('setPairsToQuote', (await synthetic.setPairsToQuote(`${assetName}/USD`, [assetName, 'USD'])).hash);
 
-        tx = await doppleSyntheticTokenFactory.createSyntheticToken('Dopple Synthetic COIN Token', 'dCOIN', synthetic.address);
+        tx = await doppleSyntheticTokenFactory.createSyntheticToken('Dopple Synthetic COIN Token', 'dCOIN', deployer, synthetic.address);
         contractAddress = (await tx.wait()).events[2].args[0];
         assetName = (await tx.wait()).events[2].args[1].substr(1);
         console.log('contractAddress', contractAddress);
@@ -34,7 +34,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
         console.log('setAddressToPairs', (await synthetic.setAddressToPairs(contractAddress, `${assetName}/USD`)).hash);
         console.log('setPairsToQuote', (await synthetic.setPairsToQuote(`${assetName}/USD`, [assetName, 'USD'])).hash);
 
-        tx = await doppleSyntheticTokenFactory.createSyntheticToken('Dopple Synthetic AAPL Token', 'dAAPL', synthetic.address);
+        tx = await doppleSyntheticTokenFactory.createSyntheticToken('Dopple Synthetic AAPL Token', 'dAAPL', deployer, synthetic.address);
         contractAddress = (await tx.wait()).events[2].args[0];
         assetName = (await tx.wait()).events[2].args[1].substr(1);
         console.log('contractAddress', contractAddress);
@@ -44,7 +44,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
         console.log('setAddressToPairs', (await synthetic.setAddressToPairs(contractAddress, `${assetName}/USD`)).hash);
         console.log('setPairsToQuote', (await synthetic.setPairsToQuote(`${assetName}/USD`, [assetName, 'USD'])).hash);
 
-        tx = await doppleSyntheticTokenFactory.createSyntheticToken('Dopple Synthetic QQQ Token', 'dQQQ', synthetic.address);
+        tx = await doppleSyntheticTokenFactory.createSyntheticToken('Dopple Synthetic QQQ Token', 'dQQQ', deployer, synthetic.address);
         contractAddress = (await tx.wait()).events[2].args[0];
         assetName = (await tx.wait()).events[2].args[1].substr(1);
         console.log('contractAddress', contractAddress);
@@ -54,7 +54,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
         console.log('setAddressToPairs', (await synthetic.setAddressToPairs(contractAddress, `${assetName}/USD`)).hash);
         console.log('setPairsToQuote', (await synthetic.setPairsToQuote(`${assetName}/USD`, [assetName, 'USD'])).hash);
 
-        tx = await doppleSyntheticTokenFactory.createSyntheticToken('Dopple Synthetic AMZN Token', 'dAMZN', synthetic.address);
+        tx = await doppleSyntheticTokenFactory.createSyntheticToken('Dopple Synthetic AMZN Token', 'dAMZN', deployer, synthetic.address);
         contractAddress = (await tx.wait()).events[2].args[0];
         assetName = (await tx.wait()).events[2].args[1].substr(1);
         console.log('contractAddress', contractAddress);
@@ -64,7 +64,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
         console.log('setAddressToPairs', (await synthetic.setAddressToPairs(contractAddress, `${assetName}/USD`)).hash);
         console.log('setPairsToQuote', (await synthetic.setPairsToQuote(`${assetName}/USD`, [assetName, 'USD'])).hash);
 
-        tx = await doppleSyntheticTokenFactory.createSyntheticToken('Dopple Synthetic XAU Token', 'dXAU', synthetic.address);
+        tx = await doppleSyntheticTokenFactory.createSyntheticToken('Dopple Synthetic XAU Token', 'dXAU', deployer, synthetic.address);
         contractAddress = (await tx.wait()).events[2].args[0];
         assetName = (await tx.wait()).events[2].args[1].substr(1);
         console.log('contractAddress', contractAddress);

@@ -19,10 +19,16 @@ contract DoppleSyntheticTokenFactory is Ownable, CloneFactory {
     function createSyntheticToken(
         string memory _name,
         string memory _symbol,
-        address _owner
+        address _owner,
+        address _synthetic
     ) public onlyOwner {
         address clone = createClone(libraryAddress);
-        DoppleSyntheticToken(clone).initialize(_name, _symbol, _owner);
+        DoppleSyntheticToken(clone).initialize(
+            _name,
+            _symbol,
+            _owner,
+            _synthetic
+        );
         cloned[_symbol] = clone;
         require(
             clonedCount < uint16(65535),

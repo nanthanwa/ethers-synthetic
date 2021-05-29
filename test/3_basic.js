@@ -4,7 +4,7 @@ const { ethers, getNamedAccounts } = require('hardhat');
 const fs = require('fs');
 
 describe('Basic Testing', async () => {
-    let synthetic, networkName, minter, deployer;
+    let synthetic, doppleSyntheticTokenFactory, networkName, minter, deployer;
     before(async () => {
         networkName = (await ethers.provider.getNetwork()).name;
         console.log('network', networkName);
@@ -18,6 +18,7 @@ describe('Basic Testing', async () => {
             minter = namedAccounts.minter;
             deployer = namedAccounts.deployer;
             synthetic = await ethers.getContract('Synthetic', minter);
+            doppleSyntheticTokenFactory = await ethers.getContract('DoppleSyntheticTokenFactory', minter);
             assert.ok(synthetic.address);
         }
     });
@@ -38,32 +39,56 @@ describe('Basic Testing', async () => {
     });
 
     it('Can approve doppleTSLA before redeem', async () => {
-        if (networkName === 'kovan') {
-            const data = JSON.parse(fs.readFileSync(`./deployments/${networkName}/DoppleTSLA.json`).toString().trim());
-            const DoppleTSLA = await ethers.getContractAt('DoppleTSLA', data.address);
-            assert.ok(DoppleTSLA.address);
-            const actual = await DoppleTSLA.approve(synthetic.address, ethers.utils.parseEther('1000000000000').toString());
-            assert.ok(actual.hash);
-        } else {
-            const doppleTSLA = await ethers.getContract('DoppleTSLA', minter);
-            assert.ok(doppleTSLA.address);
-            const actual = await doppleTSLA.approve(synthetic.address, ethers.utils.parseEther('1000000000000').toString());
-            assert.ok(actual.hash);
-        }
+        const contractAddress = await doppleSyntheticTokenFactory.cloned('dTSLA');
+        console.log('contract address', contractAddress);
+        const doppleTSLA = await ethers.getContractAt('DoppleSyntheticToken', contractAddress);
+        assert.ok(doppleTSLA.address);
+        const actual = await doppleTSLA.approve(synthetic.address, ethers.utils.parseEther('1000000000000').toString());
+        assert.ok(actual.hash);
     });
 
-    it('Can set synthetic contract address to synthetic asset contract before mint', async () => {
-        if (networkName === 'kovan') {
-            const data = JSON.parse(fs.readFileSync(`./deployments/${networkName}/DoppleTSLA.json`).toString().trim());
-            doppleTSLA = await ethers.getContractAt('DoppleTSLA', data.address);
-            assert.ok(doppleTSLA.address);
-            const actual = await doppleTSLA.setSyntheticAddress(synthetic.address); // only Synthetic contract can mint synthetic asset.
-            assert.ok(actual.hash);
-        } else {
-            const doppleTSLA = await ethers.getContract('DoppleTSLA', deployer);
-            assert.ok(doppleTSLA.address);
-            const actual = await doppleTSLA.setSyntheticAddress(synthetic.address); // only Synthetic contract can mint synthetic asset.
-            assert.ok(actual.hash);
-        }
+    it('Can approve doppleCOIN before redeem', async () => {
+        const contractAddress = await doppleSyntheticTokenFactory.cloned('dCOIN');
+        console.log('contract address', contractAddress);
+        const doppleCOIN = await ethers.getContractAt('DoppleSyntheticToken', contractAddress);
+        assert.ok(doppleCOIN.address);
+        const actual = await doppleCOIN.approve(synthetic.address, ethers.utils.parseEther('1000000000000').toString());
+        assert.ok(actual.hash);
+    });
+
+    it('Can approve doppleAAPL before redeem', async () => {
+        const contractAddress = await doppleSyntheticTokenFactory.cloned('dAAPL');
+        console.log('contract address', contractAddress);
+        const doppleAAPL = await ethers.getContractAt('DoppleSyntheticToken', contractAddress);
+        assert.ok(doppleAAPL.address);
+        const actual = await doppleAAPL.approve(synthetic.address, ethers.utils.parseEther('1000000000000').toString());
+        assert.ok(actual.hash);
+    });
+
+    it('Can approve doppleQQQ before redeem', async () => {
+        const contractAddress = await doppleSyntheticTokenFactory.cloned('dQQQ');
+        console.log('contract address', contractAddress);
+        const doppleQQQ = await ethers.getContractAt('DoppleSyntheticToken', contractAddress);
+        assert.ok(doppleQQQ.address);
+        const actual = await doppleQQQ.approve(synthetic.address, ethers.utils.parseEther('1000000000000').toString());
+        assert.ok(actual.hash);
+    });
+
+    it('Can approve doppleAMZN before redeem', async () => {
+        const contractAddress = await doppleSyntheticTokenFactory.cloned('dAMZN');
+        console.log('contract address', contractAddress);
+        const doppleAMZN = await ethers.getContractAt('DoppleSyntheticToken', contractAddress);
+        assert.ok(doppleAMZN.address);
+        const actual = await doppleAMZN.approve(synthetic.address, ethers.utils.parseEther('1000000000000').toString());
+        assert.ok(actual.hash);
+    });
+
+    it('Can approve doppleXAU before redeem', async () => {
+        const contractAddress = await doppleSyntheticTokenFactory.cloned('dXAU');
+        console.log('contract address', contractAddress);
+        const doppleXAU = await ethers.getContractAt('DoppleSyntheticToken', contractAddress);
+        assert.ok(doppleXAU.address);
+        const actual = await doppleXAU.approve(synthetic.address, ethers.utils.parseEther('1000000000000').toString());
+        assert.ok(actual.hash);
     });
 });

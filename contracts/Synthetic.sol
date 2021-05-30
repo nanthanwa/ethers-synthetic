@@ -126,10 +126,10 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
         MintingNote storage mn = contracts[_msgSender()][address(_synthetic)];
 
         uint256 exchangeRate = getRate(addressToPairs[address(_synthetic)]);
-        uint256 assetBackedAtRateAmount =
-            (_amount.mul(exchangeRate)).div(denominator);
+
+        uint256 assetBackedAtRateAmount = getProductOf(_amount, exchangeRate);
         uint256 requiredAmount =
-            (assetBackedAtRateAmount.mul(collateralRatio)).div(denominator);
+            getProductOf(assetBackedAtRateAmount, collateralRatio);
         require(
             _backedAmount >= requiredAmount,
             "Synthetic::mintSynthetic: under collateral"

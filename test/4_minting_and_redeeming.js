@@ -1,4 +1,4 @@
-const { assert } = require('chai');
+const { expect, assert } = require('chai');
 const { deployments } = require('hardhat');
 const { ethers, getNamedAccounts } = require('hardhat');
 
@@ -43,8 +43,8 @@ describe('Minting and Redeeming Testing', async () => {
         const bDollyBal = await dolly.balanceOf(minter);
         const bTSLABal = await doppleTSLA.balanceOf(minter);
 
-        assert.ok(bDollyBal.eq(aDollyBal.sub(dollyAmount)));
-        assert.ok(bTSLABal.eq(aTSLABal.add(syntheticAmount)));
+        expect(bDollyBal).to.eq(aDollyBal.sub(dollyAmount));
+        expect(bTSLABal).to.eq(aTSLABal.add(syntheticAmount));
     });
 
     it('Can mint $dCOIN', async () => {
@@ -69,8 +69,8 @@ describe('Minting and Redeeming Testing', async () => {
 
         const bDollyBal = await dolly.balanceOf(minter);
         const bCOINBal = await doppleCOIN.balanceOf(minter);
-        assert.ok(bDollyBal.eq(aDollyBal.sub(dollyAmount)));
-        assert.ok(bCOINBal.eq(aCOINBal.add(syntheticAmount)));
+        expect(bDollyBal).to.eq(aDollyBal.sub(dollyAmount));
+        expect(bCOINBal).to.eq(aCOINBal.add(syntheticAmount));
     });
 
     it('Can mint $dAAPL', async () => {
@@ -95,8 +95,8 @@ describe('Minting and Redeeming Testing', async () => {
 
         const bDollyBal = await dolly.balanceOf(minter);
         const bAAPLBal = await doppleAAPL.balanceOf(minter);
-        assert.ok(bDollyBal.eq(aDollyBal.sub(dollyAmount)));
-        assert.ok(bAAPLBal.eq(aAAPLBal.add(syntheticAmount)));
+        expect(bDollyBal).to.eq(aDollyBal.sub(dollyAmount));
+        expect(bAAPLBal).to.eq(aAAPLBal.add(syntheticAmount));
     });
 
     it('Can mint $dQQQ', async () => {
@@ -121,8 +121,8 @@ describe('Minting and Redeeming Testing', async () => {
 
         const bDollyBal = await dolly.balanceOf(minter);
         const bQQQBal = await doppleQQQ.balanceOf(minter);
-        assert.ok(bDollyBal.eq(aDollyBal.sub(dollyAmount)));
-        assert.ok(bQQQBal.eq(aQQQBal.add(syntheticAmount)));
+        expect(bDollyBal).to.eq(aDollyBal.sub(dollyAmount));
+        expect(bQQQBal).to.eq(aQQQBal.add(syntheticAmount));
     });
 
     // 3288.069999999
@@ -149,8 +149,8 @@ describe('Minting and Redeeming Testing', async () => {
 
         const bDollyBal = await dolly.balanceOf(minter);
         const bAMZNBal = await doppleAMZN.balanceOf(minter);
-        assert.ok(bDollyBal.eq(aDollyBal.sub(dollyAmount)));
-        assert.ok(bAMZNBal.eq(aAMZNBal.add(syntheticAmount)));
+        expect(bDollyBal).to.eq(aDollyBal.sub(dollyAmount));
+        expect(bAMZNBal).to.eq(aAMZNBal.add(syntheticAmount));
     });
 
     // 1889.019475
@@ -176,8 +176,8 @@ describe('Minting and Redeeming Testing', async () => {
 
         const bDollyBal = await dolly.balanceOf(minter);
         const bXAUBal = await doppleXAU.balanceOf(minter);
-        assert.ok(bDollyBal.eq(aDollyBal.sub(dollyAmount)));
-        assert.ok(bXAUBal.eq(aXAUBal.add(syntheticAmount)));
+        expect(bDollyBal).to.eq(aDollyBal.sub(dollyAmount));
+        expect(bXAUBal).to.eq(aXAUBal.add(syntheticAmount));
     });
 
     it('Can fully redeem $dTSLA', async () => {
@@ -201,8 +201,8 @@ describe('Minting and Redeeming Testing', async () => {
         const bDollyBal = await dolly.balanceOf(minter);
         const bTSLABal = await doppleTSLA.balanceOf(minter);
 
-        assert.ok(bDollyBal.gt(aDollyBal));
-        assert.ok(bTSLABal.lt(aTSLABal));
+        expect(bDollyBal).to.gt(aDollyBal);
+        expect(bTSLABal).to.lt(aTSLABal);
     });
 
     it('Can fully redeem $dCOIN', async () => {
@@ -226,8 +226,8 @@ describe('Minting and Redeeming Testing', async () => {
         const bDollyBal = await dolly.balanceOf(minter);
         const bCOINBal = await doppleCOIN.balanceOf(minter);
 
-        assert.ok(bDollyBal.gt(aDollyBal));
-        assert.ok(bCOINBal.lt(aCOINBal));
+        expect(bDollyBal).to.gt(aDollyBal);
+        expect(bCOINBal).to.lt(aCOINBal);
     });
 
     it('Can fully redeem $dAAPL', async () => {
@@ -251,8 +251,8 @@ describe('Minting and Redeeming Testing', async () => {
         const bDollyBal = await dolly.balanceOf(minter);
         const bAAPLBal = await doppleAAPL.balanceOf(minter);
 
-        assert.ok(bDollyBal.gt(aDollyBal));
-        assert.ok(bAAPLBal.lt(aAAPLBal));
+        expect(bDollyBal).to.gt(aDollyBal);
+        expect(bAAPLBal).to.lt(aAAPLBal);
     });
 
     it('Can fully redeem $dQQQ', async () => {
@@ -276,8 +276,8 @@ describe('Minting and Redeeming Testing', async () => {
         const bDollyBal = await dolly.balanceOf(minter);
         const bQQQBal = await doppleQQQ.balanceOf(minter);
 
-        assert.ok(bDollyBal.gt(aDollyBal));
-        assert.ok(bQQQBal.lt(aQQQBal));
+        expect(bDollyBal).to.gt(aDollyBal);
+        expect(bQQQBal).to.lt(aQQQBal);
     });
 
     it('Can fully redeem $dAMZN', async () => {
@@ -301,8 +301,8 @@ describe('Minting and Redeeming Testing', async () => {
         const bDollyBal = await dolly.balanceOf(minter);
         const bAMZNBal = await doppleAMZN.balanceOf(minter);
 
-        assert.ok(bDollyBal.gt(aDollyBal));
-        assert.ok(bAMZNBal.lt(aAMZNBal));
+        expect(bDollyBal).to.gt(aDollyBal);
+        expect(bAMZNBal).to.lt(aAMZNBal);
     });
 
     it('Can fully redeem $dXAU', async () => {
@@ -326,7 +326,7 @@ describe('Minting and Redeeming Testing', async () => {
         const bDollyBal = await dolly.balanceOf(minter);
         const bXAUBal = await doppleXAU.balanceOf(minter);
 
-        assert.ok(bDollyBal.gt(aDollyBal));
-        assert.ok(bXAUBal.lt(aXAUBal));
+        expect(bDollyBal).to.gt(aDollyBal);
+        expect(bXAUBal).to.lt(aXAUBal);
     });
 });

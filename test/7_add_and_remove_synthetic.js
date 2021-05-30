@@ -1,7 +1,6 @@
-const { assert } = require('chai');
+const { expect, assert } = require('chai');
 const { deployments } = require('hardhat');
 const { ethers } = require('hardhat');
-const fs = require('fs');
 
 describe('Add and remove synthetic Testing', async () => {
     let actual, synthetic, doppleSyntheticTokenFactory, dolly;

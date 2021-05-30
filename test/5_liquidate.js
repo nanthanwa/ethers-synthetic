@@ -1,5 +1,4 @@
-const chai = require('chai');
-const { expect, assert } = chai;
+const { expect, assert } = require('chai');
 const { deployments } = require('hardhat');
 const { ethers } = require('hardhat');
 

@@ -57,7 +57,7 @@ describe('Add and remove collateral Testing', async () => {
         // ========================================================
         actual = await synthetic.connect(minter).addCollateral(doppleTSLA.address, addCollateralAmount);
         const bRatio = (await synthetic.contracts(minter.address, doppleTSLA.address)).currentRatio;
-        assert.ok(aRatio.lt(bRatio));
+        assert.ok(bRatio.gt(aRatio));
 
         const bDollyBal2 = await dolly.balanceOf(minter.address);
         assert.ok(bDollyBal2.lt(bDollyBal1));
@@ -99,7 +99,7 @@ describe('Add and remove collateral Testing', async () => {
         // ========================================================
         actual = await synthetic.connect(minter).addCollateral(doppleCOIN.address, addCollateralAmount);
         const bRatio = (await synthetic.contracts(minter.address, doppleCOIN.address)).currentRatio;
-        assert.ok(aRatio.lt(bRatio));
+        assert.ok(bRatio.gt(aRatio));
 
         const bDollyBal2 = await dolly.balanceOf(minter.address);
         assert.ok(bDollyBal2.lt(bDollyBal1));
@@ -141,7 +141,7 @@ describe('Add and remove collateral Testing', async () => {
         // ========================================================
         actual = await synthetic.connect(minter).addCollateral(doppleAAPL.address, addCollateralAmount);
         const bRatio = (await synthetic.contracts(minter.address, doppleAAPL.address)).currentRatio;
-        assert.ok(aRatio.lt(bRatio));
+        assert.ok(bRatio.gt(aRatio));
 
         const bDollyBal2 = await dolly.balanceOf(minter.address);
         assert.ok(bDollyBal2.lt(bDollyBal1));
@@ -183,7 +183,7 @@ describe('Add and remove collateral Testing', async () => {
         // ========================================================
         actual = await synthetic.connect(minter).addCollateral(doppleQQQ.address, addCollateralAmount);
         const bRatio = (await synthetic.contracts(minter.address, doppleQQQ.address)).currentRatio;
-        assert.ok(aRatio.lt(bRatio));
+        assert.ok(bRatio.gt(aRatio));
 
         const bDollyBal2 = await dolly.balanceOf(minter.address);
         assert.ok(bDollyBal2.lt(bDollyBal1));
@@ -225,7 +225,7 @@ describe('Add and remove collateral Testing', async () => {
         // ========================================================
         actual = await synthetic.connect(minter).addCollateral(doppleAMZN.address, addCollateralAmount);
         const bRatio = (await synthetic.contracts(minter.address, doppleAMZN.address)).currentRatio;
-        assert.ok(aRatio.lt(bRatio));
+        assert.ok(bRatio.gt(aRatio));
 
         const bDollyBal2 = await dolly.balanceOf(minter.address);
         assert.ok(bDollyBal2.lt(bDollyBal1));
@@ -267,7 +267,7 @@ describe('Add and remove collateral Testing', async () => {
         // ========================================================
         actual = await synthetic.connect(minter).addCollateral(doppleXAU.address, addCollateralAmount);
         const bRatio = (await synthetic.contracts(minter.address, doppleXAU.address)).currentRatio;
-        assert.ok(aRatio.lt(bRatio));
+        assert.ok(bRatio.gt(aRatio));
 
         const bDollyBal2 = await dolly.balanceOf(minter.address);
         assert.ok(bDollyBal2.lt(bDollyBal1));

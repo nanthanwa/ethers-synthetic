@@ -46,7 +46,7 @@ describe('Add and remove collateral Testing', async () => {
         const aRatio = (await synthetic.contracts(minter.address, doppleTSLA.address)).currentRatio;
 
         const bDollyBal1 = await dolly.balanceOf(minter.address);
-        assert.ok(bDollyBal1.eq(aDollyBal.sub(dollyAmount)));
+        expect(bDollyBal1).to.eq(aDollyBal.sub(dollyAmount));
 
         const bTSLABal1 = await doppleTSLA.balanceOf(minter.address);
         assert.ok(bTSLABal1.eq(aTSLABal.add(syntheticAmount)));
@@ -56,10 +56,10 @@ describe('Add and remove collateral Testing', async () => {
         // ========================================================
         actual = await synthetic.connect(minter).addCollateral(doppleTSLA.address, addCollateralAmount);
         const bRatio = (await synthetic.contracts(minter.address, doppleTSLA.address)).currentRatio;
-        assert.ok(bRatio.gt(aRatio));
+        expect(bRatio).to.gt(aRatio);
 
         const bDollyBal2 = await dolly.balanceOf(minter.address);
-        assert.ok(bDollyBal2.lt(bDollyBal1));
+        expect(bDollyBal2).to.lt(bDollyBal1);
     });
 
     it('Can add collateral for $dCOIN', async () => {
@@ -88,20 +88,20 @@ describe('Add and remove collateral Testing', async () => {
         const aRatio = (await synthetic.contracts(minter.address, doppleCOIN.address)).currentRatio;
 
         const bDollyBal1 = await dolly.balanceOf(minter.address);
-        assert.ok(bDollyBal1.eq(aDollyBal.sub(dollyAmount)));
+        expect(bDollyBal1).to.eq(aDollyBal.sub(dollyAmount));
 
         const bCOINBal1 = await doppleCOIN.balanceOf(minter.address);
-        assert.ok(bCOINBal1.eq(aCOINBal.add(syntheticAmount)));
+        expect(bCOINBal1).to.eq(aCOINBal.add(syntheticAmount));
 
         // ========================================================
         // ADD MORE COLLATERAL
         // ========================================================
         actual = await synthetic.connect(minter).addCollateral(doppleCOIN.address, addCollateralAmount);
         const bRatio = (await synthetic.contracts(minter.address, doppleCOIN.address)).currentRatio;
-        assert.ok(bRatio.gt(aRatio));
+        expect(bRatio).to.gt(aRatio);
 
         const bDollyBal2 = await dolly.balanceOf(minter.address);
-        assert.ok(bDollyBal2.lt(bDollyBal1));
+        expect(bDollyBal2).to.lt(bDollyBal1);
     });
 
     it('Can add collateral for $dAAPL', async () => {
@@ -130,20 +130,20 @@ describe('Add and remove collateral Testing', async () => {
         const aRatio = (await synthetic.contracts(minter.address, doppleAAPL.address)).currentRatio;
 
         const bDollyBal1 = await dolly.balanceOf(minter.address);
-        assert.ok(bDollyBal1.eq(aDollyBal.sub(dollyAmount)));
+        expect(bDollyBal1).to.eq(aDollyBal.sub(dollyAmount));
 
         const bAAPLBal1 = await doppleAAPL.balanceOf(minter.address);
-        assert.ok(bAAPLBal1.eq(aAAPLBal.add(syntheticAmount)));
+        expect(bAAPLBal1).to.eq(aAAPLBal.add(syntheticAmount));
 
         // ========================================================
         // ADD MORE COLLATERAL
         // ========================================================
         actual = await synthetic.connect(minter).addCollateral(doppleAAPL.address, addCollateralAmount);
         const bRatio = (await synthetic.contracts(minter.address, doppleAAPL.address)).currentRatio;
-        assert.ok(bRatio.gt(aRatio));
+        expect(bRatio).to.gt(aRatio);
 
         const bDollyBal2 = await dolly.balanceOf(minter.address);
-        assert.ok(bDollyBal2.lt(bDollyBal1));
+        expect(bDollyBal2).to.lt(bDollyBal1);
     });
 
     it('Can add collateral for $dQQQ', async () => {
@@ -172,20 +172,20 @@ describe('Add and remove collateral Testing', async () => {
         const aRatio = (await synthetic.contracts(minter.address, doppleQQQ.address)).currentRatio;
 
         const bDollyBal1 = await dolly.balanceOf(minter.address);
-        assert.ok(bDollyBal1.eq(aDollyBal.sub(dollyAmount)));
+        expect(bDollyBal1).to.eq(aDollyBal.sub(dollyAmount));
 
         const bQQQBal1 = await doppleQQQ.balanceOf(minter.address);
-        assert.ok(bQQQBal1.eq(aQQQBal.add(syntheticAmount)));
+        expect(bQQQBal1).to.eq(aQQQBal.add(syntheticAmount));
 
         // ========================================================
         // ADD MORE COLLATERAL
         // ========================================================
         actual = await synthetic.connect(minter).addCollateral(doppleQQQ.address, addCollateralAmount);
         const bRatio = (await synthetic.contracts(minter.address, doppleQQQ.address)).currentRatio;
-        assert.ok(bRatio.gt(aRatio));
+        expect(bRatio).to.gt(aRatio);
 
         const bDollyBal2 = await dolly.balanceOf(minter.address);
-        assert.ok(bDollyBal2.lt(bDollyBal1));
+        expect(bDollyBal2).to.lt(bDollyBal1);
     });
 
     it('Can add collateral for $dAMZN', async () => {
@@ -214,20 +214,20 @@ describe('Add and remove collateral Testing', async () => {
         const aRatio = (await synthetic.contracts(minter.address, doppleAMZN.address)).currentRatio;
 
         const bDollyBal1 = await dolly.balanceOf(minter.address);
-        assert.ok(bDollyBal1.eq(aDollyBal.sub(dollyAmount)));
+        expect(bDollyBal1).to.eq(aDollyBal.sub(dollyAmount));
 
         const bAMZNBal1 = await doppleAMZN.balanceOf(minter.address);
-        assert.ok(bAMZNBal1.eq(aAMZNBal.add(syntheticAmount)));
+        expect(bAMZNBal1).to.eq(aAMZNBal.add(syntheticAmount));
 
         // ========================================================
         // ADD MORE COLLATERAL
         // ========================================================
         actual = await synthetic.connect(minter).addCollateral(doppleAMZN.address, addCollateralAmount);
         const bRatio = (await synthetic.contracts(minter.address, doppleAMZN.address)).currentRatio;
-        assert.ok(bRatio.gt(aRatio));
+        expect(bRatio).to.gt(aRatio);
 
         const bDollyBal2 = await dolly.balanceOf(minter.address);
-        assert.ok(bDollyBal2.lt(bDollyBal1));
+        expect(bDollyBal2).to.lt(bDollyBal1);
     });
 
     it('Can add collateral for $dXAU', async () => {
@@ -256,20 +256,20 @@ describe('Add and remove collateral Testing', async () => {
         const aRatio = (await synthetic.contracts(minter.address, doppleXAU.address)).currentRatio;
 
         const bDollyBal1 = await dolly.balanceOf(minter.address);
-        assert.ok(bDollyBal1.eq(aDollyBal.sub(dollyAmount)));
+        expect(bDollyBal1).to.eq(aDollyBal.sub(dollyAmount));
 
         const bXAUBal1 = await doppleXAU.balanceOf(minter.address);
-        assert.ok(bXAUBal1.eq(aXAUBal.add(syntheticAmount)));
+        expect(bXAUBal1).to.eq(aXAUBal.add(syntheticAmount));
 
         // ========================================================
         // ADD MORE COLLATERAL
         // ========================================================
         actual = await synthetic.connect(minter).addCollateral(doppleXAU.address, addCollateralAmount);
         const bRatio = (await synthetic.contracts(minter.address, doppleXAU.address)).currentRatio;
-        assert.ok(bRatio.gt(aRatio));
+        expect(bRatio).to.gt(aRatio);
 
         const bDollyBal2 = await dolly.balanceOf(minter.address);
-        assert.ok(bDollyBal2.lt(bDollyBal1));
+        expect(bDollyBal2).to.lt(bDollyBal1);
     });
 
     it('Can remove collateral for $dTSLA', async () => {
@@ -297,10 +297,10 @@ describe('Add and remove collateral Testing', async () => {
         const aRatio = (await synthetic.contracts(minter.address, doppleTSLA.address)).currentRatio;
 
         const bDollyBal1 = await dolly.balanceOf(minter.address);
-        assert.ok(bDollyBal1.eq(aDollyBal.sub(dollyAmount)));
+        expect(bDollyBal1).to.eq(aDollyBal.sub(dollyAmount));
 
         const bTSLABal1 = await doppleTSLA.balanceOf(minter.address);
-        assert.ok(bTSLABal1.eq(aTSLABal.add(syntheticAmount)));
+        expect(bTSLABal1).to.eq(aTSLABal.add(syntheticAmount));
 
         // ========================================================
         // REMOVE COLLATERAL
@@ -308,10 +308,10 @@ describe('Add and remove collateral Testing', async () => {
         const mintingNote = await synthetic.contracts(minter.address, doppleTSLA.address);
         actual = await synthetic.connect(minter).removeCollateral(doppleTSLA.address, mintingNote.canWithdrawRemainning.div(2));
         const bRatio = (await synthetic.contracts(minter.address, doppleTSLA.address)).currentRatio;
-        assert.ok(bRatio.lt(aRatio));
+        expect(bRatio).to.lt(aRatio);
 
         const bDollyBal2 = await dolly.balanceOf(minter.address);
-        assert.ok(bDollyBal2.gt(bDollyBal1));
+        expect(bDollyBal2).to.gt(bDollyBal1);
     });
 
     it('Can remove collateral for $dCOIN', async () => {
@@ -339,10 +339,10 @@ describe('Add and remove collateral Testing', async () => {
         const aRatio = (await synthetic.contracts(minter.address, doppleCOIN.address)).currentRatio;
 
         const bDollyBal1 = await dolly.balanceOf(minter.address);
-        assert.ok(bDollyBal1.eq(aDollyBal.sub(dollyAmount)));
+        expect(bDollyBal1).to.eq(aDollyBal.sub(dollyAmount));
 
         const bCOINBal1 = await doppleCOIN.balanceOf(minter.address);
-        assert.ok(bCOINBal1.eq(aCOINBal.add(syntheticAmount)));
+        expect(bCOINBal1).to.eq(aCOINBal.add(syntheticAmount));
 
         // ========================================================
         // REMOVE COLLATERAL
@@ -350,10 +350,10 @@ describe('Add and remove collateral Testing', async () => {
         const mintingNote = await synthetic.contracts(minter.address, doppleCOIN.address);
         actual = await synthetic.connect(minter).removeCollateral(doppleCOIN.address, mintingNote.canWithdrawRemainning.div(2));
         const bRatio = (await synthetic.contracts(minter.address, doppleCOIN.address)).currentRatio;
-        assert.ok(bRatio.lt(aRatio));
+        expect(bRatio).to.lt(aRatio);
 
         const bDollyBal2 = await dolly.balanceOf(minter.address);
-        assert.ok(bDollyBal2.gt(bDollyBal1));
+        expect(bDollyBal2).to.gt(bDollyBal1);
     });
 
     it('Can remove collateral for $dAAPL', async () => {
@@ -381,10 +381,10 @@ describe('Add and remove collateral Testing', async () => {
         const aRatio = (await synthetic.contracts(minter.address, doppleAAPL.address)).currentRatio;
 
         const bDollyBal1 = await dolly.balanceOf(minter.address);
-        assert.ok(bDollyBal1.eq(aDollyBal.sub(dollyAmount)));
+        expect(bDollyBal1).to.eq(aDollyBal.sub(dollyAmount));
 
         const bAAPLBal1 = await doppleAAPL.balanceOf(minter.address);
-        assert.ok(bAAPLBal1.eq(aAAPLBal.add(syntheticAmount)));
+        expect(bAAPLBal1).to.eq(aAAPLBal.add(syntheticAmount));
 
         // ========================================================
         // REMOVE COLLATERAL
@@ -392,10 +392,10 @@ describe('Add and remove collateral Testing', async () => {
         const mintingNote = await synthetic.contracts(minter.address, doppleAAPL.address);
         actual = await synthetic.connect(minter).removeCollateral(doppleAAPL.address, mintingNote.canWithdrawRemainning.div(2));
         const bRatio = (await synthetic.contracts(minter.address, doppleAAPL.address)).currentRatio;
-        assert.ok(bRatio.lt(aRatio));
+        expect(bRatio).to.lt(aRatio);
 
         const bDollyBal2 = await dolly.balanceOf(minter.address);
-        assert.ok(bDollyBal2.gt(bDollyBal1));
+        expect(bDollyBal2).to.gt(bDollyBal1);
     });
 
     it('Can remove collateral for $dQQQ', async () => {
@@ -423,10 +423,10 @@ describe('Add and remove collateral Testing', async () => {
         const aRatio = (await synthetic.contracts(minter.address, doppleQQQ.address)).currentRatio;
 
         const bDollyBal1 = await dolly.balanceOf(minter.address);
-        assert.ok(bDollyBal1.eq(aDollyBal.sub(dollyAmount)));
+        expect(bDollyBal1).to.eq(aDollyBal.sub(dollyAmount));
 
         const bQQQBal1 = await doppleQQQ.balanceOf(minter.address);
-        assert.ok(bQQQBal1.eq(aQQQBal.add(syntheticAmount)));
+        expect(bQQQBal1).to.eq(aQQQBal.add(syntheticAmount));
 
         // ========================================================
         // REMOVE COLLATERAL
@@ -434,10 +434,10 @@ describe('Add and remove collateral Testing', async () => {
         const mintingNote = await synthetic.contracts(minter.address, doppleQQQ.address);
         actual = await synthetic.connect(minter).removeCollateral(doppleQQQ.address, mintingNote.canWithdrawRemainning.div(2));
         const bRatio = (await synthetic.contracts(minter.address, doppleQQQ.address)).currentRatio;
-        assert.ok(bRatio.lt(aRatio));
+        expect(bRatio).to.lt(aRatio);
 
         const bDollyBal2 = await dolly.balanceOf(minter.address);
-        assert.ok(bDollyBal2.gt(bDollyBal1));
+        expect(bDollyBal2).to.gt(bDollyBal1);
     });
 
     it('Can remove collateral for $dAMZN', async () => {
@@ -465,10 +465,10 @@ describe('Add and remove collateral Testing', async () => {
         const aRatio = (await synthetic.contracts(minter.address, doppleAMZN.address)).currentRatio;
 
         const bDollyBal1 = await dolly.balanceOf(minter.address);
-        assert.ok(bDollyBal1.eq(aDollyBal.sub(dollyAmount)));
+        expect(bDollyBal1).to.eq(aDollyBal.sub(dollyAmount));
 
         const bAMZNBal1 = await doppleAMZN.balanceOf(minter.address);
-        assert.ok(bAMZNBal1.eq(aAMZNBal.add(syntheticAmount)));
+        expect(bAMZNBal1).to.eq(aAMZNBal.add(syntheticAmount));
 
         // ========================================================
         // REMOVE COLLATERAL
@@ -476,10 +476,10 @@ describe('Add and remove collateral Testing', async () => {
         const mintingNote = await synthetic.contracts(minter.address, doppleAMZN.address);
         actual = await synthetic.connect(minter).removeCollateral(doppleAMZN.address, mintingNote.canWithdrawRemainning.div(2));
         const bRatio = (await synthetic.contracts(minter.address, doppleAMZN.address)).currentRatio;
-        assert.ok(bRatio.lt(aRatio));
+        expect(bRatio).to.lt(aRatio);
 
         const bDollyBal2 = await dolly.balanceOf(minter.address);
-        assert.ok(bDollyBal2.gt(bDollyBal1));
+        expect(bDollyBal2).to.gt(bDollyBal1);
     });
 
     it('Can remove collateral for $dXAU', async () => {
@@ -507,10 +507,10 @@ describe('Add and remove collateral Testing', async () => {
         const aRatio = (await synthetic.contracts(minter.address, doppleXAU.address)).currentRatio;
 
         const bDollyBal1 = await dolly.balanceOf(minter.address);
-        assert.ok(bDollyBal1.eq(aDollyBal.sub(dollyAmount)));
+        expect(bDollyBal1).to.eq(aDollyBal.sub(dollyAmount));
 
         const bXAUBal1 = await doppleXAU.balanceOf(minter.address);
-        assert.ok(bXAUBal1.eq(aXAUBal.add(syntheticAmount)));
+        expect(bXAUBal1).to.eq(aXAUBal.add(syntheticAmount));
 
         // ========================================================
         // REMOVE COLLATERAL
@@ -518,9 +518,9 @@ describe('Add and remove collateral Testing', async () => {
         const mintingNote = await synthetic.contracts(minter.address, doppleXAU.address);
         actual = await synthetic.connect(minter).removeCollateral(doppleXAU.address, mintingNote.canWithdrawRemainning.div(2));
         const bRatio = (await synthetic.contracts(minter.address, doppleXAU.address)).currentRatio;
-        assert.ok(bRatio.lt(aRatio));
+        expect(bRatio).to.lt(aRatio);
 
         const bDollyBal2 = await dolly.balanceOf(minter.address);
-        assert.ok(bDollyBal2.gt(bDollyBal1));
+        expect(bDollyBal2).to.gt(bDollyBal1);
     });
 });

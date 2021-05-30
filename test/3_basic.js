@@ -21,7 +21,7 @@ describe('Basic Testing', async () => {
     it('Can approve dolly before mint', async () => {
         const dolly = await ethers.getContract('Dolly', minter);
         assert.ok(dolly.address);
-        const actual = await dolly.approve(synthetic.address, ethers.utils.parseEther('1000000000000').toString());
+        const actual = await dolly.approve(synthetic.address, ethers.constants.MaxUint256);
         assert.ok(actual.hash);
     });
 
@@ -30,7 +30,7 @@ describe('Basic Testing', async () => {
         // console.log('contract address', contractAddress);
         const doppleTSLA = await ethers.getContractAt('DoppleSyntheticToken', contractAddress);
         assert.ok(doppleTSLA.address);
-        const actual = await doppleTSLA.approve(synthetic.address, ethers.utils.parseEther('1000000000000').toString());
+        const actual = await doppleTSLA.approve(synthetic.address, ethers.constants.MaxUint256);
         assert.ok(actual.hash);
     });
 
@@ -39,7 +39,7 @@ describe('Basic Testing', async () => {
         // console.log('contract address', contractAddress);
         const doppleCOIN = await ethers.getContractAt('DoppleSyntheticToken', contractAddress);
         assert.ok(doppleCOIN.address);
-        const actual = await doppleCOIN.approve(synthetic.address, ethers.utils.parseEther('1000000000000').toString());
+        const actual = await doppleCOIN.approve(synthetic.address, ethers.constants.MaxUint256);
         assert.ok(actual.hash);
     });
 
@@ -48,7 +48,7 @@ describe('Basic Testing', async () => {
         // console.log('contract address', contractAddress);
         const doppleAAPL = await ethers.getContractAt('DoppleSyntheticToken', contractAddress);
         assert.ok(doppleAAPL.address);
-        const actual = await doppleAAPL.approve(synthetic.address, ethers.utils.parseEther('1000000000000').toString());
+        const actual = await doppleAAPL.approve(synthetic.address, ethers.constants.MaxUint256);
         assert.ok(actual.hash);
     });
 
@@ -57,7 +57,7 @@ describe('Basic Testing', async () => {
         // console.log('contract address', contractAddress);
         const doppleQQQ = await ethers.getContractAt('DoppleSyntheticToken', contractAddress);
         assert.ok(doppleQQQ.address);
-        const actual = await doppleQQQ.approve(synthetic.address, ethers.utils.parseEther('1000000000000').toString());
+        const actual = await doppleQQQ.approve(synthetic.address, ethers.constants.MaxUint256);
         assert.ok(actual.hash);
     });
 
@@ -66,7 +66,7 @@ describe('Basic Testing', async () => {
         // console.log('contract address', contractAddress);
         const doppleAMZN = await ethers.getContractAt('DoppleSyntheticToken', contractAddress);
         assert.ok(doppleAMZN.address);
-        const actual = await doppleAMZN.approve(synthetic.address, ethers.utils.parseEther('1000000000000').toString());
+        const actual = await doppleAMZN.approve(synthetic.address, ethers.constants.MaxUint256);
         assert.ok(actual.hash);
     });
 
@@ -75,7 +75,7 @@ describe('Basic Testing', async () => {
         // console.log('contract address', contractAddress);
         const doppleXAU = await ethers.getContractAt('DoppleSyntheticToken', contractAddress);
         assert.ok(doppleXAU.address);
-        const actual = await doppleXAU.approve(synthetic.address, ethers.utils.parseEther('1000000000000').toString());
+        const actual = await doppleXAU.approve(synthetic.address, ethers.constants.MaxUint256);
         assert.ok(actual.hash);
     });
 });

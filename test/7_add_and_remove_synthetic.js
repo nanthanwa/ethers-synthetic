@@ -45,10 +45,10 @@ describe('Add and remove synthetic Testing', async () => {
         const aRatio = (await synthetic.contracts(minter.address, doppleTSLA.address)).currentRatio;
 
         const bDollyBal1 = await dolly.balanceOf(minter.address);
-        assert.ok(bDollyBal1.eq(aDollyBal.sub(dollyAmount)));
+        expect(bDollyBal1).to.eq(aDollyBal.sub(dollyAmount));
 
         const bTSLABal1 = await doppleTSLA.balanceOf(minter.address);
-        assert.ok(bTSLABal1.eq(aTSLABal.add(syntheticAmount)));
+        expect(bTSLABal1).to.eq(aTSLABal.add(syntheticAmount));
 
         // ========================================================
         // ADD MORE SYNTHETIC
@@ -57,10 +57,10 @@ describe('Add and remove synthetic Testing', async () => {
 
         actual = await synthetic.connect(minter).addSynthetic(doppleTSLA.address, mintingNote.canMintRemainning.div(2));
         const bRatio = (await synthetic.contracts(minter.address, doppleTSLA.address)).currentRatio;
-        assert.ok(bRatio.lt(aRatio));
+        expect(bRatio).to.lt(aRatio);
 
         const bSyntheticAmount = await doppleTSLA.balanceOf(minter.address);
-        assert.ok(bSyntheticAmount.gt(syntheticAmount));
+        expect(bSyntheticAmount).to.gt(syntheticAmount);
     });
 
     it('Can add synthetic for $dCOIN', async () => {
@@ -88,10 +88,10 @@ describe('Add and remove synthetic Testing', async () => {
         const aRatio = (await synthetic.contracts(minter.address, doppleCOIN.address)).currentRatio;
 
         const bDollyBal1 = await dolly.balanceOf(minter.address);
-        assert.ok(bDollyBal1.eq(aDollyBal.sub(dollyAmount)));
+        expect(bDollyBal1).to.eq(aDollyBal.sub(dollyAmount));
 
         const bCOINBal1 = await doppleCOIN.balanceOf(minter.address);
-        assert.ok(bCOINBal1.eq(aCOINBal.add(syntheticAmount)));
+        expect(bCOINBal1).to.eq(aCOINBal.add(syntheticAmount));
 
         // ========================================================
         // ADD MORE SYNTHETIC
@@ -100,10 +100,10 @@ describe('Add and remove synthetic Testing', async () => {
 
         actual = await synthetic.connect(minter).addSynthetic(doppleCOIN.address, mintingNote.canMintRemainning.div(2));
         const bRatio = (await synthetic.contracts(minter.address, doppleCOIN.address)).currentRatio;
-        assert.ok(bRatio.lt(aRatio));
+        expect(bRatio).to.lt(aRatio);
 
         const bSyntheticAmount = await doppleCOIN.balanceOf(minter.address);
-        assert.ok(bSyntheticAmount.gt(syntheticAmount));
+        expect(bSyntheticAmount).to.gt(syntheticAmount);
     });
 
     it('Can add synthetic for $dAAPL', async () => {
@@ -131,10 +131,10 @@ describe('Add and remove synthetic Testing', async () => {
         const aRatio = (await synthetic.contracts(minter.address, doppleAAPL.address)).currentRatio;
 
         const bDollyBal1 = await dolly.balanceOf(minter.address);
-        assert.ok(bDollyBal1.eq(aDollyBal.sub(dollyAmount)));
+        expect(bDollyBal1).to.eq(aDollyBal.sub(dollyAmount));
 
         const bAAPLBal1 = await doppleAAPL.balanceOf(minter.address);
-        assert.ok(bAAPLBal1.eq(aAAPLBal.add(syntheticAmount)));
+        expect(bAAPLBal1).to.eq(aAAPLBal.add(syntheticAmount));
 
         // ========================================================
         // ADD MORE SYNTHETIC
@@ -143,10 +143,10 @@ describe('Add and remove synthetic Testing', async () => {
 
         actual = await synthetic.connect(minter).addSynthetic(doppleAAPL.address, mintingNote.canMintRemainning.div(2));
         const bRatio = (await synthetic.contracts(minter.address, doppleAAPL.address)).currentRatio;
-        assert.ok(bRatio.lt(aRatio));
+        expect(bRatio).to.lt(aRatio);
 
         const bSyntheticAmount = await doppleAAPL.balanceOf(minter.address);
-        assert.ok(bSyntheticAmount.gt(syntheticAmount));
+        expect(bSyntheticAmount).to.gt(syntheticAmount);
     });
 
     it('Can add synthetic for $dQQQ', async () => {
@@ -174,10 +174,10 @@ describe('Add and remove synthetic Testing', async () => {
         const aRatio = (await synthetic.contracts(minter.address, doppleQQQ.address)).currentRatio;
 
         const bDollyBal1 = await dolly.balanceOf(minter.address);
-        assert.ok(bDollyBal1.eq(aDollyBal.sub(dollyAmount)));
+        expect(bDollyBal1).to.eq(aDollyBal.sub(dollyAmount));
 
         const bQQQBal1 = await doppleQQQ.balanceOf(minter.address);
-        assert.ok(bQQQBal1.eq(aQQQBal.add(syntheticAmount)));
+        expect(bQQQBal1).to.eq(aQQQBal.add(syntheticAmount));
 
         // ========================================================
         // ADD MORE SYNTHETIC
@@ -186,10 +186,10 @@ describe('Add and remove synthetic Testing', async () => {
 
         actual = await synthetic.connect(minter).addSynthetic(doppleQQQ.address, mintingNote.canMintRemainning.div(2));
         const bRatio = (await synthetic.contracts(minter.address, doppleQQQ.address)).currentRatio;
-        assert.ok(bRatio.lt(aRatio));
+        expect(bRatio).to.lt(aRatio);
 
         const bSyntheticAmount = await doppleQQQ.balanceOf(minter.address);
-        assert.ok(bSyntheticAmount.gt(syntheticAmount));
+        expect(bSyntheticAmount).to.gt(syntheticAmount);
     });
 
     it('Can add synthetic for $dAMZN', async () => {
@@ -217,10 +217,10 @@ describe('Add and remove synthetic Testing', async () => {
         const aRatio = (await synthetic.contracts(minter.address, doppleAMZN.address)).currentRatio;
 
         const bDollyBal1 = await dolly.balanceOf(minter.address);
-        assert.ok(bDollyBal1.eq(aDollyBal.sub(dollyAmount)));
+        expect(bDollyBal1).to.eq(aDollyBal.sub(dollyAmount));
 
         const bAMZNBal1 = await doppleAMZN.balanceOf(minter.address);
-        assert.ok(bAMZNBal1.eq(aAMZNBal.add(syntheticAmount)));
+        expect(bAMZNBal1).to.eq(aAMZNBal.add(syntheticAmount));
 
         // ========================================================
         // ADD MORE SYNTHETIC
@@ -229,10 +229,10 @@ describe('Add and remove synthetic Testing', async () => {
 
         actual = await synthetic.connect(minter).addSynthetic(doppleAMZN.address, mintingNote.canMintRemainning.div(2));
         const bRatio = (await synthetic.contracts(minter.address, doppleAMZN.address)).currentRatio;
-        assert.ok(bRatio.lt(aRatio));
+        expect(bRatio).to.lt(aRatio);
 
         const bSyntheticAmount = await doppleAMZN.balanceOf(minter.address);
-        assert.ok(bSyntheticAmount.gt(syntheticAmount));
+        expect(bSyntheticAmount).to.gt(syntheticAmount);
     });
 
     it('Can add synthetic for $dXAU', async () => {
@@ -260,10 +260,10 @@ describe('Add and remove synthetic Testing', async () => {
         const aRatio = (await synthetic.contracts(minter.address, doppleXAU.address)).currentRatio;
 
         const bDollyBal1 = await dolly.balanceOf(minter.address);
-        assert.ok(bDollyBal1.eq(aDollyBal.sub(dollyAmount)));
+        expect(bDollyBal1).to.eq(aDollyBal.sub(dollyAmount));
 
         const bXAUBal1 = await doppleXAU.balanceOf(minter.address);
-        assert.ok(bXAUBal1.eq(aXAUBal.add(syntheticAmount)));
+        expect(bXAUBal1).to.eq(aXAUBal.add(syntheticAmount));
 
         // ========================================================
         // ADD MORE SYNTHETIC
@@ -272,10 +272,10 @@ describe('Add and remove synthetic Testing', async () => {
 
         actual = await synthetic.connect(minter).addSynthetic(doppleXAU.address, mintingNote.canMintRemainning.div(2));
         const bRatio = (await synthetic.contracts(minter.address, doppleXAU.address)).currentRatio;
-        assert.ok(bRatio.lt(aRatio));
+        expect(bRatio).to.lt(aRatio);
 
         const bSyntheticAmount = await doppleXAU.balanceOf(minter.address);
-        assert.ok(bSyntheticAmount.gt(syntheticAmount));
+        expect(bSyntheticAmount).to.gt(syntheticAmount);
     });
 
     it('Can remove minted synthetic for $dTSLA', async () => {
@@ -302,10 +302,10 @@ describe('Add and remove synthetic Testing', async () => {
 
         const aRatio = (await synthetic.contracts(minter.address, doppleTSLA.address)).currentRatio;
         const bDollyBal1 = await dolly.balanceOf(minter.address);
-        assert.ok(bDollyBal1.eq(aDollyBal.sub(dollyAmount)));
+        expect(bDollyBal1).to.eq(aDollyBal.sub(dollyAmount));
 
         const bTSLABal1 = await doppleTSLA.balanceOf(minter.address);
-        assert.ok(bTSLABal1.eq(aTSLABal.add(syntheticAmount)));
+        expect(bTSLABal1).to.eq(aTSLABal.add(syntheticAmount));
 
         // ========================================================
         // REMOVE MINTED SYNTHETIC
@@ -350,10 +350,10 @@ describe('Add and remove synthetic Testing', async () => {
         const aRatio = (await synthetic.contracts(minter.address, doppleCOIN.address)).currentRatio;
 
         const bDollyBal1 = await dolly.balanceOf(minter.address);
-        assert.ok(bDollyBal1.eq(aDollyBal.sub(dollyAmount)));
+        expect(bDollyBal1).to.eq(aDollyBal.sub(dollyAmount));
 
         const bCOINBal1 = await doppleCOIN.balanceOf(minter.address);
-        assert.ok(bCOINBal1.eq(aCOINBal.add(syntheticAmount)));
+        expect(bCOINBal1).to.eq(aCOINBal.add(syntheticAmount));
 
         // ========================================================
         // REMOVE MINTED SYNTHETIC
@@ -400,10 +400,10 @@ describe('Add and remove synthetic Testing', async () => {
         const aRatio = (await synthetic.contracts(minter.address, doppleAAPL.address)).currentRatio;
 
         const bDollyBal1 = await dolly.balanceOf(minter.address);
-        assert.ok(bDollyBal1.eq(aDollyBal.sub(dollyAmount)));
+        expect(bDollyBal1).to.eq(aDollyBal.sub(dollyAmount));
 
         const bAAPLBal1 = await doppleAAPL.balanceOf(minter.address);
-        assert.ok(bAAPLBal1.eq(aAAPLBal.add(syntheticAmount)));
+        expect(bAAPLBal1).to.eq(aAAPLBal.add(syntheticAmount));
 
         // ========================================================
         // REMOVE MINTED SYNTHETIC
@@ -450,10 +450,10 @@ describe('Add and remove synthetic Testing', async () => {
         const aRatio = (await synthetic.contracts(minter.address, doppleQQQ.address)).currentRatio;
 
         const bDollyBal1 = await dolly.balanceOf(minter.address);
-        assert.ok(bDollyBal1.eq(aDollyBal.sub(dollyAmount)));
+        expect(bDollyBal1).to.eq(aDollyBal.sub(dollyAmount));
 
         const bQQQBal1 = await doppleQQQ.balanceOf(minter.address);
-        assert.ok(bQQQBal1.eq(aQQQBal.add(syntheticAmount)));
+        expect(bQQQBal1).to.eq(aQQQBal.add(syntheticAmount));
 
         // ========================================================
         // REMOVE MINTED SYNTHETIC
@@ -500,10 +500,10 @@ describe('Add and remove synthetic Testing', async () => {
         const aRatio = (await synthetic.contracts(minter.address, doppleAMZN.address)).currentRatio;
 
         const bDollyBal1 = await dolly.balanceOf(minter.address);
-        assert.ok(bDollyBal1.eq(aDollyBal.sub(dollyAmount)));
+        expect(bDollyBal1).to.eq(aDollyBal.sub(dollyAmount));
 
         const bAMZNBal1 = await doppleAMZN.balanceOf(minter.address);
-        assert.ok(bAMZNBal1.eq(aAMZNBal.add(syntheticAmount)));
+        expect(bAMZNBal1).to.eq(aAMZNBal.add(syntheticAmount));
 
         // ========================================================
         // REMOVE MINTED SYNTHETIC
@@ -550,10 +550,10 @@ describe('Add and remove synthetic Testing', async () => {
         const aRatio = (await synthetic.contracts(minter.address, doppleXAU.address)).currentRatio;
 
         const bDollyBal1 = await dolly.balanceOf(minter.address);
-        assert.ok(bDollyBal1.eq(aDollyBal.sub(dollyAmount)));
+        expect(bDollyBal1).to.eq(aDollyBal.sub(dollyAmount));
 
         const bXAUBal1 = await doppleXAU.balanceOf(minter.address);
-        assert.ok(bXAUBal1.eq(aXAUBal.add(syntheticAmount)));
+        expect(bXAUBal1).to.eq(aXAUBal.add(syntheticAmount));
 
         // ========================================================
         // REMOVE MINTED SYNTHETIC

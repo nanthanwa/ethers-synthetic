@@ -284,12 +284,6 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
             "Synthetic::removeCollateral: cannot remove collateral to empty contract"
         );
         mn.assetBackedAmount = mn.assetBackedAmount.sub(_removeBackedAmount);
-
-        // TODO: get current rate before run the next line!
-        require(
-            mn.canWithdrawRemainning >= _removeBackedAmount,
-            "Synthetic::removeCollateral: amount exceeds required collateral"
-        );
         uint256 exchangeRate = getRate(addressToPairs[address(_synthetic)]);
         uint256 assetBackedAtRateAmount =
             getProductOf(mn.assetAmount, exchangeRate);
@@ -299,8 +293,8 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
         uint256 canWithdrawRemainning =
             mn.assetBackedAmount.sub(requiredAmount);
         require(
-            canWithdrawRemainning >= 0,
-            "Synthetic::removeCollateral: canWithdrawRemainning less than zero"
+            mn.canWithdrawRemainning >= _removeBackedAmount,
+            "Synthetic::removeCollateral: amount exceeds required collateral"
         );
         dolly.transfer(_msgSender(), _removeBackedAmount);
         mn.currentRatio = getRatioOf(

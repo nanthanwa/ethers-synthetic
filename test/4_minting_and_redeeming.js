@@ -1,7 +1,6 @@
 const { assert } = require('chai');
 const { deployments } = require('hardhat');
 const { ethers, getNamedAccounts } = require('hardhat');
-const fs = require('fs');
 
 describe('Minting and Redeeming Testing', async () => {
     let actual, synthetic, dolly, doppleSyntheticTokenFactory, networkName;

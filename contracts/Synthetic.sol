@@ -282,7 +282,6 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
             getProductOf(mn.assetAmount, exchangeRate);
         uint256 requiredAmount =
             getProductOf(assetBackedAtRateAmount, collateralRatio);
-
         uint256 canWithdrawRemainning =
             mn.assetBackedAmount.sub(requiredAmount);
         require(
@@ -359,7 +358,6 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
             getProductOf(mn.assetAmount, exchangeRate);
         uint256 requiredAmount =
             getProductOf(assetBackedAtRateAmount, collateralRatio);
-
         require(
             mn.assetBackedAmount > requiredAmount,
             "Synthetic::addSynthetic: under collateral"

@@ -145,10 +145,7 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
         mn.assetBackedAmount = _backedAmount;
         mn.exchangeRateAtMinted = exchangeRate;
         mn.currentExchangeRate = exchangeRate;
-        mn.currentRatio = getCurrentRatio(
-            _backedAmount,
-            assetBackedAtRateAmount
-        );
+        mn.currentRatio = getRatioOf(_backedAmount, assetBackedAtRateAmount);
         mn.willLiquidateAtPrice = getWillLiquidateAtPrice(
             exchangeRate,
             mn.currentRatio
@@ -211,7 +208,7 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
 
             mn.assetAmount = assetRemainningAfterBurned;
             mn.assetBackedAmount = assetBackedAmountAfterRedeem;
-            mn.currentRatio = getCurrentRatio(
+            mn.currentRatio = getRatioOf(
                 mn.assetBackedAmount,
                 assetBackedAtRateAmount
             );
@@ -255,7 +252,7 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
         uint256 canWithdrawRemainning =
             mn.assetBackedAmount.sub(requiredAmount);
         require(dolly.transferFrom(_msgSender(), address(this), _addAmount));
-        mn.currentRatio = getCurrentRatio(
+        mn.currentRatio = getRatioOf(
             mn.assetBackedAmount,
             assetBackedAtRateAmount
         );
@@ -304,7 +301,7 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
             "Synthetic::removeCollateral: canWithdrawRemainning less than zero"
         );
         dolly.transfer(_msgSender(), _removeBackedAmount);
-        mn.currentRatio = getCurrentRatio(
+        mn.currentRatio = getRatioOf(
             mn.assetBackedAmount,
             assetBackedAtRateAmount
         );
@@ -341,7 +338,7 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
         uint256 assetBackedAtRateAmount =
             (mn.assetAmount.mul(exchangeRate)).div(denominator);
         dolly.transfer(_msgSender(), _removeAmount);
-        mn.currentRatio = getCurrentRatio(
+        mn.currentRatio = getRatioOf(
             mn.assetBackedAmount,
             assetBackedAtRateAmount
         );
@@ -584,10 +581,11 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
     // @dev get current ratio between collateral and minted synthetic asset
     // @param _backedAmount: callateral value
     // @param _assetBackedAtRateAmount: the value of minted synthetic asset
-    function getCurrentRatio(
-        uint256 _backedAmount,
-        uint256 _assetBackedAtRateAmount
-    ) internal pure returns (uint256) {
+    function getRatioOf(uint256 _backedAmount, uint256 _assetBackedAtRateAmount)
+        internal
+        pure
+        returns (uint256)
+    {
         return
             (
                 ((_backedAmount.mul(denominator)).div(_assetBackedAtRateAmount))

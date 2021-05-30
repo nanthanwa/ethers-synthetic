@@ -1,7 +1,7 @@
-const { assert } = require('chai');
+const chai = require('chai');
+const { expect, assert } = chai;
 const { deployments } = require('hardhat');
 const { ethers } = require('hardhat');
-const fs = require('fs');
 
 // @dev We will simulate liquidate condition with remove almost entire collateral
 // @notice Synthetic's contract owner (deployer) can call special method called removeLowerCollateral()
@@ -54,15 +54,15 @@ describe('Liquidation Testing', async () => {
         // console.log(bDollyBal1.toString());
         // console.log(bTSLABal1.toString());
 
-        assert.ok(bDollyBal1.eq(aDollyBal.sub(dollyAmount)));
-        assert.ok(bTSLABal1.eq(aTSLABal.add(syntheticAmount)));
+        expect(bDollyBal1).to.eq(aDollyBal.sub(dollyAmount));
+        expect(bTSLABal1).to.eq(aTSLABal.add(syntheticAmount));
 
         // ========================================================
         // REMOVE COLLATERAL
         // ========================================================
         actual = await synthetic.connect(deployer).removeLowerCollateral(doppleTSLA.address, dollyAmount.mul(25).div(100));
         const bDollyBal2 = await dolly.balanceOf(deployer.address);
-        assert.ok(bDollyBal2.gt(bDollyBal1));
+        expect(bDollyBal2).to.gt(bDollyBal1);
 
         // ========================================================
         // LIQUIDATE
@@ -74,7 +74,7 @@ describe('Liquidation Testing', async () => {
             liquidatorReceiveAmount,
             platformReceiveAmount] = actual;
 
-        assert.ok(liquidatorReceiveAmount.gt(0)); // ensure liquidator will receive the money.
+        expect(liquidatorReceiveAmount).to.gt(0); // ensure liquidator will receive the money.
 
         allowance = await dolly.allowance(liquidator.address, synthetic.address);
         if (allowance.lte(assetBackedAtRateAmount)) {
@@ -90,11 +90,11 @@ describe('Liquidation Testing', async () => {
 
         const bDollyBal4 = await dolly.balanceOf(liquidator.address);
         // console.log(bDollyBal4.toString());
-        assert.ok(bDollyBal4.gt(bDollyBal3)); // liquidator receive reward.
+        expect(bDollyBal4).to.gt(bDollyBal3); // liquidator receive reward.
 
         const bDevBal = await dolly.balanceOf(developer.address);
         // console.log(bDevBal.toString());
-        assert.ok(bDevBal.gt(aDevBal)); // developer receive liquidation fee.
+        expect(bDevBal).to.gt(aDevBal); // developer receive liquidation fee.
     });
 
     // current price 239.285, collateral 358.9275, liquidate at 299.10625
@@ -125,15 +125,15 @@ describe('Liquidation Testing', async () => {
         const bDollyBal1 = await dolly.balanceOf(deployer.address);
         const bCOINBal1 = await doppleCOIN.balanceOf(deployer.address);
 
-        assert.ok(bDollyBal1.eq(aDollyBal.sub(dollyAmount)));
-        assert.ok(bCOINBal1.eq(aCOINBal.add(syntheticAmount)));
+        expect(bDollyBal1).to.eq(aDollyBal.sub(dollyAmount));
+        expect(bCOINBal1).to.eq(aCOINBal.add(syntheticAmount));
 
         // ========================================================
         // REMOVE COLLATERAL
         // ========================================================
         actual = await synthetic.connect(deployer).removeLowerCollateral(doppleCOIN.address, dollyAmount.mul(73).div(100));
         const bDollyBal2 = await dolly.balanceOf(deployer.address);
-        assert.ok(bDollyBal2.gt(bDollyBal1));
+        expect(bDollyBal2).to.gt(bDollyBal1);
 
         // ========================================================
         // LIQUIDATE
@@ -145,7 +145,7 @@ describe('Liquidation Testing', async () => {
             liquidatorReceiveAmount,
             platformReceiveAmount] = actual;
 
-        assert.ok(liquidatorReceiveAmount.gt(0)); // ensure liquidator will receive the money.
+        expect(liquidatorReceiveAmount).to.gt(0); // ensure liquidator will receive the money.
 
         allowance = await dolly.allowance(liquidator.address, synthetic.address);
         if (allowance.lte(assetBackedAtRateAmount)) {
@@ -158,10 +158,10 @@ describe('Liquidation Testing', async () => {
         assert.ok(actual.hash);
 
         const bDollyBal4 = await dolly.balanceOf(liquidator.address);
-        assert.ok(bDollyBal4.gt(bDollyBal3)); // liquidator receive reward.
+        expect(bDollyBal4).to.gt(bDollyBal3); // liquidator receive reward.
 
         const bDevBal = await dolly.balanceOf(developer.address);
-        assert.ok(bDevBal.gt(aDevBal)); // developer receive liquidation fee.
+        expect(bDevBal).to.gt(aDevBal); // developer receive liquidation fee.
     });
 
     // current price 125.7075, collateral 188.56125, liquidate at 157.134375
@@ -192,15 +192,15 @@ describe('Liquidation Testing', async () => {
         const bDollyBal1 = await dolly.balanceOf(deployer.address);
         const bAAPLBal1 = await doppleAAPL.balanceOf(deployer.address);
 
-        assert.ok(bDollyBal1.eq(aDollyBal.sub(dollyAmount)));
-        assert.ok(bAAPLBal1.eq(aAAPLBal.add(syntheticAmount)));
+        expect(bDollyBal1).to.eq(aDollyBal.sub(dollyAmount));
+        expect(bAAPLBal1).to.eq(aAAPLBal.add(syntheticAmount));
 
         // ========================================================
         // REMOVE COLLATERAL
         // ========================================================
         actual = await synthetic.connect(deployer).removeLowerCollateral(doppleAAPL.address, dollyAmount.mul(85).div(100));
         const bDollyBal2 = await dolly.balanceOf(deployer.address);
-        assert.ok(bDollyBal2.gt(bDollyBal1));
+        expect(bDollyBal2).to.gt(bDollyBal1);
 
         // ========================================================
         // LIQUIDATE
@@ -212,7 +212,7 @@ describe('Liquidation Testing', async () => {
             liquidatorReceiveAmount,
             platformReceiveAmount] = actual;
 
-        assert.ok(liquidatorReceiveAmount.gt(0)); // ensure liquidator will receive the money.
+        expect(liquidatorReceiveAmount).to.gt(0); // ensure liquidator will receive the money.
 
         allowance = await dolly.allowance(liquidator.address, synthetic.address);
         if (allowance.lte(assetBackedAtRateAmount)) {
@@ -225,10 +225,10 @@ describe('Liquidation Testing', async () => {
         assert.ok(actual.hash);
 
         const bDollyBal4 = await dolly.balanceOf(liquidator.address);
-        assert.ok(bDollyBal4.gt(bDollyBal3)); // liquidator receive reward.
+        expect(bDollyBal4).to.gt(bDollyBal3); // liquidator receive reward.
 
         const bDevBal = await dolly.balanceOf(developer.address);
-        assert.ok(bDevBal.gt(aDevBal)); // developer receive liquidation fee.
+        expect(bDevBal).to.gt(aDevBal); // developer receive liquidation fee.
     });
 
     // current price 333.3875, collateral 500.08125, liquidate at 416.734375
@@ -259,15 +259,15 @@ describe('Liquidation Testing', async () => {
         const bDollyBal1 = await dolly.balanceOf(deployer.address);
         const bQQQBal1 = await doppleQQQ.balanceOf(deployer.address);
 
-        assert.ok(bDollyBal1.eq(aDollyBal.sub(dollyAmount)));
-        assert.ok(bQQQBal1.eq(aQQQBal.add(syntheticAmount)));
+        expect(bDollyBal1).to.eq(aDollyBal.sub(dollyAmount));
+        expect(bQQQBal1).to.eq(aQQQBal.add(syntheticAmount));
 
         // ========================================================
         // REMOVE COLLATERAL
         // ========================================================
         actual = await synthetic.connect(deployer).removeLowerCollateral(doppleQQQ.address, dollyAmount.mul(65).div(100));
         const bDollyBal2 = await dolly.balanceOf(deployer.address);
-        assert.ok(bDollyBal2.gt(bDollyBal1));
+        expect(bDollyBal2).to.gt(bDollyBal1);
 
         // ========================================================
         // LIQUIDATE
@@ -279,7 +279,7 @@ describe('Liquidation Testing', async () => {
             liquidatorReceiveAmount,
             platformReceiveAmount] = actual;
 
-        assert.ok(liquidatorReceiveAmount.gt(0)); // ensure liquidator will receive the money.
+        expect(liquidatorReceiveAmount).to.gt(0); // ensure liquidator will receive the money.
 
         allowance = await dolly.allowance(liquidator.address, synthetic.address);
         if (allowance.lte(assetBackedAtRateAmount)) {
@@ -292,10 +292,10 @@ describe('Liquidation Testing', async () => {
         assert.ok(actual.hash);
 
         const bDollyBal4 = await dolly.balanceOf(liquidator.address);
-        assert.ok(bDollyBal4.gt(bDollyBal3)); // liquidator receive reward.
+        expect(bDollyBal4).to.gt(bDollyBal3); // liquidator receive reward.
 
         const bDevBal = await dolly.balanceOf(developer.address);
-        assert.ok(bDevBal.gt(aDevBal)); // developer receive liquidation fee.
+        expect(bDevBal).to.gt(aDevBal); // developer receive liquidation fee.
     });
 
     // current price 3236.592499999, collateral 4,854.8887499985, liquidate at 4,045.7406249988
@@ -326,15 +326,15 @@ describe('Liquidation Testing', async () => {
         const bDollyBal1 = await dolly.balanceOf(deployer.address);
         const bAMZNBal1 = await doppleAMZN.balanceOf(deployer.address);
 
-        assert.ok(bDollyBal1.eq(aDollyBal.sub(dollyAmount)));
-        assert.ok(bAMZNBal1.eq(aAMZNBal.add(syntheticAmount)));
+        expect(bDollyBal1).to.eq(aDollyBal.sub(dollyAmount));
+        expect(bAMZNBal1).to.eq(aAMZNBal.add(syntheticAmount));
 
         // ========================================================
         // REMOVE COLLATERAL
         // ========================================================
         actual = await synthetic.connect(deployer).removeLowerCollateral(doppleAMZN.address, dollyAmount.mul(65).div(100));
         const bDollyBal2 = await dolly.balanceOf(deployer.address);
-        assert.ok(bDollyBal2.gt(bDollyBal1));
+        expect(bDollyBal2).to.gt(bDollyBal1);
 
         // ========================================================
         // LIQUIDATE
@@ -346,7 +346,7 @@ describe('Liquidation Testing', async () => {
             liquidatorReceiveAmount,
             platformReceiveAmount] = actual;
 
-        assert.ok(liquidatorReceiveAmount.gt(0)); // ensure liquidator will receive the money.
+        expect(liquidatorReceiveAmount).to.gt(0); // ensure liquidator will receive the money.
 
         allowance = await dolly.allowance(liquidator.address, synthetic.address);
         if (allowance.lte(assetBackedAtRateAmount)) {
@@ -359,10 +359,10 @@ describe('Liquidation Testing', async () => {
         assert.ok(actual.hash);
 
         const bDollyBal4 = await dolly.balanceOf(liquidator.address);
-        assert.ok(bDollyBal4.gt(bDollyBal3)); // liquidator receive reward.
+        expect(bDollyBal4).to.gt(bDollyBal3); // liquidator receive reward.
 
         const bDevBal = await dolly.balanceOf(developer.address);
-        assert.ok(bDevBal.gt(aDevBal)); // developer receive liquidation fee.
+        expect(bDevBal).to.gt(aDevBal); // developer receive liquidation fee.
     });
 
     // current price 1890.94916, collateral 2,836.42374, liquidate at 2,363.68645
@@ -393,15 +393,15 @@ describe('Liquidation Testing', async () => {
         const bDollyBal1 = await dolly.balanceOf(deployer.address);
         const bXAUBal1 = await doppleXAU.balanceOf(deployer.address);
 
-        assert.ok(bDollyBal1.eq(aDollyBal.sub(dollyAmount)));
-        assert.ok(bXAUBal1.eq(aXAUBal.add(syntheticAmount)));
+        expect(bDollyBal1).to.eq(aDollyBal.sub(dollyAmount));
+        expect(bXAUBal1).to.eq(aXAUBal.add(syntheticAmount));
 
         // ========================================================
         // REMOVE COLLATERAL
         // ========================================================
         actual = await synthetic.connect(deployer).removeLowerCollateral(doppleXAU.address, dollyAmount.mul(80).div(100));
         const bDollyBal2 = await dolly.balanceOf(deployer.address);
-        assert.ok(bDollyBal2.gt(bDollyBal1));
+        expect(bDollyBal2).to.gt(bDollyBal1);
 
         // ========================================================
         // LIQUIDATE
@@ -413,7 +413,7 @@ describe('Liquidation Testing', async () => {
             liquidatorReceiveAmount,
             platformReceiveAmount] = actual;
 
-        assert.ok(liquidatorReceiveAmount.gt(0)); // ensure liquidator will receive the money.
+        expect(liquidatorReceiveAmount).to.gt(0); // ensure liquidator will receive the money.
 
         allowance = await dolly.allowance(liquidator.address, synthetic.address);
         if (allowance.lte(assetBackedAtRateAmount)) {
@@ -426,9 +426,9 @@ describe('Liquidation Testing', async () => {
         assert.ok(actual.hash);
 
         const bDollyBal4 = await dolly.balanceOf(liquidator.address);
-        assert.ok(bDollyBal4.gt(bDollyBal3)); // liquidator receive reward.
+        expect(bDollyBal4).to.gt(bDollyBal3); // liquidator receive reward.
 
         const bDevBal = await dolly.balanceOf(developer.address);
-        assert.ok(bDevBal.gt(aDevBal)); // developer receive liquidation fee.
+        expect(bDevBal).to.gt(aDevBal); // developer receive liquidation fee.
     });
 });

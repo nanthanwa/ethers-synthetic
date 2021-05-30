@@ -9,7 +9,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
     });
     const synthetic = await ethers.getContract('Synthetic');
     const doppleSyntheticTokenFactory = await ethers.getContract('DoppleSyntheticTokenFactory', deployer);
-    let clonedCount = await doppleSyntheticTokenFactory.clonedCount();
+    const clonedCount = await doppleSyntheticTokenFactory.clonedCount();
     console.log('clonedCount', clonedCount);
 
     if (clonedCount === 0) {
@@ -67,10 +67,81 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
         console.log('setPairsToAddress', (await synthetic.setPairsToAddress(`${assetName}/USD`, contractAddress)).hash);
         console.log('setAddressToPairs', (await synthetic.setAddressToPairs(contractAddress, `${assetName}/USD`)).hash);
         console.log('setPairsToQuote', (await synthetic.setPairsToQuote(`${assetName}/USD`, [assetName, 'USD'])).hash);
-    }
-    clonedCount = await doppleSyntheticTokenFactory.clonedCount();
-    console.log('clonedCount', clonedCount);
+    } else {
+        let contractAddress, assetName, oldSyntheticContract;
+        contractAddress = await doppleSyntheticTokenFactory.cloned('dTSLA');
+        assetName = 'TSLA';
+        const doppleTSLA = await ethers.getContractAt('DoppleSyntheticToken', contractAddress, deployer);
+        oldSyntheticContract = await doppleTSLA.synthetic();
+        if (oldSyntheticContract !== synthetic.address) {
+            console.log(`TSLA: Synthetic contract did not match, setting to ${synthetic.address}`);
+            await doppleTSLA.setSyntheticAddress(synthetic.address);
+            console.log('setPairsToAddress', (await synthetic.setPairsToAddress(`${assetName}/USD`, contractAddress)).hash);
+            console.log('setAddressToPairs', (await synthetic.setAddressToPairs(contractAddress, `${assetName}/USD`)).hash);
+            console.log('setPairsToQuote', (await synthetic.setPairsToQuote(`${assetName}/USD`, [assetName, 'USD'])).hash);
+        }
 
+        contractAddress = await doppleSyntheticTokenFactory.cloned('dCOIN');
+        assetName = 'COIN';
+        const doppleCOIN = await ethers.getContractAt('DoppleSyntheticToken', contractAddress, deployer);
+        oldSyntheticContract = await doppleCOIN.synthetic();
+        if (oldSyntheticContract !== synthetic.address) {
+            console.log(`COIN: Synthetic contract did not match, setting to ${synthetic.address}`);
+            await doppleCOIN.setSyntheticAddress(synthetic.address);
+            console.log('setPairsToAddress', (await synthetic.setPairsToAddress(`${assetName}/USD`, contractAddress)).hash);
+            console.log('setAddressToPairs', (await synthetic.setAddressToPairs(contractAddress, `${assetName}/USD`)).hash);
+            console.log('setPairsToQuote', (await synthetic.setPairsToQuote(`${assetName}/USD`, [assetName, 'USD'])).hash);
+        }
+
+        contractAddress = await doppleSyntheticTokenFactory.cloned('dAAPL');
+        assetName = 'AAPL';
+        const doppleAAPL = await ethers.getContractAt('DoppleSyntheticToken', contractAddress, deployer);
+        oldSyntheticContract = await doppleAAPL.synthetic();
+        if (oldSyntheticContract !== synthetic.address) {
+            console.log(`AAPL: Synthetic contract did not match, setting to ${synthetic.address}`);
+            await doppleAAPL.setSyntheticAddress(synthetic.address);
+            console.log('setPairsToAddress', (await synthetic.setPairsToAddress(`${assetName}/USD`, contractAddress)).hash);
+            console.log('setAddressToPairs', (await synthetic.setAddressToPairs(contractAddress, `${assetName}/USD`)).hash);
+            console.log('setPairsToQuote', (await synthetic.setPairsToQuote(`${assetName}/USD`, [assetName, 'USD'])).hash);
+        }
+
+        contractAddress = await doppleSyntheticTokenFactory.cloned('dQQQ');
+        assetName = 'QQQ';
+        const doppleQQQ = await ethers.getContractAt('DoppleSyntheticToken', contractAddress, deployer);
+        oldSyntheticContract = await doppleQQQ.synthetic();
+        if (oldSyntheticContract !== synthetic.address) {
+            console.log(`QQQ: Synthetic contract did not match, setting to ${synthetic.address}`);
+            await doppleQQQ.setSyntheticAddress(synthetic.address);
+            console.log('setPairsToAddress', (await synthetic.setPairsToAddress(`${assetName}/USD`, contractAddress)).hash);
+            console.log('setAddressToPairs', (await synthetic.setAddressToPairs(contractAddress, `${assetName}/USD`)).hash);
+            console.log('setPairsToQuote', (await synthetic.setPairsToQuote(`${assetName}/USD`, [assetName, 'USD'])).hash);
+        }
+
+        contractAddress = await doppleSyntheticTokenFactory.cloned('dAMZN');
+        assetName = 'AMZN';
+        const doppleAMZN = await ethers.getContractAt('DoppleSyntheticToken', contractAddress, deployer);
+        oldSyntheticContract = await doppleAMZN.synthetic();
+        if (oldSyntheticContract !== synthetic.address) {
+            console.log(`AMZN: Synthetic contract did not match, setting to ${synthetic.address}`);
+            await doppleAMZN.setSyntheticAddress(synthetic.address);
+            console.log('setPairsToAddress', (await synthetic.setPairsToAddress(`${assetName}/USD`, contractAddress)).hash);
+            console.log('setAddressToPairs', (await synthetic.setAddressToPairs(contractAddress, `${assetName}/USD`)).hash);
+            console.log('setPairsToQuote', (await synthetic.setPairsToQuote(`${assetName}/USD`, [assetName, 'USD'])).hash);
+        }
+
+        contractAddress = await doppleSyntheticTokenFactory.cloned('dXAU');
+        assetName = 'XAU';
+        const doppleXAU = await ethers.getContractAt('DoppleSyntheticToken', contractAddress, deployer);
+        oldSyntheticContract = await doppleXAU.synthetic();
+        if (oldSyntheticContract !== synthetic.address) {
+            console.log(`XAU: Synthetic contract did not match, setting to ${synthetic.address}`);
+            await doppleXAU.setSyntheticAddress(synthetic.address);
+            console.log('setPairsToAddress', (await synthetic.setPairsToAddress(`${assetName}/USD`, contractAddress)).hash);
+            console.log('setAddressToPairs', (await synthetic.setAddressToPairs(contractAddress, `${assetName}/USD`)).hash);
+            console.log('setPairsToQuote', (await synthetic.setPairsToQuote(`${assetName}/USD`, [assetName, 'USD'])).hash);
+        }
+    }
+    console.log('All contracts ready to use!');
 };
 
 module.exports.tags = ['DoppleSyntheticTokenFactory', 'Factory'];

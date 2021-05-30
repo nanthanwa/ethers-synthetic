@@ -293,9 +293,9 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
         );
         uint256 exchangeRate = getRate(addressToPairs[address(_synthetic)]);
         uint256 assetBackedAtRateAmount =
-            (mn.assetAmount.mul(exchangeRate)).div(denominator);
+            getProductOf(mn.assetAmount, exchangeRate);
         uint256 requiredAmount =
-            (assetBackedAtRateAmount.mul(collateralRatio)).div(denominator);
+            getProductOf(assetBackedAtRateAmount, collateralRatio);
 
         uint256 canWithdrawRemainning =
             mn.assetBackedAmount.sub(requiredAmount);

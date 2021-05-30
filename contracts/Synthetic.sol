@@ -151,7 +151,7 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
             mn.currentRatio
         );
         mn.canWithdrawRemainning = canWithdrawRemainning;
-        mn.canMintRemainning = getCanMintRemainning(
+        mn.canMintRemainning = getRatioOf(
             canWithdrawRemainning,
             assetBackedAtRateAmount
         );
@@ -181,7 +181,7 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
             emit RedeemAsset(address(_synthetic), _amount);
         } else {
             // patial redeeming
-            uint256 percent = getRedeemPercent(_amount, mn.assetAmount);
+            uint256 percent = getRatioOf(_amount, mn.assetAmount);
             uint256 assetToBeBurned = getProductOf(mn.assetAmount, percent);
             uint256 assetBackedToBeRedeemed =
                 getProductOf(mn.assetBackedAmount, percent);
@@ -217,7 +217,7 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
                 mn.currentRatio
             );
             mn.canWithdrawRemainning = canWithdrawRemainning;
-            mn.canMintRemainning = getCanMintRemainning(
+            mn.canMintRemainning = getRatioOf(
                 canWithdrawRemainning,
                 assetBackedAtRateAmount
             );
@@ -261,7 +261,7 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
             mn.currentRatio
         );
         mn.canWithdrawRemainning = canWithdrawRemainning;
-        mn.canMintRemainning = getCanMintRemainning(
+        mn.canMintRemainning = getRatioOf(
             canWithdrawRemainning,
             assetBackedAtRateAmount
         );
@@ -284,6 +284,8 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
             "Synthetic::removeCollateral: cannot remove collateral to empty contract"
         );
         mn.assetBackedAmount = mn.assetBackedAmount.sub(_removeBackedAmount);
+
+        // TODO: get current rate before run the next line!
         require(
             mn.canWithdrawRemainning >= _removeBackedAmount,
             "Synthetic::removeCollateral: amount exceeds required collateral"
@@ -310,7 +312,7 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
             mn.currentRatio
         );
         mn.canWithdrawRemainning = canWithdrawRemainning;
-        mn.canMintRemainning = getCanMintRemainning(
+        mn.canMintRemainning = getRatioOf(
             canWithdrawRemainning,
             assetBackedAtRateAmount
         );
@@ -578,22 +580,6 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
         return data.rate;
     }
 
-    // @dev get current ratio between collateral and minted synthetic asset
-    // @param _backedAmount: callateral value
-    // @param _assetBackedAtRateAmount: the value of minted synthetic asset
-    function getRatioOf(uint256 _backedAmount, uint256 _assetBackedAtRateAmount)
-        internal
-        pure
-        returns (uint256)
-    {
-        return
-            (
-                ((_backedAmount.mul(denominator)).div(_assetBackedAtRateAmount))
-                    .mul(denominator)
-            )
-                .div(denominator);
-    }
-
     // @dev get liquidate price at current ratio
     // @param exchangeRate: the current exchange rate
     // @param currentRatio: the current ratio
@@ -607,50 +593,37 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
                 .div(denominator);
     }
 
-    // @dev get the maximum amount of asset that can be minted depends on current collateral ratio.
-    // @param canWithdrawRemainning: the amount of Dolly that can be withdrawed.
-    // @param assetBackedAtRateAmount: the current value of minted synthetic asset.
-    function getCanMintRemainning(
-        uint256 canWithdrawRemainning,
-        uint256 assetBackedAtRateAmount
-    ) internal pure returns (uint256) {
-        return
-            (
-                (
-                    (canWithdrawRemainning.mul(denominator)).div(
-                        assetBackedAtRateAmount
-                    )
-                )
-                    .mul(denominator)
-            )
-                .div(denominator);
-    }
-
-    // @dev get the percent of redeeming.
-    // @notice use this function for calculate partial redeeming.
-    // @param _amount: the number of synthetic asset that want to redeem.
-    // @param assetAmount: the number of minted synthetic asset.
-    function getRedeemPercent(uint256 _amount, uint256 assetAmount)
-        internal
-        pure
-        returns (uint256)
-    {
-        return
-            (((_amount.mul(denominator)).div(assetAmount)).mul(denominator))
-                .div(denominator);
-    }
-
     // @dev using for get supported asset before do the operation.
     // @param _pairs: the string of pairs e.g. "TSLA/USD"
     function isSupported(string memory _pairs) public view returns (bool) {
         return pairsToAddress[_pairs] != address(0);
     }
 
+    // @notice this function cal calculate multi purposes e.g.
+    // 1. get assetBackedAtRateAmount
+    // 2. get requiredAmount
+    // 3. get assetToBeBurned
+    // 4. get assetBackedToBeRedeemed
     function getProductOf(uint256 _amount, uint256 _multiplier)
         internal
         pure
         returns (uint256)
     {
         return (_amount.mul(_multiplier)).div(denominator);
+    }
+
+    // @notice this function cal calculate multi purposes e.g.
+    // 1. get currentRatio: current ratio between collateral and minted synthetic asset
+    // 2. get canMintRemainning: the maximum amount of asset that can be minted depends on current collateral ratio.
+    // 3. get percent: the percent of redeeming (in partial redeeming function).
+    function getRatioOf(uint256 _amount, uint256 _divider)
+        internal
+        pure
+        returns (uint256)
+    {
+        return
+            (((_amount.mul(denominator)).div(_divider)).mul(denominator)).div(
+                denominator
+            );
     }
 }

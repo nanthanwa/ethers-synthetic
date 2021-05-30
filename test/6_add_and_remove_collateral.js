@@ -3,8 +3,6 @@ const { deployments } = require('hardhat');
 const { ethers } = require('hardhat');
 const fs = require('fs');
 
-// @dev We will simulate liquidate condition with remove almost entire collateral
-// @notice Synthetic's contract owner (deployer) can call special method called removeLowerCollateral()
 describe('Add and remove collateral Testing', async () => {
     let actual, synthetic, doppleSyntheticTokenFactory, dolly;
     let deployer, minter, liquidator, developer;
@@ -285,7 +283,6 @@ describe('Add and remove collateral Testing', async () => {
 
         const syntheticAmount = ethers.utils.parseEther('1');
         const dollyAmount = ethers.utils.parseEther('1000');
-        const removeCollateralAmount = ethers.utils.parseEther('10');
         const aDollyBal = await dolly.balanceOf(minter.address);
         const aTSLABal = await doppleTSLA.balanceOf(minter.address);
 
@@ -309,7 +306,8 @@ describe('Add and remove collateral Testing', async () => {
         // ========================================================
         // REMOVE COLLATERAL
         // ========================================================
-        actual = await synthetic.connect(minter).removeCollateral(doppleTSLA.address, removeCollateralAmount);
+        const mintingNote = await synthetic.contracts(minter.address, doppleTSLA.address);
+        actual = await synthetic.connect(minter).removeCollateral(doppleTSLA.address, mintingNote.canWithdrawRemainning.div(2));
         const bRatio = (await synthetic.contracts(minter.address, doppleTSLA.address)).currentRatio;
         assert.ok(bRatio.lt(aRatio));
 
@@ -327,7 +325,6 @@ describe('Add and remove collateral Testing', async () => {
 
         const syntheticAmount = ethers.utils.parseEther('1');
         const dollyAmount = ethers.utils.parseEther('1000');
-        const removeCollateralAmount = ethers.utils.parseEther('10');
         const aDollyBal = await dolly.balanceOf(minter.address);
         const aCOINBal = await doppleCOIN.balanceOf(minter.address);
 
@@ -351,7 +348,8 @@ describe('Add and remove collateral Testing', async () => {
         // ========================================================
         // REMOVE COLLATERAL
         // ========================================================
-        actual = await synthetic.connect(minter).removeCollateral(doppleCOIN.address, removeCollateralAmount);
+        const mintingNote = await synthetic.contracts(minter.address, doppleCOIN.address);
+        actual = await synthetic.connect(minter).removeCollateral(doppleCOIN.address, mintingNote.canWithdrawRemainning.div(2));
         const bRatio = (await synthetic.contracts(minter.address, doppleCOIN.address)).currentRatio;
         assert.ok(bRatio.lt(aRatio));
 
@@ -369,7 +367,6 @@ describe('Add and remove collateral Testing', async () => {
 
         const syntheticAmount = ethers.utils.parseEther('1');
         const dollyAmount = ethers.utils.parseEther('1000');
-        const removeCollateralAmount = ethers.utils.parseEther('10');
         const aDollyBal = await dolly.balanceOf(minter.address);
         const aAAPLBal = await doppleAAPL.balanceOf(minter.address);
 
@@ -393,7 +390,8 @@ describe('Add and remove collateral Testing', async () => {
         // ========================================================
         // REMOVE COLLATERAL
         // ========================================================
-        actual = await synthetic.connect(minter).removeCollateral(doppleAAPL.address, removeCollateralAmount);
+        const mintingNote = await synthetic.contracts(minter.address, doppleAAPL.address);
+        actual = await synthetic.connect(minter).removeCollateral(doppleAAPL.address, mintingNote.canWithdrawRemainning.div(2));
         const bRatio = (await synthetic.contracts(minter.address, doppleAAPL.address)).currentRatio;
         assert.ok(bRatio.lt(aRatio));
 
@@ -411,7 +409,6 @@ describe('Add and remove collateral Testing', async () => {
 
         const syntheticAmount = ethers.utils.parseEther('1');
         const dollyAmount = ethers.utils.parseEther('1000');
-        const removeCollateralAmount = ethers.utils.parseEther('10');
         const aDollyBal = await dolly.balanceOf(minter.address);
         const aQQQBal = await doppleQQQ.balanceOf(minter.address);
 
@@ -435,7 +432,8 @@ describe('Add and remove collateral Testing', async () => {
         // ========================================================
         // REMOVE COLLATERAL
         // ========================================================
-        actual = await synthetic.connect(minter).removeCollateral(doppleQQQ.address, removeCollateralAmount);
+        const mintingNote = await synthetic.contracts(minter.address, doppleQQQ.address);
+        actual = await synthetic.connect(minter).removeCollateral(doppleQQQ.address, mintingNote.canWithdrawRemainning.div(2));
         const bRatio = (await synthetic.contracts(minter.address, doppleQQQ.address)).currentRatio;
         assert.ok(bRatio.lt(aRatio));
 
@@ -453,7 +451,6 @@ describe('Add and remove collateral Testing', async () => {
 
         const syntheticAmount = ethers.utils.parseEther('1');
         const dollyAmount = ethers.utils.parseEther('5200');
-        const removeCollateralAmount = ethers.utils.parseEther('10');
         const aDollyBal = await dolly.balanceOf(minter.address);
         const aAMZNBal = await doppleAMZN.balanceOf(minter.address);
 
@@ -477,7 +474,8 @@ describe('Add and remove collateral Testing', async () => {
         // ========================================================
         // REMOVE COLLATERAL
         // ========================================================
-        actual = await synthetic.connect(minter).removeCollateral(doppleAMZN.address, removeCollateralAmount);
+        const mintingNote = await synthetic.contracts(minter.address, doppleAMZN.address);
+        actual = await synthetic.connect(minter).removeCollateral(doppleAMZN.address, mintingNote.canWithdrawRemainning.div(2));
         const bRatio = (await synthetic.contracts(minter.address, doppleAMZN.address)).currentRatio;
         assert.ok(bRatio.lt(aRatio));
 
@@ -495,7 +493,6 @@ describe('Add and remove collateral Testing', async () => {
 
         const syntheticAmount = ethers.utils.parseEther('1');
         const dollyAmount = ethers.utils.parseEther('3200');
-        const removeCollateralAmount = ethers.utils.parseEther('10');
         const aDollyBal = await dolly.balanceOf(minter.address);
         const aXAUBal = await doppleXAU.balanceOf(minter.address);
 
@@ -519,7 +516,8 @@ describe('Add and remove collateral Testing', async () => {
         // ========================================================
         // REMOVE COLLATERAL
         // ========================================================
-        actual = await synthetic.connect(minter).removeCollateral(doppleXAU.address, removeCollateralAmount);
+        const mintingNote = await synthetic.contracts(minter.address, doppleXAU.address);
+        actual = await synthetic.connect(minter).removeCollateral(doppleXAU.address, mintingNote.canWithdrawRemainning.div(2));
         const bRatio = (await synthetic.contracts(minter.address, doppleXAU.address)).currentRatio;
         assert.ok(bRatio.lt(aRatio));
 

@@ -51,8 +51,8 @@ describe('Liquidation Testing', async () => {
 
         const bDollyBal1 = await dolly.balanceOf(deployer.address);
         const bTSLABal1 = await doppleTSLA.balanceOf(deployer.address);
-        console.log(bDollyBal1.toString());
-        console.log(bTSLABal1.toString());
+        // console.log(bDollyBal1.toString());
+        // console.log(bTSLABal1.toString());
 
         assert.ok(bDollyBal1.eq(aDollyBal.sub(dollyAmount)));
         assert.ok(bTSLABal1.eq(aTSLABal.add(syntheticAmount)));
@@ -84,16 +84,16 @@ describe('Liquidation Testing', async () => {
         }
 
         const bDollyBal3 = await dolly.balanceOf(liquidator.address);
-        console.log(bDollyBal3.toString());
+        // console.log(bDollyBal3.toString());
         actual = await synthetic.connect(liquidator).liquidate(doppleTSLA.address, deployer.address);
         assert.ok(actual.hash);
 
         const bDollyBal4 = await dolly.balanceOf(liquidator.address);
-        console.log(bDollyBal4.toString());
+        // console.log(bDollyBal4.toString());
         assert.ok(bDollyBal4.gt(bDollyBal3)); // liquidator receive reward.
 
         const bDevBal = await dolly.balanceOf(developer.address);
-        console.log(bDevBal.toString());
+        // console.log(bDevBal.toString());
         assert.ok(bDevBal.gt(aDevBal)); // developer receive liquidation fee.
     });
 

@@ -134,9 +134,7 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
             _backedAmount >= requiredAmount,
             "Synthetic::mintSynthetic: under collateral"
         );
-        uint256 canWithdrawRemainning = _backedAmount.sub(requiredAmount);
         _synthetic.mint(_msgSender(), _amount);
-
         require(dolly.transferFrom(_msgSender(), address(this), _backedAmount));
         mn.minter = _msgSender();
         mn.asset = _synthetic;
@@ -150,9 +148,9 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
             exchangeRate,
             mn.currentRatio
         );
-        mn.canWithdrawRemainning = canWithdrawRemainning;
+        mn.canWithdrawRemainning = _backedAmount.sub(requiredAmount);
         mn.canMintRemainning = getRatioOf(
-            canWithdrawRemainning,
+            mn.canWithdrawRemainning,
             assetBackedAtRateAmount
         );
         mn.updatedAt = block.timestamp;
@@ -200,9 +198,6 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
                 assetBackedAmountAfterRedeem >= requiredAmount,
                 "Synthetic::redeemSynthetic: under collateral ratio"
             );
-            uint256 canWithdrawRemainning =
-                assetBackedAmountAfterRedeem.sub(requiredAmount);
-
             _synthetic.burnFrom(_msgSender(), assetToBeBurned);
             dolly.transfer(_msgSender(), assetBackedToBeRedeemed);
 
@@ -216,9 +211,11 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
                 exchangeRate,
                 mn.currentRatio
             );
-            mn.canWithdrawRemainning = canWithdrawRemainning;
+            mn.canWithdrawRemainning = assetBackedAmountAfterRedeem.sub(
+                requiredAmount
+            );
             mn.canMintRemainning = getRatioOf(
-                canWithdrawRemainning,
+                mn.canWithdrawRemainning,
                 assetBackedAtRateAmount
             );
             mn.currentExchangeRate = exchangeRate;
@@ -242,15 +239,11 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
             "Synthetic::addCollateral: cannot add collateral to empty contract"
         );
         mn.assetBackedAmount = mn.assetBackedAmount.add(_addAmount);
-
         uint256 exchangeRate = getRate(addressToPairs[address(_synthetic)]);
         uint256 assetBackedAtRateAmount =
             (mn.assetAmount.mul(exchangeRate)).div(denominator);
         uint256 requiredAmount =
             (assetBackedAtRateAmount.mul(collateralRatio)).div(denominator);
-
-        uint256 canWithdrawRemainning =
-            mn.assetBackedAmount.sub(requiredAmount);
         require(dolly.transferFrom(_msgSender(), address(this), _addAmount));
         mn.currentRatio = getRatioOf(
             mn.assetBackedAmount,
@@ -260,9 +253,9 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
             exchangeRate,
             mn.currentRatio
         );
-        mn.canWithdrawRemainning = canWithdrawRemainning;
+        mn.canWithdrawRemainning = mn.assetBackedAmount.sub(requiredAmount);
         mn.canMintRemainning = getRatioOf(
-            canWithdrawRemainning,
+            mn.canWithdrawRemainning,
             assetBackedAtRateAmount
         );
         mn.currentExchangeRate = exchangeRate;

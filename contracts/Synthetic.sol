@@ -286,7 +286,7 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
         uint256 canWithdrawRemainning =
             mn.assetBackedAmount.sub(requiredAmount);
         require(
-            mn.canWithdrawRemainning >= _removeBackedAmount,
+            canWithdrawRemainning >= _removeBackedAmount,
             "Synthetic::removeCollateral: amount exceeds required collateral"
         );
         dolly.transfer(_msgSender(), _removeBackedAmount);
@@ -341,6 +341,47 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
         mn.updatedAt = block.timestamp;
         mn.updatedBlock = block.number;
         emit RemoveCollateral(_msgSender(), _removeAmount);
+    }
+
+    function addSynthetic(IERC20Burnable _synthetic, uint256 _addAmount)
+        external
+        whenNotPaused
+        nonReentrant
+    {
+        MintingNote storage mn = contracts[_msgSender()][address(_synthetic)];
+        require(
+            mn.assetAmount > 0,
+            "Synthetic::addCollateral: cannot add synthetic to empty contract"
+        );
+        mn.assetAmount = mn.assetAmount.add(_addAmount);
+        uint256 exchangeRate = getRate(addressToPairs[address(_synthetic)]);
+        uint256 assetBackedAtRateAmount =
+            getProductOf(mn.assetAmount, exchangeRate);
+        uint256 requiredAmount =
+            getProductOf(assetBackedAtRateAmount, collateralRatio);
+
+        require(
+            mn.assetBackedAmount > requiredAmount,
+            "Synthetic::addSynthetic: under collateral"
+        );
+        _synthetic.mint(_msgSender(), _addAmount);
+        mn.currentRatio = getRatioOf(
+            mn.assetBackedAmount,
+            assetBackedAtRateAmount
+        );
+        mn.willLiquidateAtPrice = getWillLiquidateAtPrice(
+            exchangeRate,
+            mn.currentRatio
+        );
+        mn.canWithdrawRemainning = mn.assetBackedAmount.sub(requiredAmount);
+        mn.canMintRemainning = getRatioOf(
+            mn.canWithdrawRemainning,
+            assetBackedAtRateAmount
+        );
+        mn.currentExchangeRate = exchangeRate;
+        mn.updatedAt = block.timestamp;
+        mn.updatedBlock = block.number;
+        emit AddCollateral(_msgSender(), _addAmount);
     }
 
     // @dev liquidator must approve Synthetic asset to spending Dolly

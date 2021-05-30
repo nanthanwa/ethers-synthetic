@@ -31,9 +31,12 @@ describe('Minting and Redeeming Testing', async () => {
         const dollyAmount = ethers.utils.parseEther('1000');
         const aDollyBal = await dolly.balanceOf(minter);
         const aTSLABal = await doppleTSLA.balanceOf(minter);
-        actual = await dolly.approve(synthetic.address, dollyAmount);
-        assert.ok(actual.hash);
 
+        const allowance = await dolly.allowance(minter, synthetic.address);
+        if (allowance.lte(dollyAmount)) {
+            actual = await dolly.approve(synthetic.address, ethers.constants.MaxUint256);
+            assert.ok(actual.hash);
+        }
         actual = await synthetic.mintSynthetic(doppleTSLA.address, syntheticAmount, dollyAmount);
         assert.ok(actual.hash);
 
@@ -55,8 +58,11 @@ describe('Minting and Redeeming Testing', async () => {
         const aDollyBal = await dolly.balanceOf(minter);
         const aCOINBal = await doppleCOIN.balanceOf(minter);
 
-        actual = await dolly.approve(synthetic.address, dollyAmount);
-        assert.ok(actual.hash);
+        const allowance = await dolly.allowance(minter, synthetic.address);
+        if (allowance.lte(dollyAmount)) {
+            actual = await dolly.approve(synthetic.address, ethers.constants.MaxUint256);
+            assert.ok(actual.hash);
+        }
 
         actual = await synthetic.mintSynthetic(doppleCOIN.address, syntheticAmount, dollyAmount);
         assert.ok(actual.hash);
@@ -78,8 +84,11 @@ describe('Minting and Redeeming Testing', async () => {
         const aDollyBal = await dolly.balanceOf(minter);
         const aAAPLBal = await doppleAAPL.balanceOf(minter);
 
-        actual = await dolly.approve(synthetic.address, dollyAmount);
-        assert.ok(actual.hash);
+        const allowance = await dolly.allowance(minter, synthetic.address);
+        if (allowance.lte(dollyAmount)) {
+            actual = await dolly.approve(synthetic.address, ethers.constants.MaxUint256);
+            assert.ok(actual.hash);
+        }
 
         actual = await synthetic.mintSynthetic(doppleAAPL.address, syntheticAmount, dollyAmount);
         assert.ok(actual.hash);
@@ -101,8 +110,11 @@ describe('Minting and Redeeming Testing', async () => {
         const aDollyBal = await dolly.balanceOf(minter);
         const aQQQBal = await doppleQQQ.balanceOf(minter);
 
-        actual = await dolly.approve(synthetic.address, dollyAmount);
-        assert.ok(actual.hash);
+        const allowance = await dolly.allowance(minter, synthetic.address);
+        if (allowance.lte(dollyAmount)) {
+            actual = await dolly.approve(synthetic.address, ethers.constants.MaxUint256);
+            assert.ok(actual.hash);
+        }
 
         actual = await synthetic.mintSynthetic(doppleQQQ.address, syntheticAmount, dollyAmount);
         assert.ok(actual.hash);
@@ -126,8 +138,11 @@ describe('Minting and Redeeming Testing', async () => {
         const aDollyBal = await dolly.balanceOf(minter);
         const aAMZNBal = await doppleAMZN.balanceOf(minter);
 
-        actual = await dolly.approve(synthetic.address, dollyAmount);
-        assert.ok(actual.hash);
+        const allowance = await dolly.allowance(minter, synthetic.address);
+        if (allowance.lte(dollyAmount)) {
+            actual = await dolly.approve(synthetic.address, ethers.constants.MaxUint256);
+            assert.ok(actual.hash);
+        }
 
         actual = await synthetic.mintSynthetic(doppleAMZN.address, syntheticAmount, dollyAmount);
         assert.ok(actual.hash);
@@ -150,8 +165,11 @@ describe('Minting and Redeeming Testing', async () => {
         const aDollyBal = await dolly.balanceOf(minter);
         const aXAUBal = await doppleXAU.balanceOf(minter);
 
-        actual = await dolly.approve(synthetic.address, dollyAmount);
-        assert.ok(actual.hash);
+        const allowance = await dolly.allowance(minter, synthetic.address);
+        if (allowance.lte(dollyAmount)) {
+            actual = await dolly.approve(synthetic.address, ethers.constants.MaxUint256);
+            assert.ok(actual.hash);
+        }
 
         actual = await synthetic.mintSynthetic(doppleXAU.address, syntheticAmount, dollyAmount);
         assert.ok(actual.hash);
@@ -170,8 +188,12 @@ describe('Minting and Redeeming Testing', async () => {
 
         const aDollyBal = await dolly.balanceOf(minter);
         const aTSLABal = await doppleTSLA.balanceOf(minter);
-        actual = await doppleTSLA.approve(synthetic.address, aTSLABal);
-        assert.ok(actual.hash);
+
+        const allowance = await doppleTSLA.allowance(minter, synthetic.address);
+        if (allowance.lte(aTSLABal)) {
+            actual = await doppleTSLA.approve(synthetic.address, ethers.constants.MaxUint256);
+            assert.ok(actual.hash);
+        }
 
         actual = await synthetic.redeemSynthetic(doppleTSLA.address, aTSLABal);
         assert.ok(actual.hash);
@@ -192,8 +214,11 @@ describe('Minting and Redeeming Testing', async () => {
         const aDollyBal = await dolly.balanceOf(minter);
         const aCOINBal = await doppleCOIN.balanceOf(minter);
 
-        actual = await doppleCOIN.approve(synthetic.address, aCOINBal);
-        assert.ok(actual.hash);
+        const allowance = await doppleCOIN.allowance(minter, synthetic.address);
+        if (allowance.lte(aCOINBal)) {
+            actual = await doppleCOIN.approve(synthetic.address, ethers.constants.MaxUint256);
+            assert.ok(actual.hash);
+        }
 
         actual = await synthetic.redeemSynthetic(doppleCOIN.address, aCOINBal);
         assert.ok(actual.hash);
@@ -214,8 +239,11 @@ describe('Minting and Redeeming Testing', async () => {
         const aDollyBal = await dolly.balanceOf(minter);
         const aAAPLBal = await doppleAAPL.balanceOf(minter);
 
-        actual = await doppleAAPL.approve(synthetic.address, aAAPLBal);
-        assert.ok(actual.hash);
+        const allowance = await doppleAAPL.allowance(minter, synthetic.address);
+        if (allowance.lte(aAAPLBal)) {
+            actual = await doppleAAPL.approve(synthetic.address, ethers.constants.MaxUint256);
+            assert.ok(actual.hash);
+        }
 
         actual = await synthetic.redeemSynthetic(doppleAAPL.address, aAAPLBal);
         assert.ok(actual.hash);
@@ -236,8 +264,11 @@ describe('Minting and Redeeming Testing', async () => {
         const aDollyBal = await dolly.balanceOf(minter);
         const aQQQBal = await doppleQQQ.balanceOf(minter);
 
-        actual = await doppleQQQ.approve(synthetic.address, aQQQBal);
-        assert.ok(actual.hash);
+        const allowance = await doppleQQQ.allowance(minter, synthetic.address);
+        if (allowance.lte(aQQQBal)) {
+            actual = await doppleQQQ.approve(synthetic.address, ethers.constants.MaxUint256);
+            assert.ok(actual.hash);
+        }
 
         actual = await synthetic.redeemSynthetic(doppleQQQ.address, aQQQBal);
         assert.ok(actual.hash);
@@ -258,8 +289,11 @@ describe('Minting and Redeeming Testing', async () => {
         const aDollyBal = await dolly.balanceOf(minter);
         const aAMZNBal = await doppleAMZN.balanceOf(minter);
 
-        actual = await doppleAMZN.approve(synthetic.address, aAMZNBal);
-        assert.ok(actual.hash);
+        const allowance = await doppleAMZN.allowance(minter, synthetic.address);
+        if (allowance.lte(aAMZNBal)) {
+            actual = await doppleAMZN.approve(synthetic.address, ethers.constants.MaxUint256);
+            assert.ok(actual.hash);
+        }
 
         actual = await synthetic.redeemSynthetic(doppleAMZN.address, aAMZNBal);
         assert.ok(actual.hash);
@@ -280,8 +314,11 @@ describe('Minting and Redeeming Testing', async () => {
         const aDollyBal = await dolly.balanceOf(minter);
         const aXAUBal = await doppleXAU.balanceOf(minter);
 
-        actual = await doppleXAU.approve(synthetic.address, aXAUBal);
-        assert.ok(actual.hash);
+        const allowance = await doppleXAU.allowance(minter, synthetic.address);
+        if (allowance.lte(aXAUBal)) {
+            actual = await doppleXAU.approve(synthetic.address, ethers.constants.MaxUint256);
+            assert.ok(actual.hash);
+        }
 
         actual = await synthetic.redeemSynthetic(doppleXAU.address, aXAUBal);
         assert.ok(actual.hash);

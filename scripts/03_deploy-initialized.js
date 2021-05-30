@@ -89,10 +89,10 @@ async function main() {
 
 
     console.log('approve dolly');
-    result = await dolly.approve(synthetic.address, ethers.utils.parseEther('1000000000000').toString()); // for minting purpose.
+    result = await dolly.approve(synthetic.address, ethers.constants.MaxUint256); // for minting purpose.
     console.log('hash', result.hash);
     console.log('approve doppleTSLA');
-    result = await doppleTSLA.approve(synthetic.address, ethers.utils.parseEther('1000000000000').toString()); // for redeem purpose (burned by synthetic contract).
+    result = await doppleTSLA.approve(synthetic.address, ethers.constants.MaxUint256); // for redeem purpose (burned by synthetic contract).
     console.log('hash', result.hash);
     console.log('Set owner of systetic asset');
     result = await doppleTSLA.setSyntheticAddress(synthetic.address); // only Synthetic contract can mint synthetic asset.

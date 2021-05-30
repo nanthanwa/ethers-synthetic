@@ -80,6 +80,8 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
     event RedeemAsset(address indexed syntheticAddress, uint256 amount);
     event AddCollateral(address indexed user, uint256 amount);
     event RemoveCollateral(address indexed user, uint256 amount);
+    event AddSynthetic(address indexed user, uint256 amount);
+    event RemoveSynthetic(address indexed user, uint256 amount);
     event Liquidated(
         address indexed liquidated,
         address indexed liquidator,
@@ -342,6 +344,9 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
         emit RemoveCollateral(_msgSender(), _removeAmount);
     }
 
+    // @dev if minter have a lot of collateral, minter can get more synthetic asset while the collateral ratio is sastisfy
+    // @param _synthetic: the address of synthetic asset.
+    // @param _addAmount: the amount of synthetic asset that want to mint more.
     function addSynthetic(IERC20Burnable _synthetic, uint256 _addAmount)
         external
         whenNotPaused
@@ -379,7 +384,46 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
         mn.currentExchangeRate = exchangeRate;
         mn.updatedAt = block.timestamp;
         mn.updatedBlock = block.number;
-        emit AddCollateral(_msgSender(), _addAmount);
+        emit AddSynthetic(_msgSender(), _addAmount);
+    }
+
+    // @dev if minter have a lot of synthetic asset, minter can remove synthetic asset to increase the collateral ratio
+    // @param _synthetic: the address of synthetic asset.
+    // @param _removeAmount: amount of synthetic asset that want to remove.
+    function removeSynthetic(IERC20Burnable _synthetic, uint256 _removeAmount)
+        external
+        whenNotPaused
+        nonReentrant
+    {
+        MintingNote storage mn = contracts[_msgSender()][address(_synthetic)];
+        require(
+            mn.assetAmount > 0,
+            "Synthetic::removeSynthetic: cannot add synthetic to empty contract"
+        );
+        mn.assetAmount = mn.assetAmount.sub(_removeAmount);
+        uint256 exchangeRate = getRate(addressToPairs[address(_synthetic)]);
+        uint256 assetBackedAtRateAmount =
+            getProductOf(mn.assetAmount, exchangeRate);
+        uint256 requiredAmount =
+            getProductOf(assetBackedAtRateAmount, collateralRatio);
+        _synthetic.burnFrom(_msgSender(), _removeAmount);
+        mn.currentRatio = getRatioOf(
+            mn.assetBackedAmount,
+            assetBackedAtRateAmount
+        );
+        mn.willLiquidateAtPrice = getWillLiquidateAtPrice(
+            exchangeRate,
+            mn.currentRatio
+        );
+        mn.canWithdrawRemainning = mn.assetBackedAmount.sub(requiredAmount);
+        mn.canMintRemainning = getRatioOf(
+            mn.canWithdrawRemainning,
+            assetBackedAtRateAmount
+        );
+        mn.currentExchangeRate = exchangeRate;
+        mn.updatedAt = block.timestamp;
+        mn.updatedBlock = block.number;
+        emit RemoveSynthetic(_msgSender(), _removeAmount);
     }
 
     // @dev liquidator must approve Synthetic asset to spending Dolly

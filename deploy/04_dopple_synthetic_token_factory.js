@@ -17,8 +17,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
         tx = await doppleSyntheticTokenFactory.createSyntheticToken('Dopple Synthetic TSLA Token', 'dTSLA', deployer, synthetic.address);
         contractAddress = (await tx.wait()).events[2].args[0];
         assetName = (await tx.wait()).events[2].args[1].substr(1);
-        console.log('contractAddress', contractAddress);
-        console.log('assetName', assetName);
+        console.log(`${assetName} contractAddress`, contractAddress);
 
         console.log('setPairsToAddress', (await synthetic.setPairsToAddress(`${assetName}/USD`, contractAddress)).hash);
         console.log('setAddressToPairs', (await synthetic.setAddressToPairs(contractAddress, `${assetName}/USD`)).hash);
@@ -27,8 +26,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
         tx = await doppleSyntheticTokenFactory.createSyntheticToken('Dopple Synthetic COIN Token', 'dCOIN', deployer, synthetic.address);
         contractAddress = (await tx.wait()).events[2].args[0];
         assetName = (await tx.wait()).events[2].args[1].substr(1);
-        console.log('contractAddress', contractAddress);
-        console.log('assetName', assetName);
+        console.log(`${assetName} contractAddress`, contractAddress);
 
         console.log('setPairsToAddress', (await synthetic.setPairsToAddress(`${assetName}/USD`, contractAddress)).hash);
         console.log('setAddressToPairs', (await synthetic.setAddressToPairs(contractAddress, `${assetName}/USD`)).hash);
@@ -37,8 +35,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
         tx = await doppleSyntheticTokenFactory.createSyntheticToken('Dopple Synthetic AAPL Token', 'dAAPL', deployer, synthetic.address);
         contractAddress = (await tx.wait()).events[2].args[0];
         assetName = (await tx.wait()).events[2].args[1].substr(1);
-        console.log('contractAddress', contractAddress);
-        console.log('assetName', assetName);
+        console.log(`${assetName} contractAddress`, contractAddress);
 
         console.log('setPairsToAddress', (await synthetic.setPairsToAddress(`${assetName}/USD`, contractAddress)).hash);
         console.log('setAddressToPairs', (await synthetic.setAddressToPairs(contractAddress, `${assetName}/USD`)).hash);
@@ -47,8 +44,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
         tx = await doppleSyntheticTokenFactory.createSyntheticToken('Dopple Synthetic QQQ Token', 'dQQQ', deployer, synthetic.address);
         contractAddress = (await tx.wait()).events[2].args[0];
         assetName = (await tx.wait()).events[2].args[1].substr(1);
-        console.log('contractAddress', contractAddress);
-        console.log('assetName', assetName);
+        console.log(`${assetName} contractAddress`, contractAddress);
 
         console.log('setPairsToAddress', (await synthetic.setPairsToAddress(`${assetName}/USD`, contractAddress)).hash);
         console.log('setAddressToPairs', (await synthetic.setAddressToPairs(contractAddress, `${assetName}/USD`)).hash);
@@ -57,8 +53,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
         tx = await doppleSyntheticTokenFactory.createSyntheticToken('Dopple Synthetic AMZN Token', 'dAMZN', deployer, synthetic.address);
         contractAddress = (await tx.wait()).events[2].args[0];
         assetName = (await tx.wait()).events[2].args[1].substr(1);
-        console.log('contractAddress', contractAddress);
-        console.log('assetName', assetName);
+        console.log(`${assetName} contractAddress`, contractAddress);
 
         console.log('setPairsToAddress', (await synthetic.setPairsToAddress(`${assetName}/USD`, contractAddress)).hash);
         console.log('setAddressToPairs', (await synthetic.setAddressToPairs(contractAddress, `${assetName}/USD`)).hash);
@@ -67,8 +62,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
         tx = await doppleSyntheticTokenFactory.createSyntheticToken('Dopple Synthetic XAU Token', 'dXAU', deployer, synthetic.address);
         contractAddress = (await tx.wait()).events[2].args[0];
         assetName = (await tx.wait()).events[2].args[1].substr(1);
-        console.log('contractAddress', contractAddress);
-        console.log('assetName', assetName);
+        console.log(`${assetName} contractAddress`, contractAddress);
 
         console.log('setPairsToAddress', (await synthetic.setPairsToAddress(`${assetName}/USD`, contractAddress)).hash);
         console.log('setAddressToPairs', (await synthetic.setAddressToPairs(contractAddress, `${assetName}/USD`)).hash);

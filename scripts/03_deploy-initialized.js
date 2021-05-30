@@ -10,7 +10,7 @@ async function main() {
     const bandRef = '0xDA7a001b254CD22e46d3eAB04d937489c93174C3';
     const dolly = await ethers.getContractAt('contracts/Dolly.sol:Dolly', dollyAddress);
     await dolly.deployed();
-    console.log('Dolly deployed to:', dolly.address);
+    console.log('Dolly', dolly.address);
     // console.log('verify Synthetic');
     // await run('verify:verify', {
     //   address: dollyAddress,
@@ -25,7 +25,7 @@ async function main() {
     const synthetic = await Synthetic.deploy(dolly.address, bandRef); // dolly, bandRef
     // const synthetic = await ethers.getContractAt('Synthetic', '0xAdde342E77525862Bf435fb85004Af9F40403BAe');
     await synthetic.deployed();
-    console.log('Synthetic deployed to:', synthetic.address);
+    console.log('Synthetic', synthetic.address);
     console.log('verify Synthetic');
     await run('verify:verify', {
       address: synthetic.address,
@@ -38,7 +38,7 @@ async function main() {
     // // const doppleTSLA = await DoppleTSLA.deploy(synthetic.address); // synthetic address
     const doppleTSLA = await ethers.getContractAt('DoppleTSLA', '0xdC47e2C0b6046cD58d3B21583DA19B45Ebf679ad');
     await doppleTSLA.deployed();
-    console.log('DoppleTSLA deployed to:', doppleTSLA.address);
+    console.log('DoppleTSLA', doppleTSLA.address);
     // await run('verify:verify', {
     //   address: doppleTSLA.address,
     //   contract: 'contracts/DoppleSyntheticToken.sol:DoppleTSLA',

@@ -8,7 +8,7 @@ async function main() {
     const Dolly = await ethers.getContractFactory("Dolly.sol");
     const dolly = await Dolly.deploy("Dolly Stable Coin", "DOLLY", "18");
     await dolly.deployed();
-    console.log("Dolly deployed to:", dolly.address);
+    console.log("Dolly", dolly.address);
   } else {
     console.error('please specify the network!');
     return;

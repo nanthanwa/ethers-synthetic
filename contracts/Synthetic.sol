@@ -20,22 +20,24 @@ interface IERC20Burnable is IERC20 {
     function mint(address account, uint256 amount) external;
 }
 
-// @info Synthetic contract is the contract that minting systhetic asset by given amount of collateral
-// Minter can mint, redeem (some or all all them), add more collateral (to avoid liquidation),
-// remove some collateral (to withdraw the backed asset). If the ratio between collateral and synthetic value
-// goes lower than liquidation ratio, anyone can call the liquidate function to get the reward and close that contract.
-//
-// @requirements:
-// - Contract address of Dolly (constuctor parameter).
-// - Contract address of referrence of orale Band protocol (constuctor parameter).
-// - Contract address of synthetic token contract (e.g. TSLA).
-// - Set the ownership of synthetic token contract (e.g. TSLA) to this contract.
-// - Set the pairsToQuote of supported synthetic asset (e.g. pairsToQuote["TSLA/USD"] = ["TSLA", "USD"]).
-// - Set the pairsToAddress of supported synthetic asset (e.g. pairsToAddress["TSLA/USD"] = 0x65cAC0F09EFdB88195a002E8DD4CBF6Ec9BC7f60).
-// - Set the addressToPairs of supported synthetic asset (e.g.) addressToPairs[0x65cAC0F09EFdB88195a002E8DD4CBF6Ec9BC7f60] = "TSLA/USD".
-
+/**
+ * @dev Synthetic contract is the contract that minting systhetic asset by given amount of collateral
+ * Minter can mint, redeem (some or all all them), add more collateral (to avoid liquidation),
+ * remove some collateral (to withdraw the backed asset). If the ratio between collateral and synthetic value
+ * goes lower than liquidation ratio, anyone can call the liquidate function to get the reward and close that contract.
+ * @notice the requirement of this contract are
+ * Contract address of Dolly (constuctor parameter).
+ * Contract address of referrence of orale Band protocol (constuctor parameter).
+ * Contract address of synthetic token contracts.
+ * Set the ownership of synthetic token contract (e.g. TSLA) to this contract.
+ * Set the pairsToQuote of supported synthetic asset (e.g. pairsToQuote["TSLA/USD"] = ["TSLA", "USD"]).
+ * Set the pairsToAddress of supported synthetic asset (e.g. pairsToAddress["TSLA/USD"] = 0x65cAC0F09EFdB88195a002E8DD4CBF6Ec9BC7f60).
+ * Set the pairsToAddress of supported synthetic asset (e.g. pairsToAddress["TSLA/USD"] = 0x65cAC0F09EFdB88195a002E8DD4CBF6Ec9BC7f60).
+ * Set the addressToPairs of supported synthetic asset (e.g.) addressToPairs[0x65cAC0F09EFdB88195a002E8DD4CBF6Ec9BC7f60] = "TSLA/USD".
+ */
 contract Synthetic is Ownable, Pausable, ReentrancyGuard {
     using SafeMath for uint256;
+    using SafeERC20 for IERC20;
 
     IERC20 public dolly;
     IStdReference public bandOracle;
@@ -113,18 +115,27 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
         uint256 newRemainingToMinterRatio
     );
 
-    // @dev the constructor requires an address of Dolly and referrence of oracle Band Protocol
+    /**
+     * @dev the constructor requires an address of Dolly and referrence of oracle Band Protocol
+     * @param _dolly smartcontract address of Dolly
+     * @param _ref referrence of oracle Band Protocol
+     */
     constructor(IERC20 _dolly, IStdReference _ref) public {
         dolly = _dolly; // use Dolly as collateral
         bandOracle = _ref;
         devAddress = _msgSender();
     }
 
-    // user need to approve for deducting $DOLLY at Dolly contract first.
+    /**
+     * @dev user need to approve for deducting $DOLLY at Dolly contract first.
+     * @param _synthetic name
+     * @param _amount amount of synthetic that want to mint
+     * @param _backedAmount amount of Dolly that you want to collateral
+     */
     function mintSynthetic(
         IERC20Burnable _synthetic,
-        uint256 _amount, // amount of synthetic that want to mint
-        uint256 _backedAmount // amount of Dolly that you want to collateral
+        uint256 _amount,
+        uint256 _backedAmount
     ) external whenNotPaused nonReentrant {
         MintingNote storage mn = contracts[_msgSender()][address(_synthetic)];
 
@@ -160,8 +171,11 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
         emit MintAsset(_msgSender(), address(_synthetic), _amount);
     }
 
-    // @dev minter needs to approve for burn at SyntheticAsset before call this function.
-    // @notice no need to redeem entire colateral amount.
+    /**
+     * @dev minter needs to approve for burn at SyntheticAsset before call this function.
+     * @param _synthetic amount of synthetic that want to mint
+     * @param _amount amount of Dolly that you want to collateral
+     */
     function redeemSynthetic(IERC20Burnable _synthetic, uint256 _amount)
         external
         whenNotPaused
@@ -227,9 +241,11 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
         }
     }
 
-    // @info add more collateral for minted contract
-    // @param _synthetic: the address of synthetic asset
-    // @param _addAmount: amount of Dolly which want to add
+    /**
+     * @dev add more collateral for minted contract
+     * @param _synthetic the address of synthetic asset
+     * @param _addAmount amount of Dolly which want to add
+     */
     function addCollateral(IERC20Burnable _synthetic, uint256 _addAmount)
         external
         whenNotPaused
@@ -266,9 +282,11 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
         emit AddCollateral(_msgSender(), _addAmount);
     }
 
-    // @info remove some collateral for minted contract
-    // @param _synthetic: the address of synthetic asset
-    // @param _removeBackedAmount: amount of collateral which want to remove
+    /**
+     * @dev remove some collateral for minted contract
+     * @param _synthetic the address of synthetic asset
+     * @param _removeBackedAmount amount of collateral which want to remove
+     */
     function removeCollateral(
         IERC20Burnable _synthetic,
         uint256 _removeBackedAmount
@@ -310,10 +328,12 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
         emit RemoveCollateral(_msgSender(), _removeBackedAmount);
     }
 
-    // @dev for testing purpose.
-    // @notice this function will remove some collateral to simulate under collateral and need to be liquidated in the future.
-    // @param _synthetic: the address of synthetic asset.
-    // @param _removeAmount: amount of collateral which want to remove.
+    /**
+     * @dev for testing purpose.
+     * @notice this function will remove some collateral to simulate under collateral and need to be liquidated in the future.
+     * @param _synthetic: the address of synthetic asset.
+     * @param _removeAmount: amount of collateral which want to remove.
+     */
     function removeLowerCollateral(
         IERC20Burnable _synthetic,
         uint256 _removeAmount
@@ -344,9 +364,11 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
         emit RemoveCollateral(_msgSender(), _removeAmount);
     }
 
-    // @dev if minter have a lot of collateral, minter can get more synthetic asset while the collateral ratio is sastisfy
-    // @param _synthetic: the address of synthetic asset.
-    // @param _addAmount: the amount of synthetic asset that want to mint more.
+    /**
+     * @dev if minter have a lot of collateral, minter can get more synthetic asset while the collateral ratio is sastisfy
+     * @param _synthetic the address of synthetic asset.
+     * @param _addAmount the amount of synthetic asset that want to mint more.
+     */
     function addSynthetic(IERC20Burnable _synthetic, uint256 _addAmount)
         external
         whenNotPaused
@@ -387,9 +409,11 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
         emit AddSynthetic(_msgSender(), _addAmount);
     }
 
-    // @dev if minter have a lot of synthetic asset, minter can remove synthetic asset to increase the collateral ratio
-    // @param _synthetic: the address of synthetic asset.
-    // @param _removeAmount: amount of synthetic asset that want to remove.
+    /**
+     * @dev if minter have a lot of synthetic asset, minter can remove synthetic asset to increase the collateral ratio
+     * @param _synthetic: the address of synthetic asset.
+     * @param _removeAmount: amount of synthetic asset that want to remove.
+     */
     function removeSynthetic(IERC20Burnable _synthetic, uint256 _removeAmount)
         external
         whenNotPaused
@@ -426,9 +450,11 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
         emit RemoveSynthetic(_msgSender(), _removeAmount);
     }
 
-    // @dev liquidator must approve Synthetic asset to spending Dolly
-    // @param _synthetic: the address of synthetic asset.
-    // @param _minter: address of minter.
+    /**
+     * @dev liquidator must approve Synthetic asset to spending Dolly
+     * @param _synthetic the address of synthetic asset.
+     * @param _minter address of minter.
+     */
     function liquidate(IERC20Burnable _synthetic, address _minter)
         external
         whenNotPaused
@@ -466,9 +492,11 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
         delete contracts[_minter][address(_synthetic)];
     }
 
-    // @info set the pairs and quotes to calling the oracle.
-    // @param _pairs: string of pairs e.g. "TSLA/USD".
-    // @param baseAndQuote: 2 elements array e.g. ["TSLA"]["USD"].
+    /**
+     * @dev set the pairs and quotes to calling the oracle.
+     * @param _pairs string of pairs e.g. "TSLA/USD".
+     * @param baseAndQuote 2 elements array e.g. ["TSLA"]["USD"].
+     */
     function setPairsToQuote(
         string memory _pairs,
         string[2] memory baseAndQuote
@@ -476,9 +504,11 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
         pairsToQuote[_pairs] = baseAndQuote;
     }
 
-    // @info use this function to get the synthetic token address by given string pairs.
-    // @param _pairs: string of pairs e.g. "TSLA/USD".
-    // @param _syntheticAddress: address of synthetic asset.
+    /**
+     * @dev use this function to get the synthetic token address by given string pairs.
+     * @param _pairs string of pairs e.g. "TSLA/USD".
+     * @param _syntheticAddress address of synthetic asset.
+     */
     function setPairsToAddress(string memory _pairs, address _syntheticAddress)
         external
         onlyOwner
@@ -486,9 +516,11 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
         pairsToAddress[_pairs] = _syntheticAddress;
     }
 
-    // @info map synthetic token address to string of pairs. Used for getRate() function
-    // @param _pairs: string of pairs e.g. "TSLA/USD".
-    // @param _syntheticAddress: address of synthetic asset.
+    /**
+     * @dev map synthetic token address to string of pairs. Used for getRate() function
+     * @param _pairs string of pairs e.g. "TSLA/USD".
+     * @param _syntheticAddress address of synthetic asset.
+     */
     function setAddressToPairs(address _syntheticAddress, string memory _pairs)
         external
         onlyOwner
@@ -496,32 +528,40 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
         addressToPairs[_syntheticAddress] = _pairs;
     }
 
-    // @info set dev address to receive liquidation fee.
-    // @param _devAddress: new developer address.
+    /**
+     * @dev set dev address to receive liquidation fee.
+     * @param _devAddress new developer address.
+     */
     function setDevAddress(address _devAddress) external onlyOwner {
         address oldDevAddress = devAddress;
         devAddress = _devAddress;
         emit SetDevAddress(oldDevAddress, _devAddress);
     }
 
-    // @info set collateral ratio.
-    // @param _collateralRatio: new collateral ratio.
+    /**
+     * @dev set collateral ratio.
+     * @param _collateralRatio: new collateral ratio.
+     */
     function setCollateralRatio(uint256 _collateralRatio) external onlyOwner {
         uint256 oldCollateralRatio = collateralRatio;
         collateralRatio = _collateralRatio;
         emit SetCollateralRatio(oldCollateralRatio, _collateralRatio);
     }
 
-    // @info set liquidation ratio.
-    // @param _liquidationRatio: new liquidation ratio.
+    /**
+     * @dev set liquidation ratio.
+     * @param _liquidationRatio new liquidation ratio.
+     */
     function setLiquidationRatio(uint256 _liquidationRatio) external onlyOwner {
         uint256 oldLiquidationRatio = liquidationRatio;
         liquidationRatio = _liquidationRatio;
         emit SetLiquidationRatio(oldLiquidationRatio, _liquidationRatio);
     }
 
-    // @info set liquidator reward ratio.
-    // @param _liquidatorRewardRatio: new liquidator reward ratio.
+    /**
+     * @dev set liquidator reward ratio.
+     * @param _liquidatorRewardRatio new liquidator reward ratio.
+     */
     function setLiquidatorRewardRatio(uint256 _liquidatorRewardRatio)
         external
         onlyOwner
@@ -534,16 +574,20 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
         );
     }
 
-    // @info set platfrom fee ratio.
-    // @param _platfromFeeRatio: new platfrom fee ratio.
+    /**
+     * @dev set platfrom fee ratio.
+     * @param _platfromFeeRatio new platfrom fee ratio.
+     */
     function setPlatfromFeeRatio(uint256 _platfromFeeRatio) external onlyOwner {
         uint256 oldPlatfromFeeRatio = platfromFeeRatio;
         platfromFeeRatio = _platfromFeeRatio;
         emit SetPlatfromFeeRatio(oldPlatfromFeeRatio, _platfromFeeRatio);
     }
 
-    // @info set remaining of backed asset to minter ratio.
-    // @param _setRemainingToMinterRatio: new remaining to minter ratio.
+    /**
+     * @dev set remaining of backed asset to minter ratio.
+     * @param _remainingToMinterRatio new remaining to minter ratio.
+     */
     function setRemainingToMinterRatio(uint256 _remainingToMinterRatio)
         external
         onlyOwner
@@ -556,10 +600,12 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
         );
     }
 
-    // @dev for simulate all relevant amount of liqiodation
-    // @notice both liquidate bot and this contract can call this function to estimate the profit.
-    // @param _synthetic: a contract address of synthetic asset.
-    // @param _minter: an address of minter.
+    /**
+     * @dev for simulate all relevant amount of liqiodation
+     * @notice both liquidate bot and this contract can call this function to estimate the profit.
+     * @param _synthetic a contract address of synthetic asset.
+     * @param _minter an address of minter.
+     */
     function getRewardFromLiquidate(IERC20Burnable _synthetic, address _minter)
         public
         view
@@ -628,18 +674,24 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
         );
     }
 
-    // @dev for pause this smart contract to prevent mint, redeem, add collateral, remove collateral, liquidate process.
+    /**
+     * @dev for pause this smart contract to prevent mint, redeem, add collateral, remove collateral, liquidate process.
+     */
     function pause() external whenNotPaused onlyOwner {
         _pause();
     }
 
-    // @dev for unpause this smart contract to allow mint, redeem, add collateral, remove collateral, liquidate process.
+    /**
+     * @dev for unpause this smart contract to prevent mint, redeem, add collateral, remove collateral, liquidate process.
+     */
     function unpause() external whenPaused onlyOwner {
         _unpause();
     }
 
-    // @dev get current rate of given asset by Oracle
-    // @param _pairs: the pairs of asset.
+    /**
+     * @dev get current rate of given asset by Oracle
+     * @param _pairs the pairs of asset.
+     */
     function getRate(string memory _pairs) public view returns (uint256) {
         require(isSupported(_pairs));
         IStdReference.ReferenceData memory data =
@@ -650,9 +702,11 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
         return data.rate;
     }
 
-    // @dev get liquidate price at current ratio
-    // @param exchangeRate: the current exchange rate
-    // @param currentRatio: the current ratio
+    /**
+     * @dev get liquidate price at current ratio
+     * @param exchangeRate the current exchange rate
+     * @param currentRatio the current ratio
+     */
     function getWillLiquidateAtPrice(uint256 exchangeRate, uint256 currentRatio)
         internal
         view
@@ -663,17 +717,24 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
                 .div(denominator);
     }
 
-    // @dev using for get supported asset before do the operation.
-    // @param _pairs: the string of pairs e.g. "TSLA/USD"
+    /**
+     * @dev using for get supported asset before do the operation.
+     * @param _pairs the string of pairs e.g. "TSLA/USD"
+     */
     function isSupported(string memory _pairs) public view returns (bool) {
         return pairsToAddress[_pairs] != address(0);
     }
 
-    // @notice this function cal calculate multi purposes e.g.
-    // 1. get assetBackedAtRateAmount
-    // 2. get requiredAmount
-    // 3. get assetToBeBurned
-    // 4. get assetBackedToBeRedeemed
+    /**
+     * @dev using for get supported asset before do the operation.
+     * @notice this function cal calculate multi purposes e.g.
+     * 1. get assetBackedAtRateAmount
+     * 2. get requiredAmount
+     * 3. get assetToBeBurned
+     * 4. get assetBackedToBeRedeemed
+     * @param _amount amount of base
+     * @param _multiplier amount of multiplier
+     */
     function getProductOf(uint256 _amount, uint256 _multiplier)
         internal
         pure
@@ -682,10 +743,15 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
         return (_amount.mul(_multiplier)).div(denominator);
     }
 
-    // @notice this function cal calculate multi purposes e.g.
-    // 1. get currentRatio: current ratio between collateral and minted synthetic asset
-    // 2. get canMintRemainning: the maximum amount of asset that can be minted depends on current collateral ratio.
-    // 3. get percent: the percent of redeeming (in partial redeeming function).
+    /**
+     * @dev this function cal calculate multi purposes e.g.
+     * @notice this function cal calculate multi purposes e.g.
+     * 1. get currentRatio: current ratio between collateral and minted synthetic asset
+     * 2. get canMintRemainning: the maximum amount of asset that can be minted depends on current collateral ratio.
+     * 3. get percent: the percent of redeeming (in partial redeeming function).
+     * @param _amount amount of base
+     * @param _divider amount of divider
+     */
     function getRatioOf(uint256 _amount, uint256 _divider)
         internal
         pure

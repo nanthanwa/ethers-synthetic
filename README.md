@@ -1,4 +1,5 @@
 # Dopple Synthetic
+DISCLAIMER: This project is work by assuming the price of $DOLLY is **EQUAL** USD only.
 
 ## Installation
 - `git clone https://github.com/nanmcpe/dopple-synthetic.git`

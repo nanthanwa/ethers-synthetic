@@ -16,10 +16,10 @@
     "infuraProjectId": "",
     "alchemyProjectId": "",
     "privateKey": [
-        "",
-        "",
-        "",
-        ""
+        DEPLOYER_PRIVATE_KEY,
+        MINTER_PRIVATE_KEY,
+        LIQUIDATOR_PRIVATE_KEY,
+        DEVELOPER_PRIVATE_KEY
         ],
     "etherApiKey": "",
     "bscApiKey": ""
@@ -46,9 +46,9 @@
 - ✅ Add reentrancy guard.
 - ✅ Use factory pattern for synthetic asset contracts. [From this issue](https://github.com/nanmcpe/dopple-synthetic/issues/2).
 - ✅ Fix [this issue](https://github.com/nanmcpe/dopple-synthetic/issues/2).
+- ✅ Add function `addSynthetic()` and `removeSynthetic()` corresponding of user's collateral ratio.
 - ⏰ Add more unit test!!
 - ⏰ Gathering and monitor liquidation of minted asset (for liquidate bot).
-- ⏰ Add function `mintMoreSynthetic()` and `redeemSomeSynthetic()` corresponding of user's collateral ratio.
 - ⏰ Make simple UI.
 - ⏰ Use [Chainlink oracle](https://docs.chain.link/docs/binance-smart-chain-addresses) for standby (or combine) mode.
 

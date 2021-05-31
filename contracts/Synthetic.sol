@@ -3,6 +3,7 @@
 pragma solidity 0.6.12;
 pragma experimental ABIEncoderV2;
 import "./token/ERC20/IERC20.sol";
+import "./token/ERC20/SafeERC20.sol";
 import "./access/Ownable.sol";
 import "./utils/Pausable.sol";
 import "./utils/ReentrancyGuard.sol";
@@ -128,7 +129,6 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
         MintingNote storage mn = contracts[_msgSender()][address(_synthetic)];
 
         uint256 exchangeRate = getRate(addressToPairs[address(_synthetic)]);
-
         uint256 assetBackedAtRateAmount = getProductOf(_amount, exchangeRate);
         uint256 requiredAmount =
             getProductOf(assetBackedAtRateAmount, collateralRatio);
@@ -137,7 +137,7 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
             "Synthetic::mintSynthetic: under collateral"
         );
         _synthetic.mint(_msgSender(), _amount);
-        require(dolly.transferFrom(_msgSender(), address(this), _backedAmount));
+        dolly.safeTransferFrom(_msgSender(), address(this), _backedAmount);
         mn.minter = _msgSender();
         mn.asset = _synthetic;
         mn.assetBacked = dolly;
@@ -176,7 +176,7 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
         if (_amount == mn.assetAmount) {
             // redeem and exit
             _synthetic.burnFrom(_msgSender(), _amount);
-            dolly.transfer(_msgSender(), mn.assetBackedAmount);
+            dolly.safeTransfer(_msgSender(), mn.assetBackedAmount);
             delete contracts[_msgSender()][address(_synthetic)];
             emit RedeemAsset(address(_synthetic), _amount);
         } else {
@@ -201,7 +201,7 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
                 "Synthetic::redeemSynthetic: under collateral ratio"
             );
             _synthetic.burnFrom(_msgSender(), assetToBeBurned);
-            dolly.transfer(_msgSender(), assetBackedToBeRedeemed);
+            dolly.safeTransfer(_msgSender(), assetBackedToBeRedeemed);
 
             mn.assetAmount = assetRemainningAfterBurned;
             mn.assetBackedAmount = assetBackedAmountAfterRedeem;
@@ -246,7 +246,7 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
             (mn.assetAmount.mul(exchangeRate)).div(denominator);
         uint256 requiredAmount =
             (assetBackedAtRateAmount.mul(collateralRatio)).div(denominator);
-        require(dolly.transferFrom(_msgSender(), address(this), _addAmount));
+        dolly.safeTransferFrom(_msgSender(), address(this), _addAmount);
         mn.currentRatio = getRatioOf(
             mn.assetBackedAmount,
             assetBackedAtRateAmount
@@ -290,7 +290,7 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
             canWithdrawRemainning >= _removeBackedAmount,
             "Synthetic::removeCollateral: amount exceeds required collateral"
         );
-        dolly.transfer(_msgSender(), _removeBackedAmount);
+        dolly.safeTransfer(_msgSender(), _removeBackedAmount);
         mn.currentRatio = getRatioOf(
             mn.assetBackedAmount,
             assetBackedAtRateAmount
@@ -327,7 +327,7 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
         uint256 exchangeRate = getRate(addressToPairs[address(_synthetic)]);
         uint256 assetBackedAtRateAmount =
             (mn.assetAmount.mul(exchangeRate)).div(denominator);
-        dolly.transfer(_msgSender(), _removeAmount);
+        dolly.safeTransfer(_msgSender(), _removeAmount);
         mn.currentRatio = getRatioOf(
             mn.assetBackedAmount,
             assetBackedAtRateAmount
@@ -444,20 +444,20 @@ contract Synthetic is Ownable, Pausable, ReentrancyGuard {
 
         if (remainingGapAmount > 0) {
             // collateral ratio is between 1.0 - 1.25, so liquidator will get the reward.
-            dolly.transferFrom(
+            dolly.safeTransferFrom(
                 _msgSender(),
                 address(this),
                 assetBackedAtRateAmount
             ); // deduct Doly from liquidator.
-            dolly.transfer(_minter, minterReceiveAmount); // transfer remainning to minter (90%).
-            dolly.transfer(
+            dolly.safeTransfer(_minter, minterReceiveAmount); // transfer remainning to minter (90%).
+            dolly.safeTransfer(
                 _msgSender(),
                 assetBackedAtRateAmount.add(liquidatorReceiveAmount)
             ); // transfer reward to to liquidator (5%) + original amount.
-            dolly.transfer(devAddress, platformReceiveAmount); // transfer liquidating fee to dev address (5%).
+            dolly.safeTransfer(devAddress, platformReceiveAmount); // transfer liquidating fee to dev address (5%).
         } else {
             // collateral ratio is less than 1.0.
-            dolly.transferFrom(
+            dolly.safeTransferFrom(
                 _msgSender(),
                 address(this),
                 assetBackedAtRateAmount

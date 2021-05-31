@@ -47,6 +47,7 @@
 - ✅ Use factory pattern for synthetic asset contracts. [From this issue](https://github.com/nanmcpe/dopple-synthetic/issues/2).
 - ✅ Fix [this issue](https://github.com/nanmcpe/dopple-synthetic/issues/2).
 - ✅ Add function `addSynthetic()` and `removeSynthetic()` corresponding of user's collateral ratio.
+- ✅ Use SafeERC20 for transfer tokens.
 - ⏰ Add more unit test!!
 - ⏰ Gathering and monitor liquidation of minted asset (for liquidate bot).
 - ⏰ Make simple UI.

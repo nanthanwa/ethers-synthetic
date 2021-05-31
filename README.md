@@ -67,7 +67,7 @@
 
 ## Deployed contract (Kovan Testnet)
 - Dolly: [0x2a49FF95c52Abb5d0302Bd59877B7CF32134f4E8](https://kovan.etherscan.io/address/0x2a49FF95c52Abb5d0302Bd59877B7CF32134f4E8#code)
-- Synthetic: [0x8cC72F02B4e0547a811b3c828E7d535C6B304Cf1](https://kovan.etherscan.io/address/0x8cC72F02B4e0547a811b3c828E7d535C6B304Cf1#code)
+- Synthetic: [0x45C205dF8fF7b1c3DBbB5de019a4C0F920Bbdd4d](https://kovan.etherscan.io/address/0x45C205dF8fF7b1c3DBbB5de019a4C0F920Bbdd4d#code)
 - DoppleSyntheticToken: [0xe973CBf1b49d1A6c0939291C77F6423FF2426d84](https://kovan.etherscan.io/address/0xe973CBf1b49d1A6c0939291C77F6423FF2426d84#code)
 - DoppleSyntheticTokenFactory: [0xD2f944c3Cc22072565acB5cB2f7aA8212908003C](https://kovan.etherscan.io/address/0xD2f944c3Cc22072565acB5cB2f7aA8212908003C#code)
 - dTSLA: [0x89996f43332693396693D6aDC76094487E9FD26C](https://kovan.etherscan.io/address/0x89996f43332693396693D6aDC76094487E9FD26C#code)

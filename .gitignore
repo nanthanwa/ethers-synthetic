@@ -16,3 +16,4 @@ artifacts/contracts/DoppleSyntheticToken.sol/*
 !artifacts/contracts/DoppleSyntheticToken.sol/DoppleSyntheticToken.json
 artifacts/contracts/DoppleSyntheticTokenFactory.sol/*
 !artifacts/contracts/DoppleSyntheticTokenFactory.sol/DoppleSyntheticTokenFactory.json
+deployments/kovan/solcInputs/
